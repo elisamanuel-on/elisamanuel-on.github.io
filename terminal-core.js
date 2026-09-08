@@ -251,8 +251,14 @@ function iniciarTerminalInterativo() {
         janela.scrollTop = janela.scrollHeight;
     }
 
+    function escaparHtml(texto) {
+        const div = document.createElement('div');
+        div.textContent = texto;
+        return div.innerHTML;
+    }
+
     function imprimirPrompt(comando) {
-        imprimir(`<span class="term-prompt">elisama@portfolio:~$</span> ${comando}`, 'term-echo');
+        imprimir(`<span class="term-prompt">elisama@portfolio:~$</span> ${escaparHtml(comando)}`, 'term-echo');
     }
 
     function desenharCaixa(linhas) {
@@ -336,7 +342,7 @@ function iniciarTerminalInterativo() {
         if (id && ACOES[id]) {
             ACOES[id]();
         } else {
-            imprimir(TEXTOS_TERMINAL.comando_nao_encontrado[idiomaAtual](comando), 'term-erro');
+            imprimir(TEXTOS_TERMINAL.comando_nao_encontrado[idiomaAtual](escaparHtml(comando)), 'term-erro');
         }
     }
 
