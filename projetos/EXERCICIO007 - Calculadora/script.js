@@ -14,9 +14,9 @@ console.log('Elementos encontrados');
 
 // 2. FUNÇÃO PARA MOSTRAR ERRO
 function mostrarErro(mensagem) {
-    errorMessage.textContent = '⚠️ ' + mensagem;
+    errorMessage.textContent = mensagem;
     errorMessage.classList.add('show');
-    console.log(' Erro: ' + mensagem);
+    console.log('Erro: ' + mensagem);
     
     setTimeout(() => {
         errorMessage.classList.remove('show');
@@ -47,7 +47,7 @@ function validarInputs() {
     }
 
     esconderErro();
-    console.log('✅ Números válidos: ' + num1 + ' e ' + num2);
+    console.log('Números válidos: ' + num1 + ' e ' + num2);
     return { num1, num2 };
 }
 
@@ -61,11 +61,11 @@ function formatarNumero(num) {
 
 // 6. FUNÇÃO PRINCIPAL PARA CALCULAR
 function calcular() {
-    console.log('🔢 Botão clicado!');
-    
+    console.log('Botão clicado!');
+
     const validacao = validarInputs();
     if (!validacao) {
-        console.log(' Validação falhou');
+        console.log('Validação falhou');
         return;
     }
 

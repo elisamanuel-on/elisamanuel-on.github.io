@@ -2,7 +2,13 @@
 // EXERCÍCIO 018 - JOGO DA ADIVINHA COM TOGGLE
 // ============================================
 
-console.log('🎯 Jogo da Adivinha carregado!');
+console.log('Jogo da Adivinha carregado!');
+
+// Ícones SVG (substituem emojis — cor herdada via currentColor)
+const ICONE_SOL = '<svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const ICONE_LUA = '<svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+const ICONE_CHECK = '<svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const ICONE_TROFEU = '<svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>';
 
 // 1. VARIÁVEIS DO JOGO
 let numeroSecreto = 0;
@@ -29,12 +35,12 @@ function alternarModo() {
     
     if (modoEscuro) {
         body.classList.remove('light-mode');
-        toggleBtn.textContent = '🌙 Dark Mode';
-        console.log('🌙 Mudou para Dark Mode');
+        toggleBtn.innerHTML = `<span class="toggle-icone">${ICONE_LUA}</span> Dark Mode`;
+        console.log('Mudou para Dark Mode');
     } else {
         body.classList.add('light-mode');
-        toggleBtn.textContent = '☀️ Light Mode';
-        console.log('☀️ Mudou para Light Mode');
+        toggleBtn.innerHTML = `<span class="toggle-icone">${ICONE_SOL}</span> Light Mode`;
+        console.log('Mudou para Light Mode');
     }
 }
 
@@ -58,15 +64,15 @@ function iniciarJogo() {
     palpiteInput.value = '';
     palpiteInput.disabled = false;
     adivinharBtn.disabled = false;
-    adivinharBtn.textContent = '🔮 Adivinhar';
-    
-    console.log(`🎯 Novo número secreto gerado: ${numeroSecreto}`);
-    console.log('💡 Dica: está entre 1 e 50!');
+    adivinharBtn.innerHTML = `${ICONE_CHECK} Adivinhar`;
+
+    console.log(`Novo número secreto gerado: ${numeroSecreto}`);
+    console.log('Dica: está entre 1 e 50!');
 }
 
 // 6. FUNÇÃO PARA MOSTRAR ERRO
 function mostrarErro(msg) {
-    erroDiv.textContent = '⚠️ ' + msg;
+    erroDiv.textContent = msg;
     erroDiv.classList.add('show');
     setTimeout(() => erroDiv.classList.remove('show'), 4000);
 }
@@ -100,7 +106,7 @@ function adivinhar() {
     let acertou = false;
 
     if (palpite === numeroSecreto) {
-        mensagem = `🎉 PARABÉNS! Acertou o número ${numeroSecreto} em ${tentativas} tentativas!`;
+        mensagem = `PARABÉNS! Acertou o número ${numeroSecreto} em ${tentativas} tentativas!`;
         dicaTexto.textContent = mensagem;
         dicaTexto.className = 'acertou';
         numeroSecretoEl.textContent = numeroSecreto;
@@ -108,17 +114,17 @@ function adivinhar() {
         jogoAtivo = false;
         palpiteInput.disabled = true;
         adivinharBtn.disabled = true;
-        adivinharBtn.textContent = '🏆 Venceu!';
+        adivinharBtn.innerHTML = `${ICONE_TROFEU} Venceu!`;
         acertou = true;
-        console.log(`🎉 Acertou! Número: ${numeroSecreto}, Tentativas: ${tentativas}`);
+        console.log(`Acertou! Número: ${numeroSecreto}, Tentativas: ${tentativas}`);
     } else if (palpite < numeroSecreto) {
-        mensagem = '📈 Mais acima! Tente um número maior.';
+        mensagem = 'Mais acima! Tente um número maior.';
         dicaTexto.textContent = mensagem;
-        console.log(`📈 Palpite ${palpite} é menor que ${numeroSecreto}`);
+        console.log(`Palpite ${palpite} é menor que ${numeroSecreto}`);
     } else {
-        mensagem = '📉 Mais abaixo! Tente um número menor.';
+        mensagem = 'Mais abaixo! Tente um número menor.';
         dicaTexto.textContent = mensagem;
-        console.log(`📉 Palpite ${palpite} é maior que ${numeroSecreto}`);
+        console.log(`Palpite ${palpite} é maior que ${numeroSecreto}`);
     }
 
     adicionarHistorico(palpite, acertou);
@@ -130,7 +136,7 @@ function adivinhar() {
 function adicionarHistorico(palpite, acertou) {
     const item = document.createElement('span');
     item.className = `tentativa-item ${acertou ? 'correto' : 'errado'}`;
-    item.textContent = acertou ? `🎯 ${palpite} ✅` : `${palpite}`;
+    item.textContent = `${palpite}`;
     
     if (listaTentativas.children.length === 1 && listaTentativas.children[0].tagName === 'SPAN') {
         listaTentativas.innerHTML = '';
@@ -165,6 +171,6 @@ toggleBtn.addEventListener('click', function(e) {
 
 // 10. INICIAR JOGO
 iniciarJogo();
-console.log('✅ Jogo pronto para usar!');
-console.log('💡 Digite um número entre 1 e 50');
-console.log('💡 Clique em "🌙 Dark Mode" para alternar para Light Mode');
+console.log('Jogo pronto para usar!');
+console.log('Digite um número entre 1 e 50');
+console.log('Clique em "Dark Mode" para alternar para Light Mode');

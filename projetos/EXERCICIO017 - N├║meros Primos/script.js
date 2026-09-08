@@ -17,7 +17,7 @@ const resumoPrimos = document.getElementById('resumoPrimos');
 
 // 2. FUNÇÃO PARA MOSTRAR ERRO
 function mostrarErro(msg) {
-    erroDiv.textContent = ' ' + msg;
+    erroDiv.textContent = msg;
     erroDiv.classList.add('show');
     setTimeout(() => erroDiv.classList.remove('show'), 4000);
 }
@@ -93,11 +93,11 @@ function calcularPrimos() {
 
     // 2. Status
     if (ehPrimo) {
-        statusPrimo.innerHTML = `<span class="primo"> ${num} é um número PRIMO!</span>`;
-        console.log(` ${num} é primo`);
+        statusPrimo.innerHTML = `<span class="primo">${num} é um número PRIMO!</span>`;
+        console.log(`${num} é primo`);
     } else {
-        statusPrimo.innerHTML = `<span class="nao-primo"> ${num} NÃO é um número primo!</span>`;
-        console.log(` ${num} não é primo`);
+        statusPrimo.innerHTML = `<span class="nao-primo">${num} NÃO é um número primo!</span>`;
+        console.log(`${num} não é primo`);
     }
 
     // 3. Lista de Primos

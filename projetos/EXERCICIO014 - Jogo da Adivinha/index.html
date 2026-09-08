@@ -9,17 +9,17 @@
 <body>
     <div class="container">
         <div class="card">
-            <h1>🎯 Jogo da Adivinha</h1>
+            <h1><svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Jogo da Adivinha</h1>
             <p class="subtitle">Tente adivinhar o número entre <strong>1 e 50</strong></p>
 
             <!-- Status do Jogo -->
             <div class="status">
                 <div class="status-item">
-                    <span class="status-label"> Número Secreto</span>
+                    <span class="status-label">Número Secreto</span>
                     <span id="numeroSecreto" class="status-valor">???</span>
                 </div>
                 <div class="status-item">
-                    <span class="status-label"> Tentativas</span>
+                    <span class="status-label"><svg class="icon" style="width:0.85em;height:0.85em;vertical-align:-0.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Tentativas</span>
                     <span id="tentativas" class="status-valor">0</span>
                 </div>
             </div>
@@ -38,13 +38,13 @@
 
             <!-- Dica -->
             <div id="dica" class="dica">
-                <span class="dica-icone"> </span>
+                <span class="dica-icone"><svg style="width:1em;height:1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg></span>
                 <span id="dicaTexto">Digite um número e tente adivinhar!</span>
             </div>
 
             <!-- Histórico de Tentativas -->
             <div id="historico" class="historico">
-                <h3> Histórico de Tentativas</h3>
+                <h3><svg class="icon" style="width:0.9em;height:0.9em;vertical-align:-0.1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Histórico de Tentativas</h3>
                 <div id="listaTentativas" class="lista-tentativas">
                     <span style="color: #4a5568;">Nenhuma tentativa ainda...</span>
                 </div>

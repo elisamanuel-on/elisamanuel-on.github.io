@@ -2,7 +2,7 @@
 // EXERCÍCIO 011 - CURIOSIDADES ESCONDIDAS
 // ============================================
 
-console.log(' Curiosidades carregadas!');
+console.log('Curiosidades carregadas!');
 
 // 1. CAPTURAR ELEMENTOS
 const revelarBtn = document.getElementById('revelarBtn');
@@ -16,7 +16,7 @@ let curiosidadesReveladas = false;
 
 // 2. FUNÇÃO PARA MOSTRAR ERRO
 function mostrarErro(msg) {
-    erroDiv.textContent = ' ' + msg;
+    erroDiv.textContent = msg;
     erroDiv.classList.add('show');
     setTimeout(() => erroDiv.classList.remove('show'), 4000);
 }

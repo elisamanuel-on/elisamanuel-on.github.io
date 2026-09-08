@@ -7,7 +7,7 @@ const numTabuada = document.getElementById('numTabuada');
 const tabuadaLista = document.getElementById('tabuadaLista');
 
 function mostrarErro(msg) {
-    erroDiv.textContent = '⚠️ ' + msg;
+    erroDiv.textContent = msg;
     erroDiv.classList.add('show');
     setTimeout(() => erroDiv.classList.remove('show'), 4000);
 }

@@ -9,25 +9,25 @@
 <body>
     <div class="container">
         <div class="calculator-card">
-            <h1>🧮 Calculadora Inteligente Elisama</h1>
+            <h1><svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8.01" y2="10"/><line x1="12" y1="10" x2="12.01" y2="10"/><line x1="16" y1="10" x2="16.01" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg> Calculadora Inteligente Elisama</h1>
             <p class="subtitle">Insira dois números e veja os resultados</p>
 
             <!-- Área de Inputs -->
             <div class="input-group">
                 <div class="input-field">
-                    <label for="num1">🔢 Primeiro Número</label>
+                    <label for="num1">Primeiro Número</label>
                     <input type="number" id="num1" placeholder="Ex: 15" step="any">
                 </div>
                 
                 <div class="input-field">
-                    <label for="num2">🔢 Segundo Número</label>
+                    <label for="num2">Segundo Número</label>
                     <input type="number" id="num2" placeholder="Ex: 7" step="any">
                 </div>
             </div>
 
             <!-- Botão Calcular -->
             <button id="calcularBtn" class="calculate-btn">
-                ⚡ Calcular
+                <svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Calcular
             </button>
 
             <!-- Mensagem de Erro -->
@@ -36,7 +36,7 @@
             <!-- Área de Resultados -->
             <div id="resultados" class="results-area">
                 <div class="result-item">
-                    <span class="result-icon">➕</span>
+                    <span class="result-icon">+</span>
                     <div class="result-content">
                         <h3>Soma</h3>
                         <p id="somaResult">Aguardando cálculo...</p>
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="result-item">
-                    <span class="result-icon">✖️</span>
+                    <span class="result-icon">×</span>
                     <div class="result-content">
                         <h3>Multiplicação</h3>
                         <p id="multiplicacaoResult">Aguardando cálculo...</p>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="result-item comparison">
-                    <span class="result-icon">🔍</span>
+                    <span class="result-icon"><svg class="icon" style="width:0.8em;height:0.8em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
                     <div class="result-content">
                         <h3>Comparação</h3>
                         <p id="comparacaoResult">Aguardando cálculo...</p>

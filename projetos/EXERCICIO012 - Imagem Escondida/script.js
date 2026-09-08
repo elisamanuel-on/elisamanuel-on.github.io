@@ -2,7 +2,7 @@
 // EXERCÍCIO 012 - IMAGEM ESCONDIDA
 // ============================================
 
-console.log('🕵️ Imagem Escondida carregada!');
+console.log('Imagem Escondida carregada!');
 
 // 1. CAPTURAR ELEMENTOS
 const areaImagem = document.getElementById('areaImagem');
@@ -14,13 +14,13 @@ let imagemRevelada = false;
 // 2. FUNÇÃO PARA ATUALIZAR ESTADO
 function atualizarEstado(revelada) {
     if (revelada) {
-        estadoTexto.textContent = '🟢 Imagem revelada!';
+        estadoTexto.textContent = 'Imagem revelada!';
         estadoTexto.className = 'visivel';
         console.log('Imagem revelada!');
     } else {
-        estadoTexto.textContent = '🔴 Imagem escondida';
+        estadoTexto.textContent = 'Imagem escondida';
         estadoTexto.className = 'escondido';
-        console.log('🔴 Imagem escondida');
+        console.log('Imagem escondida');
     }
 }
 

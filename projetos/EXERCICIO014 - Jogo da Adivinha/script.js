@@ -48,7 +48,7 @@ function iniciarJogo() {
 
 // 5. FUNÇÃO PARA MOSTRAR ERRO
 function mostrarErro(msg) {
-    erroDiv.textContent = ' ' + msg;
+    erroDiv.textContent = msg;
     erroDiv.classList.add('show');
     setTimeout(() => erroDiv.classList.remove('show'), 4000);
 }
@@ -92,7 +92,7 @@ function adivinhar() {
         jogoAtivo = false;
         palpiteInput.disabled = true;
         adivinharBtn.disabled = true;
-        adivinharBtn.textContent = 'Venceu! 🏆';
+        adivinharBtn.textContent = 'Venceu!';
         acertou = true;
         console.log(`Acertou! Número: ${numeroSecreto}, Tentativas: ${tentativas}`);
     } else if (palpite < numeroSecreto) {
@@ -117,7 +117,7 @@ function adivinhar() {
 function adicionarHistorico(palpite, acertou) {
     const item = document.createElement('span');
     item.className = `tentativa-item ${acertou ? 'correto' : 'errado'}`;
-    item.textContent = acertou ? `${palpite} ` : `${palpite}`;
+    item.textContent = `${palpite}`;
     
     // Remove a mensagem "Nenhuma tentativa..."
     if (listaTentativas.children.length === 1 && listaTentativas.children[0].tagName === 'SPAN') {

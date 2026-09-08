@@ -148,6 +148,17 @@ h1 {
     color: #48bb78;
 }
 
+.estado .escondido::before,
+.estado .visivel::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    margin-right: 6px;
+}
+
 /* ===== ANIMAÇÕES ===== */
 @keyframes pulse {
     0%, 100% {
