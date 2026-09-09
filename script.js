@@ -358,10 +358,10 @@ const projetos = [
         id: '020',
         titulo: { pt: 'Controlo de Gastos', en: 'Expense Tracker', es: 'Control de Gastos', fr: 'Suivi des Dépenses' },
         descricao: {
-            pt: 'App full-stack com API FastAPI, SQLite, testes automáticos e deployment contínuo',
-            en: 'Full-stack app with a FastAPI backend, SQLite, automated tests and continuous deployment',
-            es: 'App full-stack con API FastAPI, SQLite, pruebas automáticas y deployment continuo',
-            fr: 'Application full-stack avec API FastAPI, SQLite, tests automatisés et déploiement continu'
+            pt: 'App full-stack com API FastAPI, PostgreSQL, categorias personalizáveis, gráficos e testes automáticos com deployment contínuo',
+            en: 'Full-stack app with a FastAPI backend, PostgreSQL, custom categories, charts and automated tests with continuous deployment',
+            es: 'App full-stack con API FastAPI, PostgreSQL, categorías personalizables, gráficos y pruebas automáticas con deployment continuo',
+            fr: 'Application full-stack avec API FastAPI, PostgreSQL, catégories personnalisables, graphiques et tests automatisés avec déploiement continu'
         },
         tag: 'FastAPI',
         url: 'https://controlo-de-gastos.onrender.com',
