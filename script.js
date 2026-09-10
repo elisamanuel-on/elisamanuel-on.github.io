@@ -384,6 +384,42 @@ const projetos = [
         tag: 'FastAPI',
         url: 'https://delivery-eventos.onrender.com',
         imagem: 'imagens/021-delivery-eventos.jpg'
+    },
+    {
+        id: '022',
+        titulo: {
+            pt: 'Monitor de Vagas & Notícias',
+            en: 'Job & News Monitor',
+            es: 'Monitor de Vacantes y Noticias',
+            fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
+        },
+        descricao: {
+            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, guardado em MongoDB com robôs automáticos via GitHub Actions',
+            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, stored in MongoDB with automated robots via GitHub Actions',
+            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, guardado en MongoDB con robots automáticos vía GitHub Actions',
+            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, stocké dans MongoDB avec des robots automatisés via GitHub Actions'
+        },
+        tag: 'FastAPI',
+        url: 'https://monitor-vagas-noticias.onrender.com',
+        imagem: 'imagens/022-monitor-vagas.jpg'
+    },
+    {
+        id: '023',
+        titulo: {
+            pt: 'Análise de Preços de Habitação em Portugal',
+            en: 'Portugal Housing Price Analysis',
+            es: 'Análisis de Precios de Vivienda en Portugal',
+            fr: 'Analyse des Prix du Logement au Portugal'
+        },
+        descricao: {
+            pt: 'Dashboard interativo com dados reais do INE sobre preços da habitação por região e a evolução do índice nacional desde 2009',
+            en: 'Interactive dashboard with real INE data on regional housing prices and the national index\'s evolution since 2009',
+            es: 'Dashboard interactivo con datos reales del INE sobre precios de vivienda por región y la evolución del índice nacional desde 2009',
+            fr: 'Tableau de bord interactif avec des données réelles de l\'INE sur les prix du logement par région et l\'évolution de l\'indice national depuis 2009'
+        },
+        tag: 'Dash',
+        url: 'https://analise-precos-habitacao.onrender.com',
+        imagem: 'imagens/023-precos-habitacao.jpg'
     }
 ];
 
