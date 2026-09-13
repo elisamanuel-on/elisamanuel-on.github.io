@@ -474,6 +474,24 @@ const projetos = [
         tag: 'Template',
         url: 'https://sole-house.onrender.com',
         imagem: 'imagens/026-sole-house.jpg'
+    },
+    {
+        id: '027',
+        titulo: {
+            pt: 'Quiosques Interativos — Museu Aurora & Mesa Lume',
+            en: 'Interactive Kiosks — Museu Aurora & Mesa Lume',
+            es: 'Quioscos Interactivos — Museu Aurora y Mesa Lume',
+            fr: 'Bornes Interactives — Museu Aurora et Mesa Lume'
+        },
+        descricao: {
+            pt: 'Duas demonstrações de interface para ecrãs táteis e totens — um guia de museu e um menu de restaurante — com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
+            en: 'Two touchscreen interface demos — a museum guide and a restaurant menu — with touch navigation, an ordering system and a call-server button, all in PT/EN',
+            es: 'Dos demostraciones de interfaz táctil — una guía de museo y un menú de restaurante — con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
+            fr: 'Deux démonstrations d\'interface tactile — un guide de musée et un menu de restaurant — avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
+        },
+        tag: 'Template',
+        url: 'https://demo-wingsys.onrender.com',
+        imagem: 'imagens/027-demo-wingsys.jpg'
     }
 ];
 
