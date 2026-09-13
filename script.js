@@ -420,6 +420,24 @@ const projetos = [
         tag: 'Dash',
         url: 'https://analise-precos-habitacao.onrender.com',
         imagem: 'imagens/023-precos-habitacao.jpg'
+    },
+    {
+        id: '024',
+        titulo: {
+            pt: 'Portal de Automação Interna',
+            en: 'Internal Automation Portal',
+            es: 'Portal de Automatización Interna',
+            fr: 'Portail d\'Automatisation Interne'
+        },
+        descricao: {
+            pt: 'Portal web para automatizar tarefas internas de escritório — organização de ficheiros, geração de relatórios e backups — com histórico de execuções e agendamento automático via cron',
+            en: 'Web portal to automate internal office tasks — file organization, report generation and backups — with an execution history and automatic scheduling via cron',
+            es: 'Portal web para automatizar tareas internas de oficina — organización de archivos, generación de informes y copias de seguridad — con historial de ejecuciones y programación automática vía cron',
+            fr: 'Portail web pour automatiser des tâches internes de bureau — organisation de fichiers, génération de rapports et sauvegardes — avec historique d\'exécutions et planification automatique via cron'
+        },
+        tag: 'FastAPI',
+        url: 'https://portal-automacao-interna.onrender.com',
+        imagem: 'imagens/024-portal-automacao.jpg'
     }
 ];
 
