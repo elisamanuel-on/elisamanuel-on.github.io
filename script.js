@@ -437,7 +437,7 @@ const projetos = [
         },
         tag: 'FastAPI',
         url: 'https://portal-automacao-interna.onrender.com',
-        imagem: 'imagens/024-portal-automacao.jpg'
+        imagem: 'imagens/024-portal-automacao.png'
     }
 ];
 
