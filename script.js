@@ -66,9 +66,17 @@ const competencias = [
     { pt: 'Dash', en: 'Dash', es: 'Dash', fr: 'Dash' },
     { pt: 'HTML & CSS', en: 'HTML & CSS', es: 'HTML & CSS', fr: 'HTML & CSS' },
     { pt: 'JavaScript', en: 'JavaScript', es: 'JavaScript', fr: 'JavaScript' },
+    { pt: 'Java', en: 'Java', es: 'Java', fr: 'Java' },
+    { pt: 'MySQL', en: 'MySQL', es: 'MySQL', fr: 'MySQL' },
+    { pt: 'PostgreSQL', en: 'PostgreSQL', es: 'PostgreSQL', fr: 'PostgreSQL' },
+    { pt: 'SQL Server', en: 'SQL Server', es: 'SQL Server', fr: 'SQL Server' },
     { pt: 'SQLite', en: 'SQLite', es: 'SQLite', fr: 'SQLite' },
     { pt: 'MongoDB', en: 'MongoDB', es: 'MongoDB', fr: 'MongoDB' },
     { pt: 'Git', en: 'Git', es: 'Git', fr: 'Git' },
+    { pt: 'Linux', en: 'Linux', es: 'Linux', fr: 'Linux' },
+    { pt: 'Ubuntu', en: 'Ubuntu', es: 'Ubuntu', fr: 'Ubuntu' },
+    { pt: 'Proxmox', en: 'Proxmox', es: 'Proxmox', fr: 'Proxmox' },
+    { pt: 'VS Code', en: 'VS Code', es: 'VS Code', fr: 'VS Code' },
     { pt: 'Machine Learning', en: 'Machine Learning', es: 'Machine Learning', fr: 'Machine Learning' }
 ];
 
