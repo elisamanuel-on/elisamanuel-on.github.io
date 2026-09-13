@@ -1,0 +1,237 @@
+/* ===== RESET ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    color: #fff;
+}
+
+.container {
+    width: 100%;
+    max-width: 650px;
+}
+
+.card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    padding: 40px;
+    border: 1px solid #333;
+    box-shadow: 0 20px 60px rgba(102, 126, 234, 0.15);
+}
+
+h1 {
+    font-size: 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 30px;
+    font-size: 0.95rem;
+}
+
+/* ===== INPUTS ===== */
+.input-group {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.input-field {
+    flex: 1;
+    min-width: 200px;
+}
+
+.input-field label {
+    display: block;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.input-field input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #333;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    background: #0d0d0d;
+    color: #fff;
+}
+
+.input-field input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    background: #1a1a1a;
+}
+
+.input-field input::placeholder {
+    color: #4a5568;
+}
+
+/* ===== BOTÃO ===== */
+button {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* ===== ERRO ===== */
+.erro {
+    color: #fc8181;
+    font-size: 0.9rem;
+    padding: 10px;
+    background: rgba(252, 129, 129, 0.1);
+    border-radius: 8px;
+    border-left: 3px solid #fc8181;
+    display: none;
+    margin-bottom: 20px;
+}
+
+.erro.show {
+    display: block;
+}
+
+/* ===== RESULTADOS ===== */
+.resultados-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.resultado-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 18px;
+    background: #0d0d0d;
+    border-radius: 12px;
+    border-left: 4px solid #667eea;
+    border: 1px solid #222;
+    transition: all 0.3s ease;
+}
+
+.resultado-item:hover {
+    background: #1a1a1a;
+    border-color: #667eea;
+    transform: translateX(3px);
+}
+
+.resultado-item:nth-child(2) {
+    border-left-color: #48bb78;
+}
+
+.resultado-item:nth-child(3) {
+    border-left-color: #f6ad55;
+}
+
+.resultado-item.divisao {
+    border-left-color: #fc8181;
+}
+
+.resultado-item:nth-child(4) {
+    border-left-color: #fc8181;
+}
+
+.resultado-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    width: 35px;
+    text-align: center;
+}
+
+.resultado-conteudo {
+    flex: 1;
+}
+
+.resultado-conteudo h3 {
+    color: #4a5568;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.resultado-conteudo p {
+    color: #e2e8f0;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.resultado-conteudo .valor {
+    color: #667eea;
+    font-weight: 700;
+}
+
+.resultado-item:nth-child(2) .resultado-conteudo .valor {
+    color: #48bb78;
+}
+
+.resultado-item:nth-child(3) .resultado-conteudo .valor {
+    color: #f6ad55;
+}
+
+.resultado-item.divisao .resultado-conteudo .valor {
+    color: #fc8181;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 550px) {
+    .card {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .input-field {
+        min-width: auto;
+    }
+
+    .resultados-area {
+        grid-template-columns: 1fr;
+    }
+}
