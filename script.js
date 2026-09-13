@@ -438,6 +438,42 @@ const projetos = [
         tag: 'FastAPI',
         url: 'https://portal-automacao-interna.onrender.com',
         imagem: 'imagens/024-portal-automacao.png'
+    },
+    {
+        id: '025',
+        titulo: {
+            pt: 'Template Interativo para Negócios — Aro Alto',
+            en: 'Interactive Business Template — Aro Alto',
+            es: 'Plantilla Interactiva para Negocios — Aro Alto',
+            fr: 'Modèle Interactif pour Entreprises — Aro Alto'
+        },
+        descricao: {
+            pt: 'Template reutilizável para negócios de serviços, com catálogo interativo, calculadora de orçamento automática, marcação de horários e formulário de contacto — aqui reskinado como o site de uma academia de basquetebol fictícia',
+            en: 'Reusable template for service businesses, with an interactive catalog, automatic budget calculator, appointment booking and a contact form — reskinned here as the site of a fictional basketball academy',
+            es: 'Plantilla reutilizable para negocios de servicios, con catálogo interactivo, calculadora de presupuesto automática, reserva de horarios y formulario de contacto — aquí adaptada como el sitio de una academia de baloncesto ficticia',
+            fr: 'Modèle réutilisable pour entreprises de services, avec catalogue interactif, calculateur de devis automatique, prise de rendez-vous et formulaire de contact — ici décliné comme le site d\'une académie de basketball fictive'
+        },
+        tag: 'Template',
+        url: 'https://template-interativo.onrender.com',
+        imagem: 'imagens/025-aro-alto.jpg'
+    },
+    {
+        id: '026',
+        titulo: {
+            pt: 'Template Vitrine para Negócios — Sole House',
+            en: 'Business Showcase Template — Sole House',
+            es: 'Plantilla Vitrina para Negocios — Sole House',
+            fr: 'Modèle Vitrine pour Entreprises — Sole House'
+        },
+        descricao: {
+            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio — aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
+            en: 'One-page institutional template, ready to adapt to any business — reskinned here as the store of a fictional sneaker and streetwear brand',
+            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio — aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
+            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise — ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
+        },
+        tag: 'Template',
+        url: 'https://sole-house.onrender.com',
+        imagem: 'imagens/026-sole-house.jpg'
     }
 ];
 
