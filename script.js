@@ -420,10 +420,10 @@ const projetos = [
             fr: 'Analyse des Prix du Logement au Portugal'
         },
         descricao: {
-            pt: 'Dashboard interativo com dados reais do INE sobre preços da habitação por região e a evolução do índice nacional desde 2009',
-            en: 'Interactive dashboard with real INE data on regional housing prices and the national index\'s evolution since 2009',
-            es: 'Dashboard interactivo con datos reales del INE sobre precios de vivienda por región y la evolución del índice nacional desde 2009',
-            fr: 'Tableau de bord interactif avec des données réelles de l\'INE sur les prix du logement par région et l\'évolution de l\'indice national depuis 2009'
+            pt: 'Dashboard interativo com dados reais do INE: mapa de preços por concelho, pesquisa, comparação de regiões, evolução do índice nacional desde 2009 e exportação em CSV/Excel',
+            en: 'Interactive dashboard with real INE data: a price map by municipality, search, regional comparison, the national index\'s evolution since 2009 and CSV/Excel export',
+            es: 'Dashboard interactivo con datos reales del INE: mapa de precios por municipio, búsqueda, comparación de regiones, evolución del índice nacional desde 2009 y exportación en CSV/Excel',
+            fr: 'Tableau de bord interactif avec des données réelles de l\'INE : carte des prix par municipalité, recherche, comparaison régionale, évolution de l\'indice national depuis 2009 et export CSV/Excel'
         },
         tag: 'Dash',
         url: 'https://analise-precos-habitacao.onrender.com',
