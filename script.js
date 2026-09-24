@@ -500,6 +500,24 @@ const projetos = [
         tag: 'Template',
         url: 'https://demo-wingsys.onrender.com',
         imagem: 'imagens/027-demo-wingsys.jpg'
+    },
+    {
+        id: '028',
+        titulo: {
+            pt: 'Sistema de Gestão de Utentes e Cuidados de Saúde',
+            en: 'Patient and Healthcare Management System',
+            es: 'Sistema de Gestión de Usuarios y Cuidados de Salud',
+            fr: 'Système de Gestion des Usagers et des Soins de Santé'
+        },
+        descricao: {
+            pt: 'Sistema completo de cuidados continuados (UCC/ERPI/SAD) e ambulatório clínico/hospitalar, com avaliação de risco por machine learning (diabetes, cardiovascular e queda), acesso por perfil (Enfermeiro, Médico, Receção, Admin) e relatórios exportáveis em PDF/Excel',
+            en: 'Full long-term care (UCC/ERPI/SAD) and clinical/hospital outpatient system, with machine learning risk assessment (diabetes, cardiovascular and fall risk), role-based access (Nurse, Doctor, Reception, Admin) and exportable PDF/Excel reports',
+            es: 'Sistema completo de cuidados continuados (UCC/ERPI/SAD) y ambulatorio clínico/hospitalario, con evaluación de riesgo por machine learning (diabetes, cardiovascular y caídas), acceso por perfil (Enfermero, Médico, Recepción, Admin) e informes exportables en PDF/Excel',
+            fr: 'Système complet de soins continus (UCC/ERPI/SAD) et ambulatoire clinique/hospitalier, avec évaluation du risque par machine learning (diabète, cardiovasculaire et chute), accès par profil (Infirmier, Médecin, Réception, Admin) et rapports exportables en PDF/Excel'
+        },
+        tag: 'Dash',
+        url: 'https://sistema-gestao-saude.onrender.com',
+        imagem: 'imagens/028-sistema-gestao-saude.png'
     }
 ];
 
