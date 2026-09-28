@@ -402,10 +402,10 @@ const projetos = [
             fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
         },
         descricao: {
-            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, guardado em MongoDB com robôs automáticos via GitHub Actions',
-            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, stored in MongoDB with automated robots via GitHub Actions',
-            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, guardado en MongoDB con robots automáticos vía GitHub Actions',
-            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, stocké dans MongoDB avec des robots automatisés via GitHub Actions'
+            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows — tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
+            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app — all stored in MongoDB with automated robots via GitHub Actions',
+            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows — todo guardado en MongoDB con robots automáticos vía GitHub Actions',
+            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows — le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
         },
         tag: 'FastAPI',
         url: 'https://monitor-vagas-noticias.onrender.com',
