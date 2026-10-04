@@ -1243,7 +1243,8 @@ button.btn-limpar[type="submit"]:hover {
 /* ============================================
    v3.1: barra lateral, manual e ferramentas do visor
    ============================================ */
-body {
+/* só a página com barra lateral (index.php) deixa de centrar o conteúdo; a página estática index.html continua centrada */
+body:has(> .app) {
     display: block;
     padding: 20px;
 }
@@ -1640,7 +1641,7 @@ body[data-modo="manual"] .card {
 }
 
 @media (max-width: 550px) {
-    body {
+    body:has(> .app) {
         padding: 12px;
     }
 
@@ -1661,4 +1662,16 @@ body[data-modo="manual"] .card {
     .visor-topo {
         flex-wrap: wrap;
     }
+}
+
+/* aviso da versão estática (index.html), usada onde o PHP não corre */
+.nota-estatica {
+    margin: -14px 0 22px;
+    padding: 10px 14px;
+    border: 1px dashed var(--linha);
+    border-radius: 12px;
+    text-align: center;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--suave);
 }
