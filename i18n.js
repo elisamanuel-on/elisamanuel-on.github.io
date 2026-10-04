@@ -332,11 +332,23 @@ function atualizarMetaPagina() {
 let idiomaAtual = detetarIdioma();
 
 function detetarIdioma() {
-    const guardado = localStorage.getItem('idioma');
-    if (guardado && IDIOMAS_SUPORTADOS.includes(guardado)) return guardado;
+    // 1) escolha feita à mão numa visita anterior
+    try {
+        const guardado = localStorage.getItem('idioma');
+        if (guardado && IDIOMAS_SUPORTADOS.includes(guardado)) return guardado;
+    } catch (e) { /* armazenamento bloqueado: segue para a deteção */ }
 
-    const nav = (navigator.language || navigator.userLanguage || 'pt').slice(0, 2).toLowerCase();
-    return IDIOMAS_SUPORTADOS.includes(nav) ? nav : 'pt';
+    // 2) idiomas preferidos do navegador, por ordem (ex.: ['fr-CA', 'en-US'])
+    const preferidos = (navigator.languages && navigator.languages.length)
+        ? navigator.languages
+        : [navigator.language || navigator.userLanguage || 'pt'];
+    for (const lingua of preferidos) {
+        const codigo = String(lingua).slice(0, 2).toLowerCase();
+        if (IDIOMAS_SUPORTADOS.includes(codigo)) return codigo;
+    }
+
+    // 3) nenhum dos quatro: inglês
+    return 'en';
 }
 
 /* Devolve a tradução de uma chave no idioma atual (com fallback para PT) */

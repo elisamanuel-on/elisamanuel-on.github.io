@@ -1085,3 +1085,269 @@ form[action$="desafio"] .input-field {
     color: var(--suave);
     opacity: 0.7;
 }
+
+/* ============================================
+   v3.0: cabeçalho com logótipo, idiomas, layout em duas colunas
+   ============================================ */
+.container {
+    max-width: 700px;
+}
+
+body[data-modo="cientifica"] .container {
+    max-width: 1040px;
+}
+
+.topo-calc {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo {
+    display: block;
+    border-radius: 14px;
+    box-shadow: 0 0 22px rgba(143, 92, 255, 0.45);
+}
+
+.marca-nome {
+    font-size: 1.6rem;
+    line-height: 1.05;
+    text-align: left;
+    margin: 0;
+    letter-spacing: 0.4px;
+}
+
+.marca-sub {
+    display: block;
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--suave);
+}
+
+.idiomas {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--linha);
+    border-radius: 999px;
+    background: var(--vidro);
+}
+
+.idiomas a {
+    padding: 6px 13px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--suave);
+    text-decoration: none;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+.idiomas a:hover {
+    color: var(--texto);
+}
+
+.idiomas a.ativo {
+    background: linear-gradient(135deg, var(--violeta), var(--energia));
+    color: #fff;
+}
+
+.grade-calc {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 290px;
+    gap: 26px;
+    align-items: start;
+}
+
+.visor {
+    font-size: 1.5rem;
+}
+
+/* resultado logo por baixo do visor */
+.coluna-principal .resultados-area.uma-coluna {
+    margin: 4px 0 18px;
+}
+
+.coluna-lateral {
+    position: sticky;
+    top: 20px;
+    padding: 16px;
+    border: 1px solid var(--linha);
+    border-radius: 16px;
+    background: var(--noite);
+}
+
+.historico-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.historico-topo h2 {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--suave);
+}
+
+.btn-limpar {
+    width: auto;
+    margin: 0;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    background: transparent;
+    border: 1px solid var(--linha);
+    color: var(--suave);
+}
+
+.btn-limpar:hover {
+    color: var(--energia);
+    border-color: var(--energia);
+    box-shadow: none;
+    transform: none;
+}
+
+.historico-lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 430px;
+    overflow-y: auto;
+}
+
+.hist-item {
+    width: 100%;
+    margin: 0;
+    padding: 9px 12px;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--texto);
+    font-weight: 400;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hist-item:hover {
+    background: var(--noite-2);
+    border-color: var(--linha);
+    transform: none;
+    box-shadow: none;
+}
+
+.hist-exp {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: var(--suave);
+    word-break: break-all;
+}
+
+.hist-res {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--energia);
+    word-break: break-all;
+}
+
+.historico-vazio,
+.historico-dica {
+    font-size: 0.82rem;
+    color: var(--suave);
+}
+
+.historico-dica {
+    margin-top: 12px;
+}
+
+/* memória */
+.memoria {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.memoria button {
+    width: auto;
+    margin: 0;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+    background: var(--noite);
+    border: 1px solid var(--linha);
+    color: var(--ar);
+}
+
+.memoria button:hover {
+    border-color: var(--ar);
+    box-shadow: none;
+    transform: none;
+}
+
+.memoria-estado {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--suave);
+}
+
+.memoria-estado.cheia {
+    color: var(--agua);
+    font-weight: 700;
+}
+
+.card .versao {
+    margin-top: 22px;
+}
+
+@media (max-width: 880px) {
+    .grade-calc {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .coluna-lateral {
+        position: static;
+    }
+}
+
+@media (max-width: 550px) {
+    .topo-calc {
+        justify-content: center;
+    }
+
+    .marca-nome {
+        font-size: 1.4rem;
+    }
+}
+
+button.btn-limpar[type="submit"] {
+    background: transparent;
+    color: var(--suave);
+    border: 1px solid var(--linha);
+}
+
+button.btn-limpar[type="submit"]:hover {
+    color: var(--energia);
+    border-color: var(--energia);
+}
+
+@media (max-width: 550px) {
+    .abas .aba {
+        font-size: 0.82rem;
+    }
+}

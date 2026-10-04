@@ -9,9 +9,9 @@ declare(strict_types=1);
 
 /**
  * Versão da calculadora (atualizar a cada alteração publicada).
- * 1.x = versão original em JavaScript; 2.0 = PHP científico; 2.1 = tema, poderes e modo Desafio.
+ * 1.x = versão original em JavaScript; 2.0 = PHP científico; 2.1 = tema, poderes e modo Desafio; 3.0 = layout novo, histórico, memória e 4 idiomas.
  */
-const VERSAO = '2.1.0';
+const VERSAO = '3.0.0';
 
 /** Cada elemento tem um grupo de funções/símbolos da calculadora. */
 const PODERES_PADROES = [
@@ -34,17 +34,11 @@ function poderesUsados(string $expressao): array
     return $usados;
 }
 
-/** Nome em português de cada elemento. */
+/** Nome do elemento no idioma ativo (ver idiomas.php). */
 function nomeElemento(string $elemento): string
 {
-    return match ($elemento) {
-        'agua'    => 'Água',
-        'fogo'    => 'Fogo',
-        'terra'   => 'Terra',
-        'ar'      => 'Ar',
-        'energia' => 'Energia',
-        default   => 'Magia',
-    };
+    $validos = ['agua', 'fogo', 'terra', 'ar', 'energia'];
+    return t('el_' . (in_array($elemento, $validos, true) ? $elemento : 'magia'));
 }
 
 /** Nível do desafio: sobe de 3 em 3 acertos seguidos, até ao 4. */
