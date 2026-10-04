@@ -634,6 +634,11 @@ function carregarProjetos() {
     const container = document.getElementById('projetosContainer');
     if (!container) return;
 
+    // as miniaturas usam a mesma versão (?v=) do script, para o navegador não mostrar capturas antigas
+    const tagScript = document.querySelector('script[src*="script.js"]');
+    const versaoCache = tagScript ? (tagScript.getAttribute('src').split('?v=')[1] || '') : '';
+    const versaoImagens = versaoCache ? '?v=' + encodeURIComponent(versaoCache) : '';
+
     container.innerHTML = '';
     projetos.forEach(proj => {
         const div = document.createElement('a');
@@ -642,7 +647,7 @@ function carregarProjetos() {
         div.target = '_blank';
         div.innerHTML = `
             <div class="projeto-thumb">
-                <img src="${proj.imagem}" alt="Captura do projeto ${L(proj.titulo)}" loading="lazy">
+                <img src="${proj.imagem}${versaoImagens}" alt="Captura do projeto ${L(proj.titulo)}" loading="lazy">
                 <span class="projeto-thumb-tag">${proj.tag}</span>
             </div>
             <div class="projeto-body">
