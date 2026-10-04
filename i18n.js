@@ -16,7 +16,7 @@ const TRADUCOES = {
         theme_light: 'Claro',
 
         hero_badge: 'Dev Web Júnior',
-        hero_subtitulo: 'Desenvolvedora Web Júnior (Full-Stack) • Tecnologias de Informação',
+        hero_subtitulo: 'Desenvolvedora Web Júnior (Full-Stack)',
         hero_p1: 'Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.',
         hero_p2: 'Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.',
         hero_btn_cv: 'Descarregar CV',
@@ -76,7 +76,7 @@ const TRADUCOES = {
         theme_light: 'Light',
 
         hero_badge: 'Junior Web Dev',
-        hero_subtitulo: 'Junior Full-Stack Web Developer • Information Technology',
+        hero_subtitulo: 'Junior Full-Stack Web Developer',
         hero_p1: 'With a solid background in <strong>Finance and Accounting</strong> and a strategic move into tech, I am currently a Specialist Technician in <strong>Information Systems Technology and Programming</strong> at IEFP (Portuguese Institute for Employment and Vocational Training).',
         hero_p2: 'I specialize in <strong>Python, Process Automation (RPA), Data Analysis and Web Development</strong>. My mission is to combine management and business experience with technical skills to build innovative solutions.',
         hero_btn_cv: 'Download CV',
@@ -136,7 +136,7 @@ const TRADUCOES = {
         theme_light: 'Claro',
 
         hero_badge: 'Dev Web Júnior',
-        hero_subtitulo: 'Desarrolladora Web Júnior (Full-Stack) • Tecnologías de la Información',
+        hero_subtitulo: 'Desarrolladora Web Júnior (Full-Stack)',
         hero_p1: 'Con una base sólida en <strong>Finanzas y Contabilidad</strong> y una transición estratégica hacia el área tecnológica, actualmente soy Técnica Especialista en <strong>Tecnologías y Programación de Sistemas de Información</strong> en el IEFP (Instituto portugués de Empleo y Formación Profesional).',
         hero_p2: 'Me especializo en <strong>Python, Automatización de Procesos (RPA), Análisis de Datos y Desarrollo Web</strong>. Mi misión es combinar la experiencia en gestión y negocios con competencias técnicas para crear soluciones innovadoras.',
         hero_btn_cv: 'Descargar CV',
@@ -196,7 +196,7 @@ const TRADUCOES = {
         theme_light: 'Clair',
 
         hero_badge: 'Dev Web Junior',
-        hero_subtitulo: 'Développeuse Web Junior (Full-Stack) • Technologies de l\'Information',
+        hero_subtitulo: 'Développeuse Web Junior (Full-Stack)',
         hero_p1: 'Avec une solide base en <strong>Finance et Comptabilité</strong> et une transition stratégique vers le domaine technologique, je suis actuellement Technicienne Spécialiste en <strong>Technologies et Programmation des Systèmes d\'Information</strong> à l\'IEFP (Institut portugais de l\'Emploi et de la Formation Professionnelle).',
         hero_p2: 'Je me spécialise en <strong>Python, Automatisation des Processus (RPA), Analyse de Données et Développement Web</strong>. Ma mission est d\'allier l\'expérience en gestion et en affaires à des compétences techniques pour créer des solutions innovantes.',
         hero_btn_cv: 'Télécharger le CV',

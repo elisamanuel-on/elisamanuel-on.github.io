@@ -381,20 +381,11 @@ nav a.active {
     font-size: 1.6rem;
     font-weight: 700;
     color: var(--cor-texto);
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 1.4rem;
+    display: inline-block;
+    margin-bottom: 1.6rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--cor-primaria);
     letter-spacing: normal;
-}
-
-.titulo-seccao::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--cor-primaria), var(--cor-secundaria));
-    box-shadow: 0 0 0 4px var(--cor-sombra);
 }
 
 /* ===== ANIMAÇÃO AO FAZER SCROLL (reveal) ===== */
@@ -1266,8 +1257,9 @@ footer p {
     }
 
     .titulo-seccao {
-        display: flex;
-        justify-content: center;
+        display: block;
+        text-align: center;
+        border-bottom: 0;
     }
 
     .social-links {
@@ -1338,4 +1330,35 @@ footer p {
 /* Botão "Voltar ao Início" sem seta */
 .voltar .btn-secundario::after {
     content: none;
+}
+
+/* ===== TECNOLOGIAS AGRUPADAS POR ÁREA ===== */
+.skills-grupo {
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.skills-grupo:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.skills-rotulo {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 0.5rem;
+}
+
+.skills-grupo .tags {
+    margin: 0;
+    gap: 8px;
+}
+
+#tagsContainer {
+    display: block;
+    margin-top: 1.2rem;
 }

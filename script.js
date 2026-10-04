@@ -524,31 +524,57 @@ const projetos = [
 // 5. FUNÇÕES PARA CARREGAR DADOS
 // ============================================
 
+// Áreas em que as tecnologias são agrupadas no perfil
+const gruposCompetencias = [
+    { nome: { pt: 'Linguagens', en: 'Languages', es: 'Lenguajes', fr: 'Langages' },
+      itens: ['Python', 'JavaScript', 'PHP', 'Java', 'HTML & CSS'] },
+    { nome: { pt: 'Frameworks', en: 'Frameworks', es: 'Frameworks', fr: 'Frameworks' },
+      itens: ['FastAPI', 'Flask', 'Dash'] },
+    { nome: { pt: 'Dados e automação', en: 'Data and automation', es: 'Datos y automatización', fr: 'Données et automatisation' },
+      itens: ['Pandas', 'RPA (Automação)', 'Machine Learning'] },
+    { nome: { pt: 'Bases de dados', en: 'Databases', es: 'Bases de datos', fr: 'Bases de données' },
+      itens: ['MySQL', 'PostgreSQL', 'SQL Server', 'SQLite', 'MongoDB'] },
+    { nome: { pt: 'Sistemas e ferramentas', en: 'Systems and tools', es: 'Sistemas y herramientas', fr: 'Systèmes et outils' },
+      itens: ['Git', 'Linux', 'Ubuntu', 'Proxmox', 'VS Code'] },
+    { nome: { pt: 'Gestão e negócio', en: 'Management and business', es: 'Gestión y negocio', fr: 'Gestion et affaires' },
+      itens: null } // vem de competenciasComplementares
+];
+
 function carregarCompetencias() {
     const container = document.getElementById('tagsContainer');
     if (container) {
         container.innerHTML = '';
-        competencias.forEach(tech => {
-            const tag = document.createElement('span');
-            tag.className = 'tag';
-            tag.textContent = L(tech);
-            container.appendChild(tag);
+        const porNome = {};
+        competencias.forEach(tech => { porNome[tech.pt] = tech; });
+
+        gruposCompetencias.forEach(grupo => {
+            const lista = grupo.itens
+                ? grupo.itens.map(nome => porNome[nome]).filter(Boolean)
+                : competenciasComplementares;
+
+            const linha = document.createElement('div');
+            linha.className = 'skills-grupo';
+
+            const rotulo = document.createElement('span');
+            rotulo.className = 'skills-rotulo';
+            rotulo.textContent = L(grupo.nome);
+            linha.appendChild(rotulo);
+
+            const tags = document.createElement('div');
+            tags.className = 'tags';
+            lista.forEach(tech => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = L(tech);
+                tags.appendChild(tag);
+            });
+            linha.appendChild(tags);
+            container.appendChild(linha);
         });
     }
 
     const numero = document.getElementById('numeroTech');
-    if (numero) numero.textContent = `+${competencias.length}`;
-
-    const extra = document.getElementById('tagsExtraContainer');
-    if (extra) {
-        extra.innerHTML = '';
-        competenciasComplementares.forEach(tech => {
-            const tag = document.createElement('span');
-            tag.className = 'tag tag-secundaria';
-            tag.textContent = L(tech);
-            extra.appendChild(tag);
-        });
-    }
+    if (numero) numero.textContent = String(competencias.length);
 }
 
 function carregarExperiencias() {
