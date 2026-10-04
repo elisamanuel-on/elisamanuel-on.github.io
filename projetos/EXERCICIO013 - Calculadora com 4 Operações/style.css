@@ -1076,3 +1076,12 @@ button:hover {
 form[action$="desafio"] .input-field {
     margin-bottom: 18px;
 }
+
+.versao {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+    color: var(--suave);
+    opacity: 0.7;
+}

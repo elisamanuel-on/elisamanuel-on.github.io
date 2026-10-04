@@ -7,6 +7,12 @@
 
 declare(strict_types=1);
 
+/**
+ * Versão da calculadora (atualizar a cada alteração publicada).
+ * 1.x = versão original em JavaScript; 2.0 = PHP científico; 2.1 = tema, poderes e modo Desafio.
+ */
+const VERSAO = '2.1.0';
+
 /** Cada elemento tem um grupo de funções/símbolos da calculadora. */
 const PODERES_PADROES = [
     'ar'    => '/(sin|cos|tan)/',

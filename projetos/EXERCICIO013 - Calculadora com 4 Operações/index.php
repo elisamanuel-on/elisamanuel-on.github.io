@@ -241,7 +241,7 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Científica · Exercício 013</title>
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=<?= e(VERSAO) ?>">
 </head>
 <body data-modo="<?= e($modo) ?>" data-estado="<?= e($estado) ?>" data-poderes="<?= e(implode(',', $poderes)) ?>"<?= ($feedback['subiu'] ?? false) ? ' data-subiu="1"' : '' ?>>
     <div class="container">
@@ -418,10 +418,11 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
             </form>
 <?php endif; ?>
 
+            <p class="versao">v<?= e(VERSAO) ?></p>
         </div>
     </div>
 
-    <script src="teclado.js"></script>
-    <script src="efeitos.js?v=1"></script>
+    <script src="teclado.js?v=<?= e(VERSAO) ?>"></script>
+    <script src="efeitos.js?v=<?= e(VERSAO) ?>"></script>
 </body>
 </html>
