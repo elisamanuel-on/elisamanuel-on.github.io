@@ -35,13 +35,13 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal i
 
 Os 12 projetos cobrem desde exercícios de lógica em JavaScript/HTML/CSS até aplicações full-stack com backend próprio:
 
-- 10 exercícios práticos (calculadoras, jogos, formulários, responsividade) — código incluído neste mesmo repositório, em `projetos/`
-- **[Controlo de Gastos](https://github.com/elisamanuel-on/controlo-de-gastos)** — aplicação full-stack (API em FastAPI + SQLite), com testes automáticos e deployment contínuo, publicada em [controlo-de-gastos.onrender.com](https://controlo-de-gastos.onrender.com)
-- **[Delivery Orientado a Eventos](https://github.com/elisamanuel-on/delivery-eventos)** — simulação de delivery com arquitetura orientada a eventos (Pagamento → Cozinha → Entrega) e acompanhamento em tempo real via WebSocket, publicada em [delivery-eventos.onrender.com](https://delivery-eventos.onrender.com)
+- 10 exercícios práticos (calculadoras, jogos, formulários, responsividade) - código incluído neste mesmo repositório, em `projetos/`
+- **[Controlo de Gastos](https://github.com/elisamanuel-on/controlo-de-gastos)** - aplicação full-stack (API em FastAPI + SQLite), com testes automáticos e deployment contínuo, publicada em [controlo-de-gastos.onrender.com](https://controlo-de-gastos.onrender.com)
+- **[Delivery Orientado a Eventos](https://github.com/elisamanuel-on/delivery-eventos)** - simulação de delivery com arquitetura orientada a eventos (Pagamento → Cozinha → Entrega) e acompanhamento em tempo real via WebSocket, publicada em [delivery-eventos.onrender.com](https://delivery-eventos.onrender.com)
 
 ## Como correr localmente
 
-Não precisa de build nem de instalação — é só abrir `index.html` num browser, ou servir a pasta com um servidor estático simples:
+Não precisa de build nem de instalação - é só abrir `index.html` num browser, ou servir a pasta com um servidor estático simples:
 
 ```bash
 python -m http.server 8000
