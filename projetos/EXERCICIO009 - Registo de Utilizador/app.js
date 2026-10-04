@@ -1,4 +1,4 @@
-/* Sistema de Gestão Escolar · v2.0.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
+/* Sistema de Gestão Escolar · v2.1.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
 (function () {
     'use strict';
 
@@ -67,6 +67,26 @@
                 if (campo) { campo.focus(); campo.select(); }
             }
         });
+    });
+
+    /* ---------- despesas e receitas: IVA e total ao escrever ---------- */
+    document.querySelectorAll('form[data-iva]').forEach(function (formIva) {
+        var base = formIva.querySelector('[data-iva-base]'), taxa = formIva.querySelector('[data-iva-taxa]'), saida = formIva.querySelector('[data-iva-resumo]');
+        if (!base || !taxa || !saida) { return; }
+        var vazio = saida.textContent;
+        var moeda;
+        try { moeda = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-IE' : document.documentElement.lang, { style: 'currency', currency: 'EUR' }); } catch (e) { moeda = null; }
+        function euros(n) { return moeda ? moeda.format(n) : n.toFixed(2).replace('.', decimal) + ' €'; }
+        function atualizar() {
+            var texto = String(base.value).replace(/\s/g, '').replace(/\.(?=\d{3},)/g, '').replace(',', '.');
+            var v = Number(texto);
+            if (texto === '' || !isFinite(v) || v < 0) { saida.textContent = vazio; return; }
+            var t = Number(taxa.value) || 0, iva = Math.round(v * t) / 100;
+            saida.textContent = saida.getAttribute('data-texto-iva') + ' (' + t + '%): ' + euros(iva) + ' · ' + saida.getAttribute('data-texto-total') + ': ' + euros(Math.round(v * 100) / 100 + iva);
+        }
+        base.addEventListener('input', atualizar);
+        taxa.addEventListener('change', atualizar);
+        atualizar();
     });
 
     /* ---------- editor do relatório ---------- */

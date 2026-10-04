@@ -6,10 +6,11 @@ $email = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verificarCsrf();
     if (isset($_POST['demo']) && is_string($_POST['demo'])) {
-        if (entrarDemo($_POST['demo'])) {
+        $erro = entrarDemo($_POST['demo']);
+        if ($erro === null) {
             redirecionar(ligacao('painel'));
         }
-        aviso('erro', 'login_invalido');
+        aviso('erro', $erro);
     } else {
         $email = limpar($_POST['email'] ?? '', 120);
         $erro = entrar($email, is_string($_POST['password'] ?? null) ? $_POST['password'] : '');

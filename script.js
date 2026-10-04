@@ -295,10 +295,10 @@ const projetos = [
         id: '009',
         titulo: { pt: 'Sistema de Gestão Escolar', en: 'School Management System', es: 'Sistema de Gestión Escolar', fr: 'Système de Gestion Scolaire' },
         descricao: {
-            pt: 'Colégio com aluno, professor, secretaria e direção: login seguro, lançamento de notas, pautas e boletins, faltas, horários, avisos, painel com gráficos e Relatório editável em PDF. PHP + SQLite, em 4 idiomas',
-            en: 'A school with student, teacher, office and principal profiles: secure login, grade entry, grade sheets and report cards, absences, timetables, notices, a chart dashboard and an editable PDF Report. PHP + SQLite, in 4 languages',
-            es: 'Un colegio con perfiles de alumno, profesor, secretaría y dirección: acceso seguro, notas, actas y boletines, faltas, horarios, avisos, panel con gráficos e Informe editable en PDF. PHP + SQLite, en 4 idiomas',
-            fr: 'Un collège avec profils élève, professeur, secrétariat et direction : connexion sécurisée, saisie des notes, relevés et bulletins, absences, emplois du temps, annonces, tableau de bord graphique et Rapport PDF modifiable. PHP + SQLite, en 4 langues'
+            pt: 'Colégio com 7 perfis (aluno, professor, secretaria, direção, Conselho Geral, contabilidade e portaria): notas, pautas, boletins, faltas, horários, painel com gráficos e a parte financeira — propinas, salários, impostos, despesas e relatórios em Excel e PDF. Inclui equipa não docente e registo de visitas. PHP + SQLite, em 4 idiomas',
+            en: 'A school with 7 profiles (student, teacher, office, principal, Governing Board, accounting and front desk): grades, grade sheets, report cards, absences, timetables, a chart dashboard and the finance side — tuition, salaries, taxes, expenses and Excel and PDF reports. Includes non-teaching staff and a visitor log. PHP + SQLite, in 4 languages',
+            es: 'Un colegio con 7 perfiles (alumno, profesor, secretaría, dirección, Consejo General, contabilidad y portería): notas, actas, boletines, faltas, horarios, panel con gráficos y la parte financiera — matrículas, salarios, impuestos, gastos e informes en Excel y PDF. Incluye personal no docente y registro de visitas. PHP + SQLite, en 4 idiomas',
+            fr: 'Un collège avec 7 profils (élève, professeur, secrétariat, direction, Conseil général, comptabilité et accueil) : notes, relevés, bulletins, absences, emplois du temps, tableau de bord graphique et la partie financière — scolarité, salaires, impôts, dépenses et rapports Excel et PDF. Inclut le personnel non enseignant et un registre des visiteurs. PHP + SQLite, en 4 langues'
         },
         tag: 'PHP',
         php: true,

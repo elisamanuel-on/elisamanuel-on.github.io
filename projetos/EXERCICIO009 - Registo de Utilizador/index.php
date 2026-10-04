@@ -17,6 +17,10 @@ require __DIR__ . '/inc/dados.php';
 require __DIR__ . '/inc/graficos.php';
 require __DIR__ . '/inc/pdf.php';
 require __DIR__ . '/inc/relatorios.php';
+require __DIR__ . '/inc/financas.php';
+require __DIR__ . '/inc/xlsx.php';
+require __DIR__ . '/inc/pdffinancas.php';
+require __DIR__ . '/inc/relatoriosfin.php';
 require __DIR__ . '/inc/layout.php';
 
 idiomaAtivo(escolherIdioma());

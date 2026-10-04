@@ -21,6 +21,14 @@ const ICONES = [
     'professores' => 'M3 8h18v12H3z M8 8V5h8v3 M3 13h18',
     'turmas'      => 'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',
     'direcao'     => 'M4 20V10 M10 20V4 M16 20v-7 M22 20H2',
+    'financeiro'  => 'M3 3v18h18 M7 15l4-4 3 3 6-7',
+    'propinas'    => 'M3 6h18v12H3z M3 10h18 M7 15h4',
+    'salarios'    => 'M3 7h18v13H3z M3 7l3-4h12l3 4 M12 11v5 M10 13h3',
+    'lancamentos' => 'M6 3h12v18l-3-2-3 2-3-2-3 2z M9 8h6 M9 12h6',
+    'conselho'    => 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4',
+    'equipa'      => 'M3 21v-1a5 5 0 0 1 10 0v1 M8 12a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z M15 21v-1a5 5 0 0 0-2.5-4.3 M17 4.5a3.5 3.5 0 0 1 0 6',
+    'visitas'     => 'M4 4h16v16H4z M9 9h6 M9 13h6 M9 17h3 M4 8h2 M4 12h2',
+    'excel'       => 'M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z M14 3v5h5 M9 12l5 6 M14 12l-5 6',
     'perfil'      => 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0',
     'sair'        => 'M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4 M10 17l5-5-5-5 M15 12H3',
     'menu'        => 'M3 6h18 M3 12h18 M3 18h18',
@@ -80,7 +88,12 @@ function paginaComMenu(string $conteudo, string $titulo, string $pagina): string
     $u = utilizador();
     $perfil = $u['perfil'];
     $menu = '';
+    $nFinancas = count(array_intersect(MENUS[$perfil], MENU_FINANCAS));
+    $primeiraFinanca = $nFinancas >= 2 ? (array_values(array_intersect(MENUS[$perfil], MENU_FINANCAS))[0] ?? '') : '';
     foreach (MENUS[$perfil] as $item) {
+        if ($item === $primeiraFinanca) {
+            $menu .= '<span class="menu-grupo">' . e(t('menu_grupo_financas')) . '</span>';
+        }
         $ativo = $item === $pagina;
         $menu .= '<a class="menu-item' . ($ativo ? ' ativo' : '') . '" href="' . e(ligacao($item)) . '"' . ($ativo ? ' aria-current="page"' : '') . '>'
             . icone($item) . '<span>' . e(t('menu_' . $item)) . '</span></a>';

@@ -80,7 +80,7 @@ function entrar(string $email, string $password): ?string
     if (($_SESSION['bloqueio_ate'] ?? 0) > time()) {
         return 'login_bloqueado';
     }
-    $st = bd()->prepare('SELECT id, password_hash FROM utilizadores WHERE email = ? AND ativo = 1');
+    $st = bd()->prepare('SELECT id, password_hash FROM utilizadores WHERE email = ? AND ativo = 1 AND perfil <> \'funcionario\'');
     $st->execute([mb_strtolower(trim($email))]);
     $linha = $st->fetch();
 
@@ -101,20 +101,23 @@ function entrar(string $email, string $password): ?string
     return 'login_invalido';
 }
 
-/** Entrada rápida nas contas de demonstração. */
-function entrarDemo(string $perfil): bool
+/** Entrada rápida nas contas de demonstração. Devolve null se entrou, ou a chave do erro. */
+function entrarDemo(string $perfil): ?string
 {
     if (!isset(CONTAS_DEMO[$perfil])) {
-        return false;
+        return 'login_invalido';
     }
-    $st = bd()->prepare('SELECT id FROM utilizadores WHERE email = ? AND ativo = 1');
+    $st = bd()->prepare('SELECT id, ativo FROM utilizadores WHERE email = ?');
     $st->execute([CONTAS_DEMO[$perfil]]);
-    $id = $st->fetchColumn();
-    if ($id === false) {
-        return false;
+    $linha = $st->fetch();
+    if (!$linha) {
+        return 'login_invalido';
     }
-    abrirSessaoDe((int) $id);
-    return true;
+    if (!(int) $linha['ativo']) {
+        return 'demo_conta_inativa';   // por exemplo, o diretor da demonstração foi destituído pelo Conselho Geral
+    }
+    abrirSessaoDe((int) $linha['id']);
+    return null;
 }
 
 // ---------- CSRF ----------

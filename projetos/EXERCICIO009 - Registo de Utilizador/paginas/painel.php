@@ -10,6 +10,116 @@ $cartoes = [];   // [rótulo, valor, ligação|null]
 $avisos = array_slice(avisosParaMim(), 0, 3);
 $aulasHoje = [];
 
+// O Conselho Geral tem um painel próprio: quem dirige a escola, o histórico recente e o resultado financeiro
+if ($perfil === 'conselho') {
+    $db = bd();
+    $dirAtual = $db->query("SELECT nome FROM utilizadores WHERE perfil = 'direcao' AND ativo = 1 LIMIT 1")->fetchColumn();
+    $res = resumoFinanceiro();
+    $recentes = $db->query('SELECT h.*, u.nome AS por FROM historico_direcao h JOIN utilizadores u ON u.id = h.por_id ORDER BY h.criado_em DESC, h.id DESC LIMIT 5')->fetchAll();
+    ?>
+<section class="kpis">
+    <a class="kpi" href="<?= e(ligacao('conselho')) ?>"><span class="kpi-valor kpi-texto"><?= e($dirAtual ?: '—') ?></span><span class="kpi-rotulo"><?= e(t('diretor_em_funcoes')) ?></span></a>
+    <a class="kpi" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['total']['receitas'])) ?></span><span class="kpi-rotulo"><?= e(t('total_receitas')) ?></span></a>
+    <a class="kpi" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['total']['custos'])) ?></span><span class="kpi-rotulo"><?= e(t('total_custos')) ?></span></a>
+    <a class="kpi <?= $res['atraso_n'] ? 'kpi-aviso' : '' ?>" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['atraso_valor'])) ?></span><span class="kpi-rotulo"><?= e(t('valor_em_atraso')) ?></span></a>
+</section>
+<?php if (!$dirAtual): ?><div class="mensagem erro"><?= icone('alerta') ?><span><?= e(t('sem_direcao_aviso')) ?></span></div><?php endif; ?>
+<section class="cartao">
+    <h2><?= e(t('historico_recente')) ?></h2>
+    <div class="tabela-rolagem"><table class="tabela">
+        <thead><tr><th><?= e(t('data')) ?></th><th><?= e(t('acao')) ?></th><th><?= e(t('nome')) ?></th><th><?= e(t('motivo')) ?></th></tr></thead>
+        <tbody><?php foreach ($recentes as $h): ?>
+            <tr><td><?= e(dataFmt($h['data'])) ?></td><td><span class="etiqueta <?= $h['acao'] === 'nomeacao' ? 'pos' : ($h['acao'] === 'destituicao' ? 'neg' : '') ?>"><?= e(t('hist_' . $h['acao'])) ?></span></td><td><?= e($h['nome']) ?></td><td><?= e($h['motivo'] !== '' ? $h['motivo'] : '—') ?></td></tr>
+        <?php endforeach; ?></tbody>
+    </table></div>
+    <p class="barra-acoes"><a class="botao" href="<?= e(ligacao('conselho')) ?>"><?= icone('conselho') ?><span><?= e(t('menu_conselho')) ?></span></a>
+        <a class="botao secundario" href="<?= e(ligacao('financeiro')) ?>"><?= icone('financeiro') ?><span><?= e(t('menu_financeiro')) ?></span></a></p>
+</section>
+<?php
+    return;
+}
+
+// A contabilidade vê o essencial do dinheiro e o que há por fazer neste mês
+if ($perfil === 'contabilidade') {
+    $db = bd();
+    $res = resumoFinanceiro();
+    $mesAtual = mesValido(substr(hojeISO(), 0, 7)) ?? MESES_LETIVOS[0];
+    $st = $db->prepare('SELECT COUNT(*) FROM salarios WHERE mes = ?');
+    $st->execute([$mesAtual]);
+    $processados = (int) $st->fetchColumn();
+    $st = $db->prepare('SELECT COUNT(*) FROM salarios WHERE mes = ? AND pago_em IS NULL');
+    $st->execute([$mesAtual]);
+    $porPagarSal = (int) $st->fetchColumn();
+    $st = $db->prepare('SELECT COUNT(*) FROM propinas WHERE mes = ?');
+    $st->execute([$mesAtual]);
+    $propinasEmitidas = (int) $st->fetchColumn();
+    ?>
+<section class="kpis">
+    <a class="kpi" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['total']['receitas'])) ?></span><span class="kpi-rotulo"><?= e(t('total_receitas')) ?></span></a>
+    <a class="kpi" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['total']['custos'])) ?></span><span class="kpi-rotulo"><?= e(t('total_custos')) ?></span></a>
+    <a class="kpi <?= $res['total']['resultado'] < 0 ? 'kpi-aviso' : '' ?>" href="<?= e(ligacao('financeiro')) ?>"><span class="kpi-valor"><?= e(euro($res['total']['resultado'])) ?></span><span class="kpi-rotulo"><?= e(t('resultado_fin')) ?></span></a>
+    <a class="kpi <?= $res['atraso_n'] ? 'kpi-aviso' : '' ?>" href="<?= e(ligacao('propinas', ['estado' => 'atraso', 'mes' => ''])) ?>"><span class="kpi-valor"><?= e(euro($res['atraso_valor'])) ?></span><span class="kpi-rotulo"><?= e(t('valor_em_atraso')) ?> (<?= (int) $res['atraso_n'] ?>)</span></a>
+</section>
+<section class="cartao">
+    <h2><?= e(t('por_fazer_mes', nomeMes($mesAtual))) ?></h2>
+    <ul class="lista-aulas">
+        <li><span><strong><?= e(t('propinas_do_mes')) ?></strong><small><?= e($propinasEmitidas > 0 ? t('propinas_emitidas_n', $propinasEmitidas) : t('propinas_por_emitir')) ?></small></span></li>
+        <li><span><strong><?= e(t('salarios_do_mes')) ?></strong><small><?= e($processados === 0 ? t('salarios_por_processar') : t('salarios_processados_n', $processados, $porPagarSal)) ?></small></span></li>
+        <li><span><strong><?= e(t('iva_titulo')) ?></strong><small><?= e(($res['total']['iva_pagar'] >= 0 ? t('iva_a_entregar') : t('iva_a_recuperar')) . ': ' . euro(abs($res['total']['iva_pagar']))) ?></small></span></li>
+    </ul>
+    <p class="barra-acoes">
+        <a class="botao" href="<?= e(ligacao('financeiro')) ?>"><?= icone('financeiro') ?><span><?= e(t('menu_financeiro')) ?></span></a>
+        <a class="botao secundario" href="<?= e(ligacao('salarios')) ?>"><?= icone('salarios') ?><span><?= e(t('menu_salarios')) ?></span></a>
+        <a class="botao secundario" href="<?= e(ligacao('propinas')) ?>"><?= icone('propinas') ?><span><?= e(t('menu_propinas')) ?></span></a>
+        <a class="botao secundario" href="<?= e(ligacao('lancamentos')) ?>"><?= icone('lancamentos') ?><span><?= e(t('menu_lancamentos')) ?></span></a>
+    </p>
+</section>
+<?php
+    return;
+}
+
+// A portaria vê quem está no edifício, as visitas de hoje e a equipa de turno
+if ($perfil === 'portaria') {
+    $db = bd();
+    $dentro = $db->query('SELECT v.*, u.nome AS por FROM visitas v JOIN utilizadores u ON u.id = v.registado_por WHERE v.saida IS NULL ORDER BY v.entrada')->fetchAll();
+    $st = $db->prepare("SELECT COUNT(*) FROM visitas WHERE substr(entrada, 1, 10) = ?");
+    $st->execute([hojeISO()]);
+    $hoje = (int) $st->fetchColumn();
+    $agora = date('H:i');
+    $deTurno = array_values(array_filter(
+        $db->query("SELECT u.nome, f.area, f.cargo, f.turno FROM funcionarios f JOIN utilizadores u ON u.id = f.utilizador_id WHERE u.ativo = 1 ORDER BY f.area, u.nome")->fetchAll(),
+        static fn ($f) => $agora >= TURNOS[$f['turno']][0] && $agora < TURNOS[$f['turno']][1]
+    ));
+    ?>
+<section class="kpis kpis-3">
+    <a class="kpi" href="<?= e(ligacao('visitas')) ?>"><span class="kpi-valor"><?= $hoje ?></span><span class="kpi-rotulo"><?= e(t('visitas_no_dia', dataFmt(hojeISO()))) ?></span></a>
+    <a class="kpi <?= $dentro ? 'kpi-aviso' : '' ?>" href="<?= e(ligacao('visitas')) ?>"><span class="kpi-valor"><?= count($dentro) ?></span><span class="kpi-rotulo"><?= e(t('no_edificio_agora')) ?></span></a>
+    <a class="kpi" href="<?= e(ligacao('equipa')) ?>"><span class="kpi-valor"><?= count($deTurno) ?></span><span class="kpi-rotulo"><?= e(t('de_turno_agora')) ?></span></a>
+</section>
+<div class="duas-colunas">
+    <section class="cartao">
+        <h2><?= e(t('no_edificio_agora')) ?></h2>
+        <?php if (!$dentro): ?><p class="suave"><?= e(t('ninguem_no_edificio')) ?></p><?php else: ?>
+        <ul class="lista-aulas"><?php foreach ($dentro as $v): ?>
+            <li><span class="hora"><?= e(substr($v['entrada'], 11, 5)) ?></span><span><strong><?= e($v['visitante']) ?></strong><small><?= e(t('motivo_visita_' . $v['motivo'])) ?><?= $v['destino'] !== '' ? ' · ' . e($v['destino']) : '' ?></small></span></li>
+        <?php endforeach; ?></ul>
+        <?php endif; ?>
+        <p><a class="botao" href="<?= e(ligacao('visitas')) ?>"><?= icone('visitas') ?><span><?= e(t('menu_visitas')) ?></span></a></p>
+    </section>
+    <section class="cartao">
+        <h2><?= e(t('de_turno_agora')) ?> · <?= e($agora) ?></h2>
+        <?php if (!$deTurno): ?><p class="suave"><?= e(t('ninguem_de_turno')) ?></p><?php else: ?>
+        <ul class="lista-aulas"><?php foreach ($deTurno as $f): ?>
+            <li><span><strong><?= e($f['nome']) ?></strong><small><?= e(t('area_' . $f['area'])) ?> · <?= e($f['cargo']) ?></small></span></li>
+        <?php endforeach; ?></ul>
+        <?php endif; ?>
+        <p><a href="<?= e(ligacao('equipa')) ?>"><?= e(t('ver_todos')) ?></a></p>
+    </section>
+</div>
+<?php
+    return;
+}
+
 if ($perfil === 'aluno') {
     $a = alunoPorId((int) $u['id']);
     $medias = mediasDoAluno((int) $u['id']);
@@ -146,4 +256,62 @@ ksort($aulasHoje);
 
 <?php if ($perfil === 'direcao'): ?>
 <p><a class="botao" href="<?= e(ligacao('direcao')) ?>"><?= icone('direcao') ?><span><?= e(t('menu_direcao')) ?></span></a></p>
+<?php endif; ?>
+
+<?php
+// ----- resumo das finanças de cada perfil -----
+if ($perfil === 'aluno'):
+    $st = bd()->prepare('SELECT * FROM propinas WHERE aluno_id = ? AND pago_em IS NULL ORDER BY mes LIMIT 1');
+    $st->execute([(int) $u['id']]);
+    $proxima = $st->fetch();
+?>
+<section class="cartao">
+    <h2><?= e(t('menu_propinas')) ?></h2>
+    <?php if ($proxima): $est = estadoPropina($proxima); ?>
+        <p><?= e(t('proxima_propina')) ?>: <strong><?= e(nomeMes($proxima['mes'])) ?> · <?= e(euro((int) $proxima['valor_cents'])) ?></strong>
+            <span class="etiqueta <?= $est === 'atraso' ? 'neg' : '' ?>"><?= e(t('estado_' . $est)) ?></span><br><span class="suave"><?= e(t('vencimento')) ?>: <?= e(dataFmt($proxima['vencimento'])) ?></span></p>
+    <?php else: ?><p class="suave"><?= e(t('propinas_em_dia')) ?></p><?php endif; ?>
+    <p><a href="<?= e(ligacao('propinas')) ?>"><?= e(t('ver_propinas')) ?></a></p>
+</section>
+<?php elseif ($perfil === 'professor'):
+    $st = bd()->prepare('SELECT * FROM salarios WHERE utilizador_id = ? ORDER BY mes DESC LIMIT 1');
+    $st->execute([(int) $u['id']]);
+    $ultimoSal = $st->fetch();
+?>
+<section class="cartao">
+    <h2><?= e(t('menu_salarios')) ?></h2>
+    <?php if ($ultimoSal): ?>
+        <p><?= e(t('ultimo_liquido')) ?> (<?= e(nomeMes($ultimoSal['mes'])) ?>): <strong><?= e(euro((int) $ultimoSal['liquido_cents'])) ?></strong>
+            <span class="etiqueta <?= $ultimoSal['pago_em'] ? 'pos' : '' ?>"><?= e($ultimoSal['pago_em'] ? t('pago') : t('por_pagar')) ?></span></p>
+    <?php else: ?><p class="suave"><?= e(t('sem_recibos')) ?></p><?php endif; ?>
+    <p><a href="<?= e(ligacao('salarios')) ?>"><?= e(t('os_meus_recibos')) ?></a></p>
+</section>
+<?php elseif ($perfil === 'secretaria'):
+    $resFin = resumoFinanceiro();
+    $st = bd()->prepare('SELECT COUNT(*) AS n, COALESCE(SUM(CASE WHEN pago_em IS NOT NULL THEN 1 ELSE 0 END), 0) AS pagos FROM salarios WHERE mes = (SELECT MAX(mes) FROM salarios)');
+    $st->execute();
+    $eq = $st->fetch();
+?>
+<section class="cartao">
+    <h2><?= e(t('menu_propinas')) ?></h2>
+    <dl class="dados-linha">
+        <div><dt><?= e(t('propinas_em_atraso')) ?></dt><dd><?= (int) $resFin['atraso_n'] ?></dd></div>
+        <div><dt><?= e(t('equipa_ja_paga')) ?></dt><dd><?= (int) $eq['pagos'] ?> / <?= (int) $eq['n'] ?></dd></div>
+    </dl>
+    <p class="barra-acoes"><a class="botao secundario" href="<?= e(ligacao('propinas')) ?>"><?= icone('propinas') ?><span><?= e(t('menu_propinas')) ?></span></a>
+        <a class="botao secundario" href="<?= e(ligacao('salarios')) ?>"><?= icone('salarios') ?><span><?= e(t('menu_salarios')) ?></span></a></p>
+</section>
+<?php elseif ($perfil === 'direcao'):
+    $resFin = resumoFinanceiro();
+?>
+<section class="cartao">
+    <h2><?= e(t('menu_financeiro')) ?></h2>
+    <dl class="dados-linha">
+        <div><dt><?= e(t('total_receitas')) ?></dt><dd><?= e(euro($resFin['total']['receitas'])) ?></dd></div>
+        <div><dt><?= e(t('total_custos')) ?></dt><dd><?= e(euro($resFin['total']['custos'])) ?></dd></div>
+        <div><dt><?= e(t('resultado_fin')) ?></dt><dd><?= e(euro($resFin['total']['resultado'])) ?></dd></div>
+        <div><dt><?= e(t('propinas_em_atraso')) ?></dt><dd><?= (int) $resFin['atraso_n'] ?> · <?= e(euro($resFin['atraso_valor'])) ?></dd></div>
+    </dl>
+    <p><a class="botao secundario" href="<?= e(ligacao('financeiro')) ?>"><?= icone('financeiro') ?><span><?= e(t('menu_financeiro')) ?></span></a></p>
+</section>
 <?php endif; ?>

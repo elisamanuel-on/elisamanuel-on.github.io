@@ -77,7 +77,7 @@ CREATE TABLE utilizadores (
     nome          TEXT NOT NULL,
     email         TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
-    perfil        TEXT NOT NULL CHECK (perfil IN ('aluno', 'professor', 'secretaria', 'direcao')),
+    perfil        TEXT NOT NULL CHECK (perfil IN ('aluno', 'professor', 'secretaria', 'direcao', 'conselho', 'contabilidade', 'portaria', 'funcionario')),
     ativo         INTEGER NOT NULL DEFAULT 1,
     criado_em     TEXT NOT NULL
 );
@@ -162,6 +162,81 @@ CREATE TABLE relatorios (
     criado_em     TEXT NOT NULL,
     atualizado_em TEXT NOT NULL
 );
+CREATE TABLE parametros (
+    chave TEXT PRIMARY KEY,
+    valor TEXT NOT NULL
+);
+CREATE TABLE propinas (
+    id          INTEGER PRIMARY KEY,
+    aluno_id    INTEGER NOT NULL REFERENCES utilizadores (id) ON DELETE CASCADE,
+    mes         TEXT NOT NULL,                 -- AAAA-MM
+    valor_cents INTEGER NOT NULL CHECK (valor_cents >= 0),
+    vencimento  TEXT NOT NULL,
+    pago_em     TEXT,                          -- data do pagamento (vazio = por pagar)
+    metodo      TEXT CHECK (metodo IN ('multibanco', 'transferencia', 'numerario', 'mbway')),
+    UNIQUE (aluno_id, mes)
+);
+CREATE TABLE contratos (
+    utilizador_id INTEGER PRIMARY KEY REFERENCES utilizadores (id) ON DELETE CASCADE,
+    cargo         TEXT NOT NULL DEFAULT '',
+    bruto_cents   INTEGER NOT NULL CHECK (bruto_cents >= 0),
+    irs_taxa      REAL NOT NULL CHECK (irs_taxa BETWEEN 0 AND 60)   -- retenção na fonte (%), valor ilustrativo
+);
+CREATE TABLE salarios (
+    id            INTEGER PRIMARY KEY,
+    utilizador_id INTEGER NOT NULL REFERENCES utilizadores (id) ON DELETE CASCADE,
+    mes           TEXT NOT NULL,
+    bruto_cents   INTEGER NOT NULL,
+    irs_cents     INTEGER NOT NULL,
+    ss_trab_cents INTEGER NOT NULL,
+    ss_ent_cents  INTEGER NOT NULL,
+    liquido_cents INTEGER NOT NULL,
+    pago_em       TEXT,
+    UNIQUE (utilizador_id, mes)
+);
+CREATE TABLE lancamentos (
+    id          INTEGER PRIMARY KEY,
+    tipo        TEXT NOT NULL CHECK (tipo IN ('despesa', 'receita')),
+    categoria   TEXT NOT NULL,
+    descricao   TEXT NOT NULL,
+    data        TEXT NOT NULL,
+    base_cents  INTEGER NOT NULL CHECK (base_cents >= 0),
+    iva_taxa    INTEGER NOT NULL CHECK (iva_taxa IN (0, 6, 13, 23)),
+    iva_cents   INTEGER NOT NULL,
+    total_cents INTEGER NOT NULL,
+    criado_por  INTEGER NOT NULL REFERENCES utilizadores (id),
+    criado_em   TEXT NOT NULL
+);
+CREATE TABLE historico_direcao (
+    id            INTEGER PRIMARY KEY,
+    utilizador_id INTEGER NOT NULL REFERENCES utilizadores (id),
+    nome          TEXT NOT NULL,               -- nome na altura (o histórico não muda se o nome for editado)
+    acao          TEXT NOT NULL CHECK (acao IN ('nomeacao', 'destituicao', 'edicao')),
+    data          TEXT NOT NULL,
+    motivo        TEXT NOT NULL DEFAULT '',
+    por_id        INTEGER NOT NULL REFERENCES utilizadores (id),
+    criado_em     TEXT NOT NULL
+);
+CREATE TABLE funcionarios (
+    utilizador_id INTEGER PRIMARY KEY REFERENCES utilizadores (id) ON DELETE CASCADE,
+    area          TEXT NOT NULL CHECK (area IN ('cantina', 'limpeza', 'vigilancia', 'portaria')),
+    cargo         TEXT NOT NULL,
+    turno         TEXT NOT NULL CHECK (turno IN ('manha', 'tarde', 'integral')),
+    telefone      TEXT NOT NULL DEFAULT ''
+);
+CREATE TABLE visitas (
+    id            INTEGER PRIMARY KEY,
+    visitante     TEXT NOT NULL,
+    motivo        TEXT NOT NULL,
+    destino       TEXT NOT NULL DEFAULT '',
+    entrada       TEXT NOT NULL,
+    saida         TEXT,
+    registado_por INTEGER NOT NULL REFERENCES utilizadores (id)
+);
+CREATE INDEX idx_visitas_entrada ON visitas (entrada);
+CREATE INDEX idx_propinas_mes ON propinas (mes);
+CREATE INDEX idx_salarios_mes ON salarios (mes);
+CREATE INDEX idx_lancamentos_data ON lancamentos (data);
 CREATE INDEX idx_relatorios_prof ON relatorios (professor_id);
 CREATE INDEX idx_alunos_turma ON alunos (turma_id);
 CREATE INDEX idx_avaliacoes ON avaliacoes (turma_id, disciplina_id, periodo);
@@ -193,6 +268,16 @@ function semear(PDO $bd): void
     // Direção e secretaria
     $direcao = $criar('António Carvalho', CONTAS_DEMO['direcao'], 'direcao');
     $secretaria = $criar('Helena Sousa', CONTAS_DEMO['secretaria'], 'secretaria');
+    $conselho = $criar('Conselho Geral', CONTAS_DEMO['conselho'], 'conselho');
+    $contabilista = $criar('Teresa Brandão', CONTAS_DEMO['contabilidade'], 'contabilidade');
+    $portaria = $criar('Joaquim Pires', CONTAS_DEMO['portaria'], 'portaria');
+    // Um diretor anterior (já destituído), para o histórico não começar vazio
+    $exDiretor = $criar('Fernando Matos', 'fernando.matos@colegio.demo', 'direcao');
+    $bd->prepare('UPDATE utilizadores SET ativo = 0 WHERE id = ?')->execute([$exDiretor]);
+    $stHist = $bd->prepare('INSERT INTO historico_direcao (utilizador_id, nome, acao, data, motivo, por_id, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $stHist->execute([$exDiretor, 'Fernando Matos', 'nomeacao', '2018-09-01', '', $conselho, '2018-09-01 10:00:00']);
+    $stHist->execute([$exDiretor, 'Fernando Matos', 'destituicao', '2024-08-30', 'Fim de mandato: o Conselho Geral não renovou o contrato.', $conselho, '2024-08-30 17:30:00']);
+    $stHist->execute([$direcao, 'António Carvalho', 'nomeacao', '2024-09-01', '', $conselho, '2024-08-31 11:00:00']);
 
     // Turmas e disciplinas
     $turmas = [['7.ºA', 7], ['7.ºB', 7], ['8.ºA', 8], ['9.ºA', 9]];
@@ -325,5 +410,125 @@ function semear(PDO $bd): void
                 $stHor->execute([$t, $dia, $aula, $idDisc[$d], $sala]);
             }
         }
+    }
+
+    $pessoal = semearPessoal($bd, $portaria);
+    semearFinancas($bd, $direcao, $secretaria, $contabilista, $professorDe, $alunos, $pessoal);
+    semearVisitas($bd, $portaria, $professorDe);
+}
+
+/** Pessoal não docente (sem acesso à aplicação). Devolve [id => salário bruto em cêntimos, IRS %]. O porteiro de demonstração também tem ficha. */
+function semearPessoal(PDO $bd, int $portaria): array
+{
+    $ficha = $bd->prepare('INSERT INTO funcionarios (utilizador_id, area, cargo, turno, telefone) VALUES (?, ?, ?, ?, ?)');
+    $ficha->execute([$portaria, 'portaria', 'Porteiro', 'manha', '912 555 010']);
+    $novo = $bd->prepare("INSERT INTO utilizadores (nome, email, password_hash, perfil, criado_em) VALUES (?, ?, '!', 'funcionario', ?)");
+    $lista = [
+        ['Lurdes Pinto',     'cantina',    'Cozinheira',                'integral', '912 555 011', 128000, 9.0],
+        ['Rui Gouveia',      'cantina',    'Ajudante de cozinha',       'manha',    '912 555 012', 104000, 7.0],
+        ['Sónia Matos',      'cantina',    'Empregada de refeitório',   'tarde',    '912 555 013', 98000, 6.5],
+        ['Adelaide Franco',  'limpeza',    'Auxiliar de limpeza',       'manha',    '912 555 014', 95000, 6.0],
+        ['Fátima Cruz',      'limpeza',    'Auxiliar de limpeza',       'tarde',    '912 555 015', 95000, 6.0],
+        ['Manuel Esteves',   'limpeza',    'Encarregado de limpeza',    'integral', '912 555 016', 118000, 8.0],
+        ['Carlos Neto',      'vigilancia', 'Vigilante',                 'manha',    '912 555 017', 102000, 7.0],
+        ['Paula Serra',      'vigilancia', 'Assistente operacional',    'tarde',    '912 555 018', 100000, 7.0],
+        ['Nuno Vidal',       'vigilancia', 'Assistente operacional',    'manha',    '912 555 019', 100000, 7.0],
+        ['Armindo Dias',     'portaria',   'Porteiro',                  'tarde',    '912 555 020', 99000, 6.5],
+    ];
+    $agora = date('Y-m-d H:i:s');
+    $pessoal = [$portaria => [105000, 7.5]];
+    foreach ($lista as $k => [$nome, $area, $cargo, $turno, $tel, $bruto, $irs]) {
+        $novo->execute([$nome, 'funcionario.' . ($k + 1) . '@interno.colegio.demo', $agora]);
+        $id = (int) $bd->lastInsertId();
+        $ficha->execute([$id, $area, $cargo, $turno, $tel]);
+        $pessoal[$id] = [$bruto, $irs];
+    }
+    return $pessoal;
+}
+
+/** Algumas visitas dos últimos dias (todas já saíram). */
+function semearVisitas(PDO $bd, int $portaria, array $professorDe): void
+{
+    $st = $bd->prepare('INSERT INTO visitas (visitante, motivo, destino, entrada, saida, registado_por) VALUES (?, ?, ?, ?, ?, ?)');
+    $lista = [
+        ['Paula Mendes (encarregada de educação)', 'reuniao',    'Diretor de turma do 7.ºA', '2026-09-28 09:05:00', '2026-09-28 09:50:00'],
+        ['Transportes Lusitânia',                 'fornecedor', 'Cantina',                  '2026-09-29 08:10:00', '2026-09-29 08:30:00'],
+        ['Jorge Almeida (encarregado de educação)','documentos', 'Secretaria',               '2026-09-30 10:20:00', '2026-09-30 10:45:00'],
+        ['Eletricidade Norte, Lda.',              'manutencao', 'Pavilhão desportivo',      '2026-10-01 14:00:00', '2026-10-01 16:40:00'],
+        ['Marta Correia (encarregada de educação)','recolha',    'Secretaria',               '2026-10-01 12:25:00', '2026-10-01 12:35:00'],
+        ['Rui Tavares (encarregado de educação)', 'reuniao',    'Direção',                  '2026-10-02 11:00:00', '2026-10-02 11:50:00'],
+        ['Papelaria Central',                     'fornecedor', 'Secretaria',               '2026-10-02 15:10:00', '2026-10-02 15:25:00'],
+    ];
+    foreach ($lista as [$nome, $motivo, $destino, $entrada, $saida]) {
+        $st->execute([$nome, $motivo, $destino, $entrada, $saida, $portaria]);
+    }
+}
+
+/** Dados de exemplo das finanças: parâmetros, propinas de setembro e outubro, contratos, salários de setembro e lançamentos. */
+function semearFinancas(PDO $bd, int $direcao, int $secretaria, int $contabilista, array $professorDe, array $alunos, array $pessoal): void
+{
+    foreach (PARAMETROS_INICIAIS as $chave => $valor) {
+        $bd->prepare('INSERT INTO parametros (chave, valor) VALUES (?, ?)')->execute([$chave, $valor]);
+    }
+
+    // Propinas de setembro e outubro. Quase todos pagaram setembro; poucos pagaram outubro (vence a 8).
+    $anoDe = [];
+    foreach ($bd->query('SELECT a.utilizador_id AS id, t.ano FROM alunos a JOIN turmas t ON t.id = a.turma_id')->fetchAll() as $l) {
+        $anoDe[(int) $l['id']] = (int) $l['ano'];
+    }
+    $metodos = ['multibanco', 'transferencia', 'mbway', 'numerario'];
+    $st = $bd->prepare('INSERT INTO propinas (aluno_id, mes, valor_cents, vencimento, pago_em, metodo) VALUES (?, ?, ?, ?, ?, ?)');
+    foreach ($alunos as $k => [$idAluno]) {
+        $valor = (int) round((float) PARAMETROS_INICIAIS['propina_' . $anoDe[$idAluno]] * 100);
+        $setPago = ($k % 9) !== 4;                       // cerca de 11% não pagaram setembro (em atraso)
+        $dia = 1 + ($k * 3) % 8;
+        $st->execute([$idAluno, '2026-09', $valor, '2026-09-08', $setPago ? sprintf('2026-09-%02d', $dia) : null, $setPago ? $metodos[$k % 4] : null]);
+        $outPago = ($k % 4) === 0;                       // 25% já pagaram outubro
+        $st->execute([$idAluno, '2026-10', $valor, '2026-10-08', $outPago ? sprintf('2026-10-%02d', 1 + $k % 3) : null, $outPago ? $metodos[($k + 1) % 4] : null]);
+    }
+
+    // Contratos (vencimento bruto e retenção de IRS ilustrativos)
+    $contrato = $bd->prepare('INSERT INTO contratos (utilizador_id, cargo, bruto_cents, irs_taxa) VALUES (?, ?, ?, ?)');
+    $contrato->execute([$direcao, 'Diretor', 330000, 23.0]);
+    $contrato->execute([$secretaria, 'Secretária', 152000, 12.0]);
+    $contrato->execute([$contabilista, 'Contabilista certificada', 245000, 18.0]);
+    $cargoDe = $bd->prepare('SELECT cargo FROM funcionarios WHERE utilizador_id = ?');
+    foreach ($pessoal as $idPessoa => [$brutoP, $irsP]) {
+        $cargoDe->execute([$idPessoa]);
+        $contrato->execute([$idPessoa, (string) ($cargoDe->fetchColumn() ?: 'Funcionário'), $brutoP, $irsP]);
+    }
+    $vistos = [];
+    $brutos = [0 => [201000, 15.0], 1 => [214000, 16.0], 2 => [196000, 14.5], 3 => [208000, 15.5], 4 => [199000, 14.5], 5 => [188000, 13.5], 7 => [192000, 14.0]];
+    foreach ($professorDe as $d => $idProf) {
+        if (isset($vistos[$idProf])) {
+            continue;
+        }
+        $vistos[$idProf] = true;
+        [$bruto, $irs] = $brutos[$d] ?? [195000, 14.0];
+        $contrato->execute([$idProf, 'Professor', $bruto, $irs]);
+    }
+
+    // Salários de setembro, já pagos a 30 de setembro
+    processarSalarios($bd, '2026-09', '2026-09-30');
+
+    // Despesas e receitas de setembro e outubro
+    $lanc = $bd->prepare('INSERT INTO lancamentos (tipo, categoria, descricao, data, base_cents, iva_taxa, iva_cents, total_cents, criado_por, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $itens = [
+        ['despesa', 'material',   'Material escolar e papelaria',          '2026-09-05', 184000, 23],
+        ['despesa', 'energia',    'Eletricidade (setembro)',               '2026-09-28', 142000, 23],
+        ['despesa', 'energia',    'Água e saneamento (setembro)',          '2026-09-28',  38500, 6],
+        ['despesa', 'limpeza',    'Serviço de limpeza (setembro)',         '2026-09-30', 120000, 23],
+        ['despesa', 'software',   'Licenças de software de gestão',        '2026-09-12',  64000, 23],
+        ['despesa', 'seguros',    'Seguro escolar e do edifício',          '2026-09-10',  95000, 0],
+        ['despesa', 'taxas',      'Taxa municipal de ocupação',            '2026-09-15',  21000, 0],
+        ['despesa', 'manutencao', 'Reparação do aquecimento do pavilhão',  '2026-10-02',  76000, 23],
+        ['receita', 'cantina',    'Refeições da cantina (setembro)',       '2026-09-30', 168000, 13],
+        ['receita', 'aluguer',    'Aluguer do pavilhão ao clube local',    '2026-09-20',  60000, 23],
+        ['receita', 'loja',       'Venda de uniformes e material',         '2026-09-18',  92000, 23],
+        ['receita', 'donativos',  'Donativo da associação de pais',        '2026-10-01',  50000, 0],
+    ];
+    foreach ($itens as [$tipo, $categoria, $descricao, $data, $base, $taxa]) {
+        [$iva, $total] = calcularIva($base, $taxa);
+        $lanc->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $contabilista, $data . ' 10:00:00']);
     }
 }
