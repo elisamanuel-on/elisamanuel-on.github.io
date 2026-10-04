@@ -1,6 +1,7 @@
 <?php
 /**
- * Salários. Só a contabilidade define contratos, processa o mês e marca os pagamentos (nunca o seu próprio contrato).
+ * Salários. Só a contabilidade define contratos, processa o mês, corrige recibos, marca pagamentos e apaga (sempre com justificação)
+ * (nunca o seu próprio contrato).
  * A direção consulta tudo. A secretaria só vê quem da equipa já foi pago, sem valores.
  * Cada pessoa (professor, portaria) só vê os seus recibos de vencimento.
  */
@@ -83,19 +84,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->prepare('UPDATE salarios SET pago_em = ? WHERE mes = ? AND pago_em IS NULL')->execute([hojeISO(), $mes]);
             aviso('ok', 'salarios_pagos');
         }
-    } elseif (in_array($acao, ['pagar', 'anular', 'apagar'], true)) {
+    } elseif (in_array($acao, ['pagar', 'anular', 'apagar', 'editar_recibo'], true)) {
         $s = salarioCompleto(inteiro($_POST['id'] ?? ''));
+        $paga = $s && !empty($s['pago_em']);
+        $motivo = motivoValido($_POST['motivo'] ?? '');
+        // anular e apagar pedem sempre justificação; corrigir um recibo já pago também
+        $pedeMotivo = in_array($acao, ['anular', 'apagar'], true) || ($acao === 'editar_recibo' && $paga);
+        $painel = ['editar_recibo' => 'editar'][$acao] ?? $acao;
         if (!$s) {
             aviso('erro', 'dados_invalidos');
-        } elseif ($acao === 'pagar' && empty($s['pago_em'])) {
+        } elseif ($acao !== 'pagar' && $pedeMotivo && $motivo === null) {
+            aviso('erro', 'motivo_curto');
+            redirecionar(ligacao('salarios', ['mes' => $s['mes'], $painel => (int) $s['id']]));
+        } elseif ($acao === 'pagar' && !$paga) {
             $db->prepare('UPDATE salarios SET pago_em = ? WHERE id = ?')->execute([hojeISO(), (int) $s['id']]);
             aviso('ok', 'salario_pago');
-        } elseif ($acao === 'anular' && !empty($s['pago_em'])) {
+        } elseif ($acao === 'anular' && $paga) {
             $db->prepare('UPDATE salarios SET pago_em = NULL WHERE id = ?')->execute([(int) $s['id']]);
+            registarAuditoria('salario', 'anular', resumoSalarioTexto($s), (string) $motivo);
             aviso('ok', 'pagamento_anulado');
-        } elseif ($acao === 'apagar' && empty($s['pago_em'])) {
+        } elseif ($acao === 'apagar') {
             $db->prepare('DELETE FROM salarios WHERE id = ?')->execute([(int) $s['id']]);
+            registarAuditoria('salario', 'apagar', resumoSalarioTexto($s), (string) $motivo);
             aviso('ok', 'salario_apagado');
+        } elseif ($acao === 'editar_recibo') {
+            // o recibo é recalculado em PHP com os parâmetros atuais (IRS pela taxa escrita, Segurança Social pelos parâmetros)
+            $bruto = lerDinheiro($_POST['bruto'] ?? null, 2000000);
+            $irs = lerPercentagem($_POST['irs'] ?? null, 50.0);
+            $dataPag = $paga ? dataValida($_POST['data_pagamento'] ?? null) : null;
+            if ($bruto === false || $bruto <= 0 || $irs === false || ($paga && $dataPag === null)) {
+                aviso('erro', 'dados_invalidos');
+            } else {
+                $c = calcularSalario($bruto, $irs);
+                $db->prepare('UPDATE salarios SET bruto_cents = ?, irs_cents = ?, ss_trab_cents = ?, ss_ent_cents = ?, liquido_cents = ?, pago_em = ? WHERE id = ?')
+                   ->execute([$c['bruto'], $c['irs'], $c['ss_trab'], $c['ss_ent'], $c['liquido'], $paga ? $dataPag : null, (int) $s['id']]);
+                registarAuditoria('salario', 'editar', resumoSalarioTexto($s) . ' → ' . resumoSalarioTexto(salarioCompleto((int) $s['id'])), (string) $motivo);
+                aviso('ok', 'dados_guardados');
+            }
         } else {
             aviso('erro', 'dados_invalidos');
         }
@@ -217,7 +242,50 @@ foreach ($recibos as $s) {
     $porPagar += $s['pago_em'] ? 0 : 1;
 }
 $pessoal = pessoalComContrato();
+$editarRecibo = $edita ? salarioCompleto(inteiro($_GET['editar'] ?? '')) : null;
+$apagarRecibo = $edita ? salarioCompleto(inteiro($_GET['apagar'] ?? '')) : null;
+$anularRecibo = $edita ? salarioCompleto(inteiro($_GET['anular'] ?? '')) : null;
+echo separadoresFinancas('salarios');
+$ssT = parametro('ss_trab');
+$ssE = parametro('ss_ent');
+$dadosSs = ' data-ss-trab="' . e((string) $ssT) . '" data-ss-ent="' . e((string) $ssE) . '"';
 ?>
+<?php if ($editarRecibo): $pagoRec = !empty($editarRecibo['pago_em']);
+    $taxaRec = (int) $editarRecibo['bruto_cents'] > 0 ? round((int) $editarRecibo['irs_cents'] * 100 / (int) $editarRecibo['bruto_cents'], 2) : 0; ?>
+<section class="cartao painel-acao">
+    <h2><?= e(t('corrigir_recibo')) ?> · <?= e($editarRecibo['nome']) ?> · <?= e(nomeMes($editarRecibo['mes'])) ?></h2>
+    <?php if ($pagoRec): ?><p class="aviso-perigo"><?= e(t('aviso_editar_pago')) ?></p><?php endif; ?>
+    <form method="post" class="formulario" data-calc-salario<?= $dadosSs ?>>
+        <?= csrfCampo() ?><input type="hidden" name="acao" value="editar_recibo"><input type="hidden" name="id" value="<?= (int) $editarRecibo['id'] ?>">
+        <div class="grelha-campos">
+            <label><span><?= e(t('bruto')) ?> (€)</span><input type="text" inputmode="decimal" name="bruto" value="<?= e(numCents((int) $editarRecibo['bruto_cents'])) ?>" maxlength="12" required data-bruto></label>
+            <label><span><?= e(t('taxa_irs')) ?> (%)</span><input type="text" inputmode="decimal" name="irs" value="<?= e(rtrim(rtrim(number_format((float) $taxaRec, 2, '.', ''), '0'), '.')) ?>" maxlength="5" required data-irs></label>
+            <?php if ($pagoRec): ?><label><span><?= e(t('pago_em')) ?></span><input type="date" name="data_pagamento" value="<?= e($editarRecibo['pago_em']) ?>" max="<?= e(hojeISO()) ?>" required></label><?php endif; ?>
+        </div>
+        <dl class="calculo" aria-live="polite">
+            <div><dt><?= e(t('irs_retido')) ?></dt><dd data-out="irs">—</dd></div>
+            <div><dt><?= e(t('ss_trabalhador')) ?> (<?= e(numFmt($ssT, 2)) ?>%)</dt><dd data-out="ss_trab">—</dd></div>
+            <div><dt><?= e(t('liquido')) ?></dt><dd data-out="liquido">—</dd></div>
+            <div><dt><?= e(t('ss_entidade')) ?> (<?= e(numFmt($ssE, 2)) ?>%)</dt><dd data-out="ss_ent">—</dd></div>
+            <div><dt><?= e(t('custo_escola')) ?></dt><dd data-out="custo">—</dd></div>
+        </dl>
+        <label><span><?= e(t('justificacao')) ?><?php if (!$pagoRec): ?> <small>(<?= e(t('opcional')) ?>)</small><?php endif; ?></span><textarea name="motivo" rows="2" maxlength="300"<?= $pagoRec ? ' minlength="8" required' : '' ?> placeholder="<?= e(t('justificacao_exemplo')) ?>"></textarea></label>
+        <p class="barra-acoes"><button type="submit" class="botao"><?= e(t('guardar')) ?></button> <a class="botao secundario" href="<?= e(ligacao('salarios', ['mes' => $editarRecibo['mes']])) ?>"><?= e(t('cancelar')) ?></a></p>
+        <p class="suave pequeno"><?= e(t('ajuda_recalculo')) ?></p>
+    </form>
+</section>
+<?php elseif ($apagarRecibo || $anularRecibo): $alvoRec = $apagarRecibo ?? $anularRecibo; $modoApagarRec = $apagarRecibo !== null; ?>
+<section class="cartao painel-acao perigo">
+    <h2><?= e($modoApagarRec ? t('apagar_registo') : t('anular_pagamento')) ?> · <?= e($alvoRec['nome']) ?> · <?= e(nomeMes($alvoRec['mes'])) ?></h2>
+    <p class="aviso-perigo"><?= e($modoApagarRec ? t('aviso_apagar_salario') : t('aviso_anular_pagamento')) ?></p>
+    <p class="suave"><?= e(t('bruto')) ?> <?= e(euro((int) $alvoRec['bruto_cents'])) ?> · <?= e(t('liquido')) ?> <?= e(euro((int) $alvoRec['liquido_cents'])) ?><?= $alvoRec['pago_em'] ? ' · ' . e(t('pago')) . ' ' . e(dataFmt($alvoRec['pago_em'])) : '' ?></p>
+    <form method="post" class="formulario">
+        <?= csrfCampo() ?><input type="hidden" name="acao" value="<?= $modoApagarRec ? 'apagar' : 'anular' ?>"><input type="hidden" name="id" value="<?= (int) $alvoRec['id'] ?>">
+        <label><span><?= e(t('justificacao')) ?></span><textarea name="motivo" rows="2" maxlength="300" minlength="8" required placeholder="<?= e(t('justificacao_exemplo')) ?>"></textarea></label>
+        <p class="barra-acoes"><button type="submit" class="botao botao-perigo"><?= $modoApagarRec ? icone('lixo') . '<span>' . e(t('apagar_definitivamente')) . '</span>' : e(t('anular_pagamento')) ?></button> <a class="botao secundario" href="<?= e(ligacao('salarios', ['mes' => $alvoRec['mes']])) ?>"><?= e(t('cancelar')) ?></a></p>
+    </form>
+</section>
+<?php endif; ?>
 <section class="kpis">
     <div class="kpi"><span class="kpi-valor"><?= e(euro($tot['b'])) ?></span><span class="kpi-rotulo"><?= e(t('salarios_brutos')) ?> · <?= e(nomeMes($mesVer, true)) ?></span></div>
     <div class="kpi"><span class="kpi-valor"><?= e(euro($tot['l'])) ?></span><span class="kpi-rotulo"><?= e(t('liquido_a_pagar')) ?></span></div>
@@ -245,14 +313,15 @@ $pessoal = pessoalComContrato();
                 <td><span class="etiqueta <?= $s['pago_em'] ? 'pos' : '' ?>"><?= e($s['pago_em'] ? t('pago') : t('por_pagar')) ?></span><?php if ($s['pago_em']): ?><small class="motivo"><?= e(dataFmt($s['pago_em'])) ?></small><?php endif; ?></td>
                 <td class="acoes">
                     <a class="botao secundario pequeno" href="<?= e(ligacao('salarios', ['pdf' => $s['id']])) ?>"><?= icone('baixar') ?><span><?= e(t('recibo')) ?></span></a>
-                    <?php if ($edita): ?><form method="post" class="form-linha"><?= csrfCampo() ?><input type="hidden" name="id" value="<?= (int) $s['id'] ?>">
-                    <?php if ($s['pago_em']): ?>
-                        <button type="submit" name="acao" value="anular" class="botao secundario pequeno" data-confirmar-botao="<?= e(t('confirmar_anular_pagamento')) ?>"><?= e(t('anular_pagamento')) ?></button>
-                    <?php else: ?>
-                        <button type="submit" name="acao" value="pagar" class="botao pequeno"><?= e(t('marcar_pago')) ?></button>
-                        <button type="submit" name="acao" value="apagar" class="icone-botao perigo pequeno" title="<?= e(t('apagar')) ?>" aria-label="<?= e(t('apagar')) ?>" data-confirmar-botao="<?= e(t('confirmar_apagar_salario')) ?>"><?= icone('lixo') ?></button>
-                    <?php endif; ?>
-                    </form><?php endif; ?></td></tr>
+                    <?php if ($edita): ?>
+                        <a class="botao secundario pequeno" href="<?= e(ligacao('salarios', ['mes' => $mesVer, 'editar' => $s['id']])) ?>"><?= e(t('editar')) ?></a>
+                        <?php if ($s['pago_em']): ?>
+                            <a class="botao secundario pequeno" href="<?= e(ligacao('salarios', ['mes' => $mesVer, 'anular' => $s['id']])) ?>"><?= e(t('anular_pagamento')) ?></a>
+                        <?php else: ?>
+                            <form method="post" class="form-linha"><?= csrfCampo() ?><input type="hidden" name="id" value="<?= (int) $s['id'] ?>"><button type="submit" name="acao" value="pagar" class="botao pequeno"><?= e(t('marcar_pago')) ?></button></form>
+                        <?php endif; ?>
+                        <a class="botao secundario pequeno botao-perigo-linha" href="<?= e(ligacao('salarios', ['mes' => $mesVer, 'apagar' => $s['id']])) ?>" title="<?= e(t('apagar')) ?>"><?= icone('lixo') ?><span><?= e(t('apagar')) ?></span></a>
+                    <?php endif; ?></td></tr>
         <?php endforeach; ?>
         </tbody>
         <tfoot><tr><td colspan="2"><?= e(t('total')) ?></td><td class="num"><?= e(euro($tot['b'])) ?></td><td class="num"><?= e(euro($tot['i'])) ?></td><td class="num"><?= e(euro($tot['st'])) ?></td><td class="num"><?= e(euro($tot['l'])) ?></td><td class="num"><?= e(euro($tot['se'])) ?></td><td colspan="2"></td></tr></tfoot>
@@ -269,21 +338,22 @@ $pessoal = pessoalComContrato();
     <h2><?= e(t('contratos')) ?></h2>
     <p class="suave pequeno"><?= e(t('ajuda_contratos')) ?></p>
     <div class="tabela-rolagem"><table class="tabela">
-        <thead><tr><th><?= e(t('nome')) ?></th><th><?= e(t('cargo')) ?></th><th class="num"><?= e(t('bruto')) ?> (€)</th><th class="num"><?= e(t('taxa_irs')) ?> (%)</th><th class="num"><?= e(t('liquido')) ?></th><th></th></tr></thead>
+        <thead><tr><th><?= e(t('nome')) ?></th><th><?= e(t('cargo')) ?></th><th class="num"><?= e(t('bruto')) ?> (€)</th><th class="num"><?= e(t('taxa_irs')) ?> (%)</th><th class="num"><?= e(t('liquido')) ?></th><th class="num"><?= e(t('custo_escola')) ?></th><th></th></tr></thead>
         <tbody>
         <?php foreach ($pessoal as $p): $pode = podeEditarContrato($p); $fid = 'c' . (int) $p['id'];
             $calc = $p['bruto_cents'] !== null ? calcularSalario((int) $p['bruto_cents'], (float) $p['irs_taxa']) : null; ?>
-            <tr><td><?= e($p['nome']) ?><small class="motivo"><?= e(rotuloPessoa($p)) ?></small></td>
+            <tr<?= $pode ? ' data-calc-salario' . $dadosSs : '' ?>><td><?= e($p['nome']) ?><small class="motivo"><?= e(rotuloPessoa($p)) ?></small></td>
             <?php if ($pode): ?>
                 <td><input form="<?= e($fid) ?>" type="text" name="cargo" value="<?= e($p['cargo'] ?? rotuloPessoa($p)) ?>" maxlength="40" required aria-label="<?= e(t('cargo')) ?>"></td>
-                <td class="num"><input form="<?= e($fid) ?>" type="text" inputmode="decimal" name="bruto" value="<?= e($p['bruto_cents'] !== null ? numCents((int) $p['bruto_cents']) : '') ?>" maxlength="12" required aria-label="<?= e(t('bruto')) ?>"></td>
-                <td class="num"><input form="<?= e($fid) ?>" type="text" inputmode="decimal" name="irs" value="<?= e($p['irs_taxa'] !== null ? rtrim(rtrim(number_format((float) $p['irs_taxa'], 2, '.', ''), '0'), '.') : '15') ?>" maxlength="5" required aria-label="<?= e(t('taxa_irs')) ?>"></td>
+                <td class="num"><input form="<?= e($fid) ?>" type="text" inputmode="decimal" name="bruto" value="<?= e($p['bruto_cents'] !== null ? numCents((int) $p['bruto_cents']) : '') ?>" maxlength="12" required data-bruto aria-label="<?= e(t('bruto')) ?>"></td>
+                <td class="num"><input form="<?= e($fid) ?>" type="text" inputmode="decimal" name="irs" value="<?= e($p['irs_taxa'] !== null ? rtrim(rtrim(number_format((float) $p['irs_taxa'], 2, '.', ''), '0'), '.') : '15') ?>" maxlength="5" required data-irs aria-label="<?= e(t('taxa_irs')) ?>"></td>
             <?php else: ?>
                 <td class="pequeno"><?= e($p['cargo'] ?? '—') ?></td>
                 <td class="num"><?= e($p['bruto_cents'] !== null ? euro((int) $p['bruto_cents']) : '—') ?></td>
                 <td class="num"><?= e($p['irs_taxa'] !== null ? numFmt((float) $p['irs_taxa'], 1) . '%' : '—') ?></td>
             <?php endif; ?>
-                <td class="num"><?= e($calc ? euro($calc['liquido']) : '—') ?></td>
+                <td class="num" data-out="liquido"><?= e($calc ? euro($calc['liquido']) : '—') ?></td>
+                <td class="num" data-out="custo"><?= e($calc ? euro($calc['custo']) : '—') ?></td>
                 <td class="acoes"><?php if ($pode): ?><form id="<?= e($fid) ?>" method="post" class="form-linha"><?= csrfCampo() ?><input type="hidden" name="acao" value="contrato"><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
                     <button type="submit" class="botao secundario pequeno"><?= e(t('guardar')) ?></button></form>
                 <?php elseif ($edita): ?><span class="suave pequeno"><?= e(t('o_seu_contrato')) ?></span><?php endif; ?></td></tr>

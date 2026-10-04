@@ -11,8 +11,8 @@ if (!defined('APP')) {
     exit;
 }
 
-const VERSAO = '2.1.0';          // versão da aplicação (também usada nos ficheiros, para a cache do navegador)
-const VERSAO_BD = 2;             // muda quando o esquema da base de dados muda
+const VERSAO = '2.2.0';          // versão da aplicação (também usada nos ficheiros, para a cache do navegador)
+const VERSAO_BD = 3;             // muda quando o esquema da base de dados muda
 const ANO_LETIVO = '2026/2027';
 const NOTA_POSITIVA = 10;        // escala 0 a 20: 10 ou mais é positiva
 const FALTAS_RISCO = 3;          // faltas injustificadas a partir das quais o aluno aparece "em risco"
@@ -65,6 +65,7 @@ const PAGINAS = [
     'propinas'    => ['aluno', 'secretaria', 'direcao', 'contabilidade'],
     'salarios'    => ['professor', 'secretaria', 'direcao', 'contabilidade', 'portaria'],
     'lancamentos' => ['contabilidade', 'direcao'],
+    'alteracoes'  => ['contabilidade', 'direcao', 'conselho'],
     'conselho'    => ['conselho'],
     'perfil'      => ['aluno', 'professor', 'secretaria', 'direcao', 'conselho', 'contabilidade', 'portaria'],
 ];
@@ -74,14 +75,19 @@ const MENUS = [
     'aluno'      => ['painel', 'boletim', 'faltas', 'horario', 'propinas', 'avisos', 'perfil'],
     'professor'  => ['painel', 'notas', 'pauta', 'relatorio', 'faltas', 'horario', 'salarios', 'avisos', 'perfil'],
     'secretaria' => ['painel', 'alunos', 'professores', 'equipa', 'turmas', 'pauta', 'relatorio', 'boletim', 'faltas', 'horario', 'visitas', 'propinas', 'salarios', 'avisos', 'perfil'],
-    'direcao'    => ['painel', 'direcao', 'alunos', 'professores', 'equipa', 'turmas', 'pauta', 'relatorio', 'boletim', 'faltas', 'horario', 'visitas', 'financeiro', 'propinas', 'salarios', 'lancamentos', 'avisos', 'perfil'],
+    'direcao'    => ['painel', 'direcao', 'alunos', 'professores', 'equipa', 'turmas', 'pauta', 'relatorio', 'boletim', 'faltas', 'horario', 'visitas', 'financeiro', 'avisos', 'perfil'],
     'conselho'   => ['painel', 'conselho', 'financeiro', 'perfil'],
-    'contabilidade' => ['painel', 'financeiro', 'propinas', 'salarios', 'lancamentos', 'perfil'],
+    'contabilidade' => ['painel', 'financeiro', 'perfil'],
     'portaria'   => ['painel', 'visitas', 'equipa', 'salarios', 'perfil'],
 ];
 
 // Páginas do grupo "Finanças" (o menu mostra um título quando há duas ou mais)
 const MENU_FINANCAS = ['financeiro', 'propinas', 'salarios', 'lancamentos'];
+
+// Separadores do Financeiro (contabilidade edita; direção e Conselho Geral consultam). Cada perfil só vê os separadores a que tem acesso.
+const SEPARADORES_FINANCAS = ['financeiro', 'lancamentos', 'propinas', 'salarios', 'alteracoes'];
+const ENTIDADES_AUDITORIA = ['lancamento', 'propina', 'salario'];
+const ACOES_AUDITORIA = ['editar', 'apagar', 'anular'];
 
 // ---------- Finanças (valores de exemplo, para fins escolares) ----------
 const TAXAS_IVA = [0, 6, 13, 23];           // % de IVA em Portugal continental (0 = isento ou sem IVA)

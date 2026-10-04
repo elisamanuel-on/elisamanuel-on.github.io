@@ -309,3 +309,59 @@ function pessoalComContrato(): array
           ORDER BY CASE u.perfil WHEN 'direcao' THEN 0 WHEN 'contabilidade' THEN 1 WHEN 'secretaria' THEN 2 WHEN 'professor' THEN 3 ELSE 4 END, f.area, u.nome"
     )->fetchAll();
 }
+
+
+// ---------- Registo de alterações (auditoria) ----------
+// Regra da escola: tudo o que a contabilidade corrige ou apaga fica guardado: quem, quando, o que era e porquê.
+
+/** Justificação obrigatória: pelo menos 8 caracteres. Devolve o texto limpo, ou null se for curto demais. */
+function motivoValido(mixed $texto): ?string
+{
+    $motivo = limpar($texto, 300);
+    return mb_strlen($motivo) >= 8 ? $motivo : null;
+}
+
+/** Grava uma linha no registo de alterações. O resumo usa só dados (sem palavras), por isso lê-se em qualquer idioma. */
+function registarAuditoria(string $entidade, string $acao, string $resumo, string $motivo = ''): void
+{
+    $u = utilizador();
+    bd()->prepare('INSERT INTO auditoria (quando, utilizador_id, utilizador_nome, entidade, acao, resumo, motivo) VALUES (?, ?, ?, ?, ?, ?, ?)')
+        ->execute([date('Y-m-d H:i:s'), (int) $u['id'], (string) $u['nome'], $entidade, $acao, $resumo, $motivo]);
+}
+
+function resumoPropinaTexto(array $p): string
+{
+    $txt = ($p['turma'] ?? '') . ' · ' . $p['nome'] . ' · ' . $p['mes'] . ' · ' . euro((int) $p['valor_cents']);
+    if (!empty($p['pago_em'])) {
+        $txt .= ' · ' . $p['pago_em'] . ($p['metodo'] ? ' (' . $p['metodo'] . ')' : '');
+    }
+    return $txt;
+}
+
+function resumoSalarioTexto(array $s): string
+{
+    $txt = $s['nome'] . ' · ' . $s['mes'] . ' · ' . euro((int) $s['bruto_cents']) . ' → ' . euro((int) $s['liquido_cents']);
+    if (!empty($s['pago_em'])) {
+        $txt .= ' · ' . $s['pago_em'];
+    }
+    return $txt;
+}
+
+function resumoLancamentoTexto(array $l): string
+{
+    return $l['tipo'] . ' · ' . $l['categoria'] . ' · ' . $l['descricao'] . ' · ' . $l['data'] . ' · ' . euro((int) $l['base_cents']) . ($l['iva_taxa'] > 0 ? ' + IVA ' . (int) $l['iva_taxa'] . ' %' : '');
+}
+
+/**
+ * IVA a partir do valor escrito. Se o valor já inclui IVA (modo "com"), separa a base e o imposto;
+ * senão calcula o IVA por cima. Devolve [base, iva, total] em cêntimos.
+ */
+function calcularIvaModo(int $valor, int $taxa, bool $incluiIva): array
+{
+    if ($incluiIva) {
+        $base = (int) round($valor * 100 / (100 + $taxa));
+        return [$base, $valor - $base, $valor];
+    }
+    [$iva, $total] = calcularIva($valor, $taxa);
+    return [$valor, $iva, $total];
+}

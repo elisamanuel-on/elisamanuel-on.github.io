@@ -1,4 +1,4 @@
-# Sistema de Gestão Escolar · Exercício 009 · v2.1.0
+# Sistema de Gestão Escolar · Exercício 009 · v2.2.0
 
 Evolução do "Registo de Utilizador" para um sistema prático de colégio (fictício: **Colégio Horizonte**), feito em **PHP + SQLite (PDO)**, com sete perfis: aluno, professor, secretaria, direção, **Conselho Geral**, **contabilidade** e **portaria**; inclui uma parte financeira (propinas, salários, impostos e relatórios em Excel/PDF).
 
@@ -22,9 +22,49 @@ Contas de demonstração (palavra-passe `demo1234`): `aluno@`, `professor@`, `se
 | Contabilidade | **único perfil que edita as finanças**: propinas, salários e contratos, despesas e receitas com IVA, parâmetros, Excel e PDF |
 | Portaria | regista entradas e saídas de visitas, vê a equipa de turno e o seu recibo |
 
-## Parte financeira (v2.1.0)
+## Parte financeira (v2.1.0 e 2.2.0)
 
 Valores guardados em cêntimos. Propinas por ano de escolaridade, salários de todo o pessoal (professores, secretaria, direção, contabilidade, portaria, cantina, limpeza e vigilância) com IRS, Segurança Social do trabalhador (11 %) e da entidade (23,75 %), despesas e receitas com IVA (0, 6, 13 e 23 %) e painel com gráficos. Relatórios em **Excel** (`.xlsx`, gerado em PHP puro em `inc/xlsx.php`) e em **PDF**: resumo, propinas, salários, Segurança Social e impostos, despesas e receitas, custos. As taxas são valores de exemplo para demonstração, não substituem um contabilista.
+
+### Financeiro com separadores (v2.2.0)
+
+O Financeiro tem cinco separadores: **Resumo**, **Despesas e receitas**, **Propinas**, **Salários** e **Alterações**. A contabilidade edita; a direção vê tudo; o Conselho Geral vê o Resumo e as Alterações.
+
+- **Editar:** despesas e receitas, propinas (mesmo as pagas), recibos de vencimento (o IRS, a Segurança Social e o líquido recalculam-se sozinhos, ao escrever e no servidor) e contratos.
+- **Apagar dados errados:** sempre com **justificação obrigatória** (mínimo 8 caracteres), também propinas e salários já pagos. Nada se perde: o que foi apagado, quem apagou, quando e porquê ficam no separador **Alterações** (só leitura, também em Excel).
+- **Cálculos automáticos:** IVA ao escrever (valor com ou sem IVA, o sistema separa a base e o imposto), IRS, Segurança Social, líquido e custo para a escola nos contratos e recibos, totais e resultado do painel.
+
+### PHP simples: o ciclo ler, criar, editar e apagar
+
+Todas as páginas financeiras seguem o mesmo padrão (comentado no topo de `paginas/lancamentos.php`). Cada gravação usa `prepare()` com `?`, nunca texto colado na consulta:
+
+```php
+// LER
+$st = $db->prepare('SELECT * FROM lancamentos WHERE id = ?');
+$st->execute([$id]);
+$registo = $st->fetch();
+
+// CRIAR
+[$base, $iva, $total] = calcularIvaModo($valor, $taxa, $incluiIva);   // cálculo em PHP
+$db->prepare('INSERT INTO lancamentos (descricao, data, base_cents, iva_taxa, iva_cents, total_cents) VALUES (?, ?, ?, ?, ?, ?)')
+   ->execute([$descricao, $data, $base, $taxa, $iva, $total]);
+
+// EDITAR (e registar o que mudou)
+$db->prepare('UPDATE lancamentos SET descricao = ?, base_cents = ? WHERE id = ?')->execute([$descricao, $base, $id]);
+registarAuditoria('lancamento', 'editar', $antes . ' → ' . $depois, $motivo);
+
+// APAGAR (só com justificação)
+$motivo = motivoValido($_POST['motivo'] ?? '');       // null se tiver menos de 8 caracteres
+if ($motivo === null) { aviso('erro', 'motivo_curto'); }
+else {
+    $db->prepare('DELETE FROM lancamentos WHERE id = ?')->execute([$id]);
+    registarAuditoria('lancamento', 'apagar', $resumoDoQueFoiApagado, $motivo);
+}
+```
+
+O dinheiro guarda-se em **cêntimos** (números inteiros), para as contas não terem erros de arredondamento; `euro()` mostra-o como `1 237,50 €`.
+
+**Os dados ficam mesmo no sistema?** Sim: tudo o que se grava fica na base de dados SQLite. No computador (XAMPP) fica enquanto o ficheiro existir. No Render gratuito, o disco é temporário: quando o serviço reinicia, os dados voltam ao exemplo. Para uso real seria preciso um disco persistente ou uma base de dados MySQL/PostgreSQL.
 
 ## Relatório (pauta livre em PDF)
 
@@ -45,6 +85,7 @@ Palavras-passe com `password_hash`; sessões com `HttpOnly`, `SameSite`, regener
 
 ## Versões
 
+- **2.2.0** Financeiro com separadores, editar e apagar com justificação (inclui pagos), registo de alterações, cálculos automáticos e valor com ou sem IVA.
 - **2.1.0** Parte financeira, Excel e PDF, Conselho Geral, contabilidade, equipa não docente e portaria com visitas.
 - **2.0.0** Sistema de gestão escolar completo (este), com Relatório em PDF.
 - **1.0** Formulário simples de registo (HTML, `index.html` + `script.js` + `style.css`, mantido como versão estática).

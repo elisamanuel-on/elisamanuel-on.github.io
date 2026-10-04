@@ -1,6 +1,6 @@
 <?php
 /**
- * Propinas. Só a contabilidade emite, edita e regista pagamentos. A secretaria e a direção consultam (e descarregam
+ * Propinas. Só a contabilidade emite, edita, regista pagamentos e apaga (sempre com justificação, que fica no registo de alterações). A secretaria e a direção consultam (e descarregam
  * recibos); o aluno (ou encarregado) só vê as suas e descarrega o recibo das que já pagou.
  */
 if (!defined('APP')) { http_response_code(403); exit; }
@@ -62,30 +62,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->prepare('UPDATE propinas SET pago_em = ?, metodo = ? WHERE id = ?')->execute([$data, $metodo, $id]);
             aviso('ok', 'pagamento_registado');
         }
-    } elseif ($acao === 'anular') {
-        if ($p && !empty($p['pago_em'])) {
+    } elseif (in_array($acao, ['anular', 'editar', 'apagar'], true)) {
+        // corrigir ou apagar dados já registados: o motivo é obrigatório quando a propina já foi paga, e sempre ao apagar ou anular
+        $motivo = motivoValido($_POST['motivo'] ?? '');
+        $paga = $p && !empty($p['pago_em']);
+        $pedeMotivo = $acao !== 'editar' || $paga;
+        $voltaPainel = ['mes' => is_string($_POST['f_mes'] ?? null) ? $_POST['f_mes'] : null, 'turma' => inteiro($_POST['f_turma'] ?? '') ?: null, 'estado' => is_string($_POST['f_estado'] ?? null) ? $_POST['f_estado'] : null];
+        $voltaPainel = array_filter($voltaPainel, static fn ($v) => $v !== null) + [($acao === 'editar' ? 'editar' : $acao) => $id];
+        if (!$p) {
+            aviso('erro', 'dados_invalidos');
+        } elseif ($acao === 'anular' && !$paga) {
+            aviso('erro', 'dados_invalidos');
+        } elseif ($pedeMotivo && $motivo === null) {
+            aviso('erro', 'motivo_curto');
+            redirecionar(ligacao('propinas', $voltaPainel));
+        } elseif ($acao === 'anular') {
             $db->prepare('UPDATE propinas SET pago_em = NULL, metodo = NULL WHERE id = ?')->execute([$id]);
+            registarAuditoria('propina', 'anular', resumoPropinaTexto($p), (string) $motivo);
             aviso('ok', 'pagamento_anulado');
-        } else {
-            aviso('erro', 'dados_invalidos');
-        }
-    } elseif ($acao === 'editar') {
-        $valor = lerDinheiro($_POST['valor'] ?? null);
-        $venc = dataValida($_POST['vencimento'] ?? null, true);
-        if (!$p || $valor === false || $valor <= 0 || $venc === null) {
-            aviso('erro', 'dados_invalidos');
-        } elseif (!empty($p['pago_em'])) {
-            aviso('erro', 'propina_paga_nao_edita');
-        } else {
-            $db->prepare('UPDATE propinas SET valor_cents = ?, vencimento = ? WHERE id = ?')->execute([$valor, $venc, $id]);
-            aviso('ok', 'dados_guardados');
-        }
-    } elseif ($acao === 'apagar') {
-        if ($p && empty($p['pago_em'])) {
+        } elseif ($acao === 'apagar') {
             $db->prepare('DELETE FROM propinas WHERE id = ?')->execute([$id]);
+            registarAuditoria('propina', 'apagar', resumoPropinaTexto($p), (string) $motivo);
             aviso('ok', 'propina_apagada');
         } else {
-            aviso('erro', 'propina_paga_nao_edita');
+            $valor = lerDinheiro($_POST['valor'] ?? null);
+            $venc = dataValida($_POST['vencimento'] ?? null, true);
+            $dataPag = $paga ? dataValida($_POST['data_pagamento'] ?? null) : null;
+            $metodo = $paga && is_string($_POST['metodo'] ?? null) && in_array($_POST['metodo'], metodosPagamento(), true) ? $_POST['metodo'] : null;
+            if ($valor === false || $valor <= 0 || $venc === null || ($paga && ($dataPag === null || $metodo === null))) {
+                aviso('erro', 'dados_invalidos');
+            } else {
+                if ($paga) {
+                    $db->prepare('UPDATE propinas SET valor_cents = ?, vencimento = ?, pago_em = ?, metodo = ? WHERE id = ?')->execute([$valor, $venc, $dataPag, $metodo, $id]);
+                } else {
+                    $db->prepare('UPDATE propinas SET valor_cents = ?, vencimento = ? WHERE id = ?')->execute([$valor, $venc, $id]);
+                }
+                $depois = propinaCompleta($id);
+                registarAuditoria('propina', 'editar', resumoPropinaTexto($p) . ' → ' . resumoPropinaTexto($depois), (string) $motivo);
+                aviso('ok', 'dados_guardados');
+            }
         }
     }
     $volta = array_filter([
@@ -143,6 +158,8 @@ $estadoFiltro = is_string($_GET['estado'] ?? null) && in_array($_GET['estado'], 
 $procura = limpar($_GET['q'] ?? '', 40);
 $pagarId = $edita ? inteiro($_GET['pagar'] ?? '') : 0;
 $editarId = $edita ? inteiro($_GET['editar'] ?? '') : 0;
+$apagarId = $edita ? inteiro($_GET['apagar'] ?? '') : 0;
+$anularId = $edita ? inteiro($_GET['anular'] ?? '') : 0;
 
 $sql = 'SELECT p.*, u.nome, t.nome AS turma, a.numero FROM propinas p
           JOIN utilizadores u ON u.id = p.aluno_id JOIN alunos a ON a.utilizador_id = u.id JOIN turmas t ON t.id = a.turma_id WHERE 1 = 1';
@@ -162,7 +179,10 @@ $lista = array_slice($lista, 0, 150);
 $res = resumoFinanceiro();
 $aPagar = $pagarId ? propinaCompleta($pagarId) : null;
 $aEditar = $editarId ? propinaCompleta($editarId) : null;
+$aApagar = $apagarId ? propinaCompleta($apagarId) : null;
+$aAnular = $anularId ? propinaCompleta($anularId) : null;
 $filtros = array_filter(['turma' => $filtroTurma ?: null, 'mes' => $mesFiltro ?? '', 'estado' => $estadoFiltro ?: null, 'q' => $procura ?: null], static fn ($v) => $v !== null);
+echo separadoresFinancas('propinas');
 ?>
 <section class="kpis">
     <div class="kpi"><span class="kpi-valor"><?= e(euro($res['total']['propinas'])) ?></span><span class="kpi-rotulo"><?= e(t('propinas_recebidas')) ?></span></div>
@@ -197,15 +217,13 @@ $filtros = array_filter(['turma' => $filtroTurma ?: null, 'mes' => $mesFiltro ??
                 <td class="acoes">
                 <?php if ($estado === 'paga'): ?>
                     <a class="botao secundario pequeno" href="<?= e(ligacao('propinas', ['pdf' => $p['id']])) ?>"><?= icone('baixar') ?><span><?= e(t('recibo')) ?></span></a>
-                    <?php if ($edita): ?><form method="post" class="form-linha"><?= csrfCampo() ?><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
-                        <input type="hidden" name="f_turma" value="<?= (int) $filtroTurma ?>"><input type="hidden" name="f_mes" value="<?= e($mesFiltro ?? '') ?>"><input type="hidden" name="f_estado" value="<?= e($estadoFiltro) ?>">
-                        <button type="submit" name="acao" value="anular" class="botao secundario pequeno" data-confirmar-botao="<?= e(t('confirmar_anular_pagamento')) ?>"><?= e(t('anular_pagamento')) ?></button></form><?php endif; ?>
                 <?php elseif ($edita): ?>
                     <a class="botao pequeno" href="<?= e(ligacao('propinas', $filtros + ['pagar' => $p['id']])) ?>"><?= e(t('registar_pagamento')) ?></a>
+                <?php endif; ?>
+                <?php if ($edita): ?>
                     <a class="botao secundario pequeno" href="<?= e(ligacao('propinas', $filtros + ['editar' => $p['id']])) ?>"><?= e(t('editar')) ?></a>
-                    <form method="post" class="form-linha"><?= csrfCampo() ?><input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
-                        <input type="hidden" name="f_turma" value="<?= (int) $filtroTurma ?>"><input type="hidden" name="f_mes" value="<?= e($mesFiltro ?? '') ?>"><input type="hidden" name="f_estado" value="<?= e($estadoFiltro) ?>">
-                        <button type="submit" name="acao" value="apagar" class="icone-botao perigo pequeno" title="<?= e(t('apagar')) ?>" aria-label="<?= e(t('apagar')) ?>" data-confirmar-botao="<?= e(t('confirmar_apagar_propina')) ?>"><?= icone('lixo') ?></button></form>
+                    <?php if ($estado === 'paga'): ?><a class="botao secundario pequeno" href="<?= e(ligacao('propinas', $filtros + ['anular' => $p['id']])) ?>"><?= e(t('anular_pagamento')) ?></a><?php endif; ?>
+                    <a class="botao secundario pequeno botao-perigo-linha" href="<?= e(ligacao('propinas', $filtros + ['apagar' => $p['id']])) ?>" title="<?= e(t('apagar')) ?>"><?= icone('lixo') ?><span><?= e(t('apagar')) ?></span></a>
                 <?php endif; ?>
                 </td></tr>
         <?php endforeach; ?>
@@ -229,15 +247,33 @@ $filtros = array_filter(['turma' => $filtroTurma ?: null, 'mes' => $mesFiltro ??
         <label><span><?= e(t('metodo')) ?></span><select name="metodo"><?php foreach (metodosPagamento() as $mp): ?><option value="<?= e($mp) ?>"><?= e(t('metodo_' . $mp)) ?></option><?php endforeach; ?></select></label>
         <p class="barra-acoes"><button type="submit" class="botao verde"><?= e(t('registar_pagamento')) ?></button> <a class="botao secundario" href="<?= e(ligacao('propinas', $filtros)) ?>"><?= e(t('cancelar')) ?></a></p>
     </form>
-<?php elseif ($aEditar && empty($aEditar['pago_em'])): ?>
+<?php elseif ($aEditar): $editaPaga = !empty($aEditar['pago_em']); ?>
     <h2><?= e(t('editar_propina')) ?></h2>
     <p><strong><?= e($aEditar['nome']) ?></strong><br><span class="suave"><?= e($aEditar['turma']) ?> · <?= e(nomeMes($aEditar['mes'])) ?></span></p>
+    <?php if ($editaPaga): ?><p class="aviso-perigo"><?= e(t('aviso_editar_pago')) ?></p><?php endif; ?>
     <form method="post" class="formulario">
         <?= csrfCampo() ?><input type="hidden" name="acao" value="editar"><input type="hidden" name="id" value="<?= (int) $aEditar['id'] ?>">
         <input type="hidden" name="f_turma" value="<?= (int) $filtroTurma ?>"><input type="hidden" name="f_mes" value="<?= e($mesFiltro ?? '') ?>"><input type="hidden" name="f_estado" value="<?= e($estadoFiltro) ?>">
         <label><span><?= e(t('valor')) ?> (€)</span><input type="text" inputmode="decimal" name="valor" value="<?= e(numCents((int) $aEditar['valor_cents'])) ?>" maxlength="12" required></label>
         <label><span><?= e(t('vencimento')) ?></span><input type="date" name="vencimento" value="<?= e($aEditar['vencimento']) ?>" required></label>
+        <?php if ($editaPaga): ?>
+        <label><span><?= e(t('pago_em')) ?></span><input type="date" name="data_pagamento" value="<?= e($aEditar['pago_em']) ?>" max="<?= e(hojeISO()) ?>" required></label>
+        <label><span><?= e(t('metodo')) ?></span><select name="metodo"><?php foreach (metodosPagamento() as $mp): ?><option value="<?= e($mp) ?>"<?= $mp === $aEditar['metodo'] ? ' selected' : '' ?>><?= e(t('metodo_' . $mp)) ?></option><?php endforeach; ?></select></label>
+        <label><span><?= e(t('justificacao')) ?></span><textarea name="motivo" rows="3" maxlength="300" minlength="8" required placeholder="<?= e(t('justificacao_exemplo')) ?>"></textarea></label>
+        <?php else: ?>
+        <label><span><?= e(t('motivo_alteracao')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" name="motivo" maxlength="300"></label>
+        <?php endif; ?>
         <p class="barra-acoes"><button type="submit" class="botao"><?= e(t('guardar')) ?></button> <a class="botao secundario" href="<?= e(ligacao('propinas', $filtros)) ?>"><?= e(t('cancelar')) ?></a></p>
+    </form>
+<?php elseif ($aApagar || $aAnular): $alvo = $aApagar ?? $aAnular; $modoApagar = $aApagar !== null; ?>
+    <h2><?= e($modoApagar ? t('apagar_registo') : t('anular_pagamento')) ?></h2>
+    <p class="aviso-perigo"><?= e($modoApagar ? t('aviso_apagar_propina') : t('aviso_anular_pagamento')) ?></p>
+    <p><strong><?= e($alvo['nome']) ?></strong><br><span class="suave"><?= e($alvo['turma']) ?> · <?= e(nomeMes($alvo['mes'])) ?> · <?= e(euro((int) $alvo['valor_cents'])) ?><?= $alvo['pago_em'] ? ' · ' . e(t('estado_paga')) . ' ' . e(dataFmt($alvo['pago_em'])) : '' ?></span></p>
+    <form method="post" class="formulario">
+        <?= csrfCampo() ?><input type="hidden" name="acao" value="<?= $modoApagar ? 'apagar' : 'anular' ?>"><input type="hidden" name="id" value="<?= (int) $alvo['id'] ?>">
+        <input type="hidden" name="f_turma" value="<?= (int) $filtroTurma ?>"><input type="hidden" name="f_mes" value="<?= e($mesFiltro ?? '') ?>"><input type="hidden" name="f_estado" value="<?= e($estadoFiltro) ?>">
+        <label><span><?= e(t('justificacao')) ?></span><textarea name="motivo" rows="3" maxlength="300" minlength="8" required placeholder="<?= e(t('justificacao_exemplo')) ?>"></textarea></label>
+        <p class="barra-acoes"><button type="submit" class="botao botao-perigo"><?= $modoApagar ? icone('lixo') . '<span>' . e(t('apagar_definitivamente')) . '</span>' : e(t('anular_pagamento')) ?></button> <a class="botao secundario" href="<?= e(ligacao('propinas', $filtros)) ?>"><?= e(t('cancelar')) ?></a></p>
     </form>
 <?php else: ?>
     <h2><?= e(t('emitir_propinas')) ?></h2>

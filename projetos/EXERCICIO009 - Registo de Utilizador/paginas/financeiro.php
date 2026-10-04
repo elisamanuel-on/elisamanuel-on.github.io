@@ -86,6 +86,8 @@ if ($resto > 0) {
 
 $porTurma = array_map(static fn ($l) => ['rotulo' => $l['turma'], 'total' => (int) $l['emitido'], 'parte' => (int) $l['pago']], propinasPorTurma());
 $p = parametros();
+$recentes = $db->query('SELECT * FROM auditoria ORDER BY quando DESC, id DESC LIMIT 4')->fetchAll();
+echo separadoresFinancas('financeiro');
 ?>
 <section class="kpis">
     <div class="kpi"><span class="kpi-valor"><?= e(euro($T['receitas'])) ?></span><span class="kpi-rotulo"><?= e(t('total_receitas')) ?></span></div>
@@ -133,7 +135,7 @@ $p = parametros();
         <h2><?= e(t('relatorios_excel')) ?></h2>
         <p class="suave"><?= e(t('ajuda_relatorios')) ?></p>
         <ul class="lista-relatorios">
-            <?php foreach (['resumo', 'propinas', 'salarios', 'seguranca', 'lancamentos', 'custos'] as $rel): ?>
+            <?php foreach (['resumo', 'propinas', 'salarios', 'seguranca', 'lancamentos', 'custos', 'alteracoes'] as $rel): ?>
                 <li><span><strong><?= e(t('relfin_' . $rel)) ?></strong><small><?= e(t('relfin_' . $rel . '_d')) ?></small></span>
                     <a class="botao secundario pequeno" href="<?= e(ligacao('financeiro', ['excel' => $rel])) ?>"><?= icone('excel') ?><span>Excel</span></a></li>
             <?php endforeach; ?>
@@ -144,6 +146,20 @@ $p = parametros();
         </p>
     </section>
 </div>
+
+<section class="cartao">
+    <h2><?= e(t('alteracoes_recentes')) ?></h2>
+    <?php if (!$recentes): ?><p class="suave"><?= e(t('sem_alteracoes')) ?></p><?php else: ?>
+    <div class="tabela-rolagem"><table class="tabela"><tbody>
+        <?php foreach ($recentes as $l): ?>
+            <tr><td class="pequeno"><?= e(dataFmt(substr($l['quando'], 0, 10))) ?></td><td class="pequeno"><?= e($l['utilizador_nome']) ?></td>
+                <td><span class="etiqueta <?= $l['acao'] === 'apagar' ? 'neg' : '' ?>"><?= e(t('acao_' . $l['acao'])) ?></span> <?= e(t('entidade_' . $l['entidade'])) ?></td>
+                <td class="pequeno"><?= e($l['motivo'] !== '' ? $l['motivo'] : $l['resumo']) ?></td></tr>
+        <?php endforeach; ?>
+    </tbody></table></div>
+    <?php endif; ?>
+    <p><a class="botao secundario pequeno" href="<?= e(ligacao('alteracoes')) ?>"><?= e(t('ver_todas_alteracoes')) ?></a></p>
+</section>
 
 <section class="cartao">
     <h2><?= e(t('parametros_titulo')) ?></h2>

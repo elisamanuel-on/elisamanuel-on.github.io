@@ -1,4 +1,4 @@
-/* Sistema de Gestão Escolar · v2.1.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
+/* Sistema de Gestão Escolar · v2.2.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
 (function () {
     'use strict';
 
@@ -69,23 +69,56 @@
         });
     });
 
-    /* ---------- despesas e receitas: IVA e total ao escrever ---------- */
+    /* ---------- cálculo ao vivo: formata em euros e lê números escritos à portuguesa ---------- */
+    // formata como o servidor (euro() em PHP): 1 237,50 € (pt, es, fr) ou €1,237.50 (en)
+    function euros(n) {
+        var neg = n < 0, partes = Math.abs(n).toFixed(2).split('.'), en = document.documentElement.lang === 'en';
+        var inteiro = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, en ? ',' : '\u00A0');
+        var txt = inteiro + (en ? '.' : ',') + partes[1];
+        return (neg ? '\u2212' : '') + (en ? '\u20AC' + txt : txt + '\u00A0\u20AC');
+    }
+    function lerValor(valor) {
+        var texto = String(valor).replace(/\s/g, '').replace(/\.(?=\d{3},)/g, '').replace(',', '.');
+        var n = Number(texto);
+        return texto === '' || !isFinite(n) || n < 0 ? null : n;
+    }
+
+    /* ---------- despesas e receitas: IVA e total ao escrever (valor sem IVA, ou com IVA) ---------- */
     document.querySelectorAll('form[data-iva]').forEach(function (formIva) {
         var base = formIva.querySelector('[data-iva-base]'), taxa = formIva.querySelector('[data-iva-taxa]'), saida = formIva.querySelector('[data-iva-resumo]');
+        var modo = formIva.querySelector('[data-iva-modo]'), rotulo = formIva.querySelector('[data-iva-rotulo]');
         if (!base || !taxa || !saida) { return; }
         var vazio = saida.textContent;
-        var moeda;
-        try { moeda = new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-IE' : document.documentElement.lang, { style: 'currency', currency: 'EUR' }); } catch (e) { moeda = null; }
-        function euros(n) { return moeda ? moeda.format(n) : n.toFixed(2).replace('.', decimal) + ' €'; }
         function atualizar() {
-            var texto = String(base.value).replace(/\s/g, '').replace(/\.(?=\d{3},)/g, '').replace(',', '.');
-            var v = Number(texto);
-            if (texto === '' || !isFinite(v) || v < 0) { saida.textContent = vazio; return; }
-            var t = Number(taxa.value) || 0, iva = Math.round(v * t) / 100;
-            saida.textContent = saida.getAttribute('data-texto-iva') + ' (' + t + '%): ' + euros(iva) + ' · ' + saida.getAttribute('data-texto-total') + ': ' + euros(Math.round(v * 100) / 100 + iva);
+            var com = modo && modo.value === 'com';
+            if (rotulo) { rotulo.textContent = rotulo.getAttribute(com ? 'data-com' : 'data-sem'); }
+            var v = lerValor(base.value);
+            if (v === null) { saida.textContent = vazio; return; }
+            var t = Number(taxa.value) || 0, cent = Math.round(v * 100), b, iva;
+            if (com) { b = Math.round(cent * 100 / (100 + t)); iva = cent - b; } else { b = cent; iva = Math.round(cent * t / 100); }
+            saida.textContent = saida.getAttribute('data-texto-base') + ': ' + euros(b / 100) + ' · ' + saida.getAttribute('data-texto-iva') + ' (' + t + '%): ' + euros(iva / 100) + ' · ' + saida.getAttribute('data-texto-total') + ': ' + euros((b + iva) / 100);
         }
         base.addEventListener('input', atualizar);
         taxa.addEventListener('change', atualizar);
+        if (modo) { modo.addEventListener('change', atualizar); }
+        atualizar();
+    });
+
+    /* ---------- salários: IRS, Segurança Social, líquido e custo ao escrever o bruto e a taxa de IRS ---------- */
+    document.querySelectorAll('[data-calc-salario]').forEach(function (caixa) {
+        var bruto = caixa.querySelector('[data-bruto]'), irs = caixa.querySelector('[data-irs]');
+        if (!bruto || !irs) { return; }
+        var ssT = Number(caixa.getAttribute('data-ss-trab')) || 0, ssE = Number(caixa.getAttribute('data-ss-ent')) || 0;
+        function saida(nome, valor) { caixa.querySelectorAll('[data-out="' + nome + '"]').forEach(function (el) { el.textContent = valor; }); }
+        function atualizar() {
+            var b = lerValor(bruto.value), taxa = lerValor(irs.value);
+            if (b === null || taxa === null) { ['irs', 'ss_trab', 'ss_ent', 'liquido', 'custo'].forEach(function (n) { saida(n, '—'); }); return; }
+            var c = Math.round(b * 100), vIrs = Math.round(c * taxa / 100), vT = Math.round(c * ssT / 100), vE = Math.round(c * ssE / 100);
+            saida('irs', euros(vIrs / 100)); saida('ss_trab', euros(vT / 100)); saida('ss_ent', euros(vE / 100));
+            saida('liquido', euros((c - vIrs - vT) / 100)); saida('custo', euros((c + vE) / 100));
+        }
+        bruto.addEventListener('input', atualizar);
+        irs.addEventListener('input', atualizar);
         atualizar();
     });
 

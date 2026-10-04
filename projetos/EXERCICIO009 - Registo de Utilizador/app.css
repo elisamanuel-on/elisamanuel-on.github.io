@@ -1,4 +1,4 @@
-/* Sistema de Gestão Escolar · v2.1.0 · painel claro, azul e verde */
+/* Sistema de Gestão Escolar · v2.2.0 · painel claro, azul e verde */
 :root {
     --azul: #2563eb;
     --azul-escuro: #1d4ed8;
@@ -369,3 +369,18 @@ rect.g-col-a:hover, rect.g-col-b:hover { opacity: .8; }
     .tabela-rolagem { overflow: visible; }
     @page { margin: 14mm; }
 }
+
+/* ---------- v2.2.0: separadores do Financeiro, painel de ação, cálculo ao vivo ---------- */
+.separadores { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; padding: 5px; background: var(--superficie); border: 1px solid var(--borda); border-radius: 12px; }
+.separador { padding: 8px 14px; border-radius: 8px; font-weight: 650; color: var(--suave); text-decoration: none; }
+.separador:hover { background: var(--azul-claro); color: var(--texto); }
+.separador.ativo { background: var(--azul); color: #fff; }
+.painel-acao { border-left: 4px solid var(--azul); margin-bottom: 18px; }
+.painel-acao.perigo { border-left-color: var(--vermelho); }
+.aviso-perigo { background: var(--vermelho-claro); color: #7f1d1d; border-radius: 8px; padding: 10px 12px; margin: 0 0 12px; }
+.calculo { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin: 4px 0 12px; }
+.calculo div { background: var(--azul-claro); border-radius: 8px; padding: 8px 10px; }
+.calculo dt { font-size: .78rem; color: var(--suave); }
+.calculo dd { margin: 0; font-weight: 700; }
+.acoes .botao-perigo-linha { color: #b91c1c; }
+.linha-antes-depois { color: var(--suave); font-size: .85rem; }

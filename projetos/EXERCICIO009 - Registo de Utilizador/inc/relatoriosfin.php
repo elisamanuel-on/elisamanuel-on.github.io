@@ -8,7 +8,7 @@ if (!defined('APP')) {
     exit;
 }
 
-const RELATORIOS_FIN = ['tudo', 'resumo', 'propinas', 'salarios', 'seguranca', 'lancamentos', 'custos'];
+const RELATORIOS_FIN = ['tudo', 'resumo', 'propinas', 'salarios', 'seguranca', 'lancamentos', 'custos', 'alteracoes'];
 
 function dinheiroCelula(int $cents, bool $negrito = false): array
 {
@@ -145,6 +145,16 @@ function folhaLancamentos(Xlsx $x): void
     $x->folha(t('menu_lancamentos'), $linhas);
 }
 
+/** Registo de alterações: quem mudou, anulou ou apagou o quê, quando e porquê. */
+function folhaAlteracoes(Xlsx $x): void
+{
+    $linhas = [cabecalhoCelulas([t('quando'), t('quem'), t('acao'), t('o_que'), t('registo'), t('justificacao')])];
+    foreach (bd()->query('SELECT * FROM auditoria ORDER BY quando, id')->fetchAll() as $l) {
+        $linhas[] = [dataFmt(substr($l['quando'], 0, 10)) . ' ' . substr($l['quando'], 11, 5), $l['utilizador_nome'], t('acao_' . $l['acao']), t('entidade_' . $l['entidade']), $l['resumo'], $l['motivo']];
+    }
+    $x->folha(t('menu_alteracoes'), $linhas);
+}
+
 function folhaCustos(Xlsx $x, array $r): void
 {
     $T = $r['total'];
@@ -192,6 +202,9 @@ function excelFinanceiro(string $qual): Xlsx
     }
     if ($todas || $qual === 'custos') {
         folhaCustos($x, $r);
+    }
+    if ($todas || $qual === 'alteracoes') {
+        folhaAlteracoes($x);
     }
     return $x;
 }

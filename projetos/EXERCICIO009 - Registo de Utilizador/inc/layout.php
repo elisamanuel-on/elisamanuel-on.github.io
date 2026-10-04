@@ -82,6 +82,27 @@ function cabecaHtml(string $titulo): string
         . '<script src="app.js?v=' . $v . '" defer></script></head>';
 }
 
+/**
+ * Separadores do Financeiro: Resumo, Despesas e receitas, Propinas, Salários e Alterações.
+ * Só aparecem para a contabilidade, a direção e o Conselho Geral, e só os separadores a que cada um tem acesso.
+ */
+function separadoresFinancas(string $atual): string
+{
+    if (!temPerfil('contabilidade', 'direcao', 'conselho')) {
+        return '';
+    }
+    $html = '';
+    foreach (SEPARADORES_FINANCAS as $pg) {
+        if (!temPerfil(...PAGINAS[$pg])) {
+            continue;
+        }
+        $ativo = $pg === $atual;
+        $rotulo = $pg === 'financeiro' ? t('separador_resumo') : t('menu_' . $pg);
+        $html .= '<a class="separador' . ($ativo ? ' ativo' : '') . '" href="' . e(ligacao($pg)) . '"' . ($ativo ? ' aria-current="page"' : '') . '>' . e($rotulo) . '</a>';
+    }
+    return '<nav class="separadores" aria-label="' . e(t('menu_financeiro')) . '">' . $html . '</nav>';
+}
+
 /** Página com menu lateral (utilizador com sessão). */
 function paginaComMenu(string $conteudo, string $titulo, string $pagina): string
 {
@@ -94,7 +115,8 @@ function paginaComMenu(string $conteudo, string $titulo, string $pagina): string
         if ($item === $primeiraFinanca) {
             $menu .= '<span class="menu-grupo">' . e(t('menu_grupo_financas')) . '</span>';
         }
-        $ativo = $item === $pagina;
+        // dentro do Financeiro, o item do menu fica ativo em todos os separadores
+        $ativo = $item === $pagina || ($item === 'financeiro' && in_array($pagina, SEPARADORES_FINANCAS, true) && !in_array($pagina, MENUS[$perfil], true));
         $menu .= '<a class="menu-item' . ($ativo ? ' ativo' : '') . '" href="' . e(ligacao($item)) . '"' . ($ativo ? ' aria-current="page"' : '') . '>'
             . icone($item) . '<span>' . e(t('menu_' . $item)) . '</span></a>';
     }

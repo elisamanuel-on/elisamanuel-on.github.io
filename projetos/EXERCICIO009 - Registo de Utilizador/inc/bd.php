@@ -207,6 +207,17 @@ CREATE TABLE lancamentos (
     criado_por  INTEGER NOT NULL REFERENCES utilizadores (id),
     criado_em   TEXT NOT NULL
 );
+-- Registo de alterações financeiras: quem mudou ou apagou o quê, quando e porquê (o motivo é obrigatório ao apagar)
+CREATE TABLE auditoria (
+    id             INTEGER PRIMARY KEY,
+    quando         TEXT NOT NULL,
+    utilizador_id  INTEGER REFERENCES utilizadores (id) ON DELETE SET NULL,
+    utilizador_nome TEXT NOT NULL,
+    entidade       TEXT NOT NULL CHECK (entidade IN ('lancamento', 'propina', 'salario')),
+    acao           TEXT NOT NULL CHECK (acao IN ('editar', 'apagar', 'anular')),
+    resumo         TEXT NOT NULL,
+    motivo         TEXT NOT NULL DEFAULT ''
+);
 CREATE TABLE historico_direcao (
     id            INTEGER PRIMARY KEY,
     utilizador_id INTEGER NOT NULL REFERENCES utilizadores (id),
@@ -236,6 +247,7 @@ CREATE TABLE visitas (
 CREATE INDEX idx_visitas_entrada ON visitas (entrada);
 CREATE INDEX idx_propinas_mes ON propinas (mes);
 CREATE INDEX idx_salarios_mes ON salarios (mes);
+CREATE INDEX idx_auditoria_quando ON auditoria (quando);
 CREATE INDEX idx_lancamentos_data ON lancamentos (data);
 CREATE INDEX idx_relatorios_prof ON relatorios (professor_id);
 CREATE INDEX idx_alunos_turma ON alunos (turma_id);
@@ -531,4 +543,10 @@ function semearFinancas(PDO $bd, int $direcao, int $secretaria, int $contabilist
         [$iva, $total] = calcularIva($base, $taxa);
         $lanc->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $contabilista, $data . ' 10:00:00']);
     }
+
+    // Dois exemplos no registo de alterações (o motivo é sempre obrigatório ao apagar)
+    $nomeContab = (string) $bd->query('SELECT nome FROM utilizadores WHERE id = ' . (int) $contabilista)->fetchColumn();
+    $aud = $bd->prepare('INSERT INTO auditoria (quando, utilizador_id, utilizador_nome, entidade, acao, resumo, motivo) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $aud->execute(['2026-09-29 16:12:00', $contabilista, $nomeContab, 'lancamento', 'apagar', 'despesa · energia · Eletricidade (setembro) · 2026-09-28 · 1 420,00 € + IVA 23 %', 'Registo duplicado: a fatura já estava lançada.']);
+    $aud->execute(['2026-10-01 09:40:00', $contabilista, $nomeContab, 'propina', 'editar', '8.ºA · 2026-09 · 190,00 € → 185,00 €', 'Desconto de irmãos aprovado pela direção.']);
 }
