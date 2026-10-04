@@ -414,13 +414,6 @@ button:active {
     line-height: 1.7;
 }
 
-.rodape-php {
-    text-align: center;
-    color: #4a5568;
-    font-size: 0.78rem;
-    margin-top: 25px;
-}
-
 @media (max-width: 550px) {
     .teclado {
         gap: 6px;
@@ -440,4 +433,8 @@ button:active {
     text-transform: none;
     letter-spacing: 0;
     font-family: Consolas, 'Courier New', monospace;
+}
+
+.card h1 {
+    margin-bottom: 28px;
 }

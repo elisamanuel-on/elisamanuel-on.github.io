@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: portfolio-php
+    runtime: docker
+    plan: free
+    healthCheckPath: /index.html

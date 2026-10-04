@@ -133,10 +133,9 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
     <div class="container">
         <div class="card">
             <h1><?= $iconeCalculadora ?> Calculadora Científica</h1>
-            <p class="subtitle">Do básico às funções científicas — o cálculo é feito em PHP</p>
 
             <nav class="abas" aria-label="Modo da calculadora">
-                <a class="aba<?= $modo === 'basica' ? ' ativa' : '' ?>" href="?modo=basica"<?= $modo === 'basica' ? ' aria-current="page"' : '' ?>>4 Operações</a>
+                <a class="aba<?= $modo === 'basica' ? ' ativa' : '' ?>" href="?modo=basica"<?= $modo === 'basica' ? ' aria-current="page"' : '' ?>>6 Operações</a>
                 <a class="aba<?= $modo === 'cientifica' ? ' ativa' : '' ?>" href="?modo=cientifica"<?= $modo === 'cientifica' ? ' aria-current="page"' : '' ?>>Científica</a>
             </nav>
 
@@ -187,7 +186,7 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
                 <div class="input-field">
                     <label for="expressao">Expressão</label>
                     <input type="text" id="expressao" name="expressao" value="<?= e($expressao) ?>" maxlength="200"
-                           placeholder="Ex: 2^10 + sqrt(144) * 3!" spellcheck="false" class="visor">
+                           placeholder="0" spellcheck="false" class="visor">
                 </div>
 
                 <div class="linha-opcoes">
@@ -256,7 +255,6 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
             <?php endif; ?>
 <?php endif; ?>
 
-            <p class="rodape-php">Calculado no servidor com PHP <?= e(phpversion()) ?></p>
         </div>
     </div>
 
