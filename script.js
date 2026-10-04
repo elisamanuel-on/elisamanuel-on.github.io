@@ -285,8 +285,8 @@ const formacao = [
 const projetos = [
     {
         id: '008',
-        titulo: { pt: 'Tabuada Interativa', en: 'Interactive Times Table', es: 'Tabla de Multiplicar Interactiva', fr: 'Table de Multiplication Interactive' },
-        descricao: { pt: 'Tabuada do 1 ao 10 com design moderno', en: 'Times tables from 1 to 10 with a modern design', es: 'Tablas del 1 al 10 con diseño moderno', fr: 'Tables de 1 à 10 avec un design moderne' },
+        titulo: { pt: 'Tabuada em Jogos', en: 'Times Tables Games', es: 'Tablas de Multiplicar en Juegos', fr: 'Tables de Multiplication en Jeux' },
+        descricao: { pt: 'Jogos para crianças: labirinto, quiz com tempo, caça aos múltiplos e memória', en: 'Games for kids: maze, timed quiz, multiples hunt and memory', es: 'Juegos para niños: laberinto, quiz con tiempo, caza de múltiplos y memoria', fr: 'Jeux pour enfants : labyrinthe, quiz chronométré, chasse aux multiples et mémoire' },
         tag: 'JavaScript',
         caminho: 'projetos/EXERCICIO008 - Tabuada/',
         imagem: 'imagens/projetos/008-tabuada.jpg'

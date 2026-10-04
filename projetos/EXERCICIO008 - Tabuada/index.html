@@ -1,35 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabuada - Exercício 008</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Tabuada em Jogos · Elisama Manuel</title>
+    <meta name="description" content="Tabuada em jogos para crianças: labirinto, quiz com tempo, caça aos múltiplos e memória.">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2.0.0">
 </head>
 <body>
-    <div class="container">
-        <div class="card">
-            <h1><svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Tabuada da Elisama</h1>
-            <p class="subtitle">Digite um número e veja sua tabuada</p>
-
-            <div class="input-group">
-                <input type="number" id="numero" placeholder="Ex: 7" min="0">
-                <button id="calcular">Calcular</button>
+    <div class="app">
+        <header class="topo">
+            <button type="button" class="marca" id="marcaBtn">
+                <span class="marca-mascote" id="logoMascote"></span>
+                <span class="marca-texto">
+                    <span class="marca-nome" data-i18n="titulo">Tabuada em Jogos</span>
+                    <span class="marca-sub" data-i18n="subtitulo">Aprende e joga</span>
+                </span>
+            </button>
+            <div class="topo-direita">
+                <span class="estrelas-total" id="estrelasTotal" role="status">
+                    <span class="estrela-icone" aria-hidden="true"></span><b>0</b>
+                </span>
+                <button type="button" class="btn-som" id="somBtn" data-i18n-aria="som_aria" aria-pressed="true"></button>
+                <label class="idioma-caixa">
+                    <span class="so-leitor" data-i18n="idioma">Idioma</span>
+                    <select id="idioma"></select>
+                </label>
             </div>
+        </header>
 
-            <div id="erro" class="erro"></div>
+        <main id="ecra"></main>
 
-            <div id="resultado">
-                <div class="tabuada-header">
-                    <span>Tabuada do <strong id="numTabuada">?</strong></span>
-                </div>
-                <div id="tabuadaLista" class="tabuada-lista">
-                    <span style="color: #4a5568;">Aguardando número...</span>
-                </div>
-            </div>
-        </div>
+        <footer class="rodape">
+            <span id="versao">v2.0.0</span>
+            <span>Elisama Manuel</span>
+        </footer>
     </div>
 
-    <script src="script.js"></script>
+    <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+    <canvas id="confete" aria-hidden="true"></canvas>
+
+    <noscript><p style="padding:20px;text-align:center">Este jogo precisa de JavaScript.</p></noscript>
+
+    <script src="idiomas.js?v=2.0.0"></script>
+    <script src="comum.js?v=2.0.0"></script>
+    <script src="aprender.js?v=2.0.0"></script>
+    <script src="labirinto.js?v=2.0.0"></script>
+    <script src="quiz.js?v=2.0.0"></script>
+    <script src="caca.js?v=2.0.0"></script>
+    <script src="memoria.js?v=2.0.0"></script>
+    <script>Tabuada.iniciar();</script>
 </body>
 </html>

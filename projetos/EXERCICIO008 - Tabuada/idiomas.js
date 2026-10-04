@@ -1,0 +1,432 @@
+// Tabuada em Jogos · textos em PT, EN, ES e FR.
+// O idioma abre como o do navegador (ou o que a criança escolheu antes); inglês para os restantes.
+(function () {
+    'use strict';
+
+    var T = window.Tabuada = window.Tabuada || {};
+
+    var SUPORTADOS = ['pt', 'en', 'es', 'fr'];
+    var NOMES = { pt: 'Português', en: 'English', es: 'Español', fr: 'Français' };
+    var CHAVE = 'tabuada_idioma';
+
+    var TEXTOS = {
+        pt: {
+            html_lang: 'pt-PT',
+            titulo: 'Tabuada em Jogos',
+            subtitulo: 'Aprende e joga',
+            ola: 'Olá! Eu sou o Tabi. Vamos jogar com a tabuada?',
+            idioma: 'Idioma',
+            som_aria: 'Ligar ou desligar o som',
+            estrelas: 'Estrelas',
+            voltar: 'Voltar',
+            inicio: 'Início',
+            escolhe_tabuadas: 'Escolhe as tabuadas',
+            todas: 'Todas',
+            nivel: 'Nível',
+            facil: 'Fácil',
+            medio: 'Médio',
+            dificil: 'Difícil',
+            titulo_rank: 'O teu título',
+            rank_0: 'Aprendiz',
+            rank_1: 'Explorador',
+            rank_2: 'Campeão',
+            rank_3: 'Mestre da Tabuada',
+            faltam_rank: 'Faltam %1 estrelas para %2',
+            rank_max: 'Já és o melhor título!',
+            escolhe_jogo: 'Escolhe um jogo',
+            jogar: 'Jogar',
+            recorde: 'Melhor: %1',
+            sem_recorde: 'Ainda sem recorde',
+            jogo_aprender: 'Aprender', jogo_aprender_d: 'Vê a tabuada de qualquer número e treina a tapar as respostas.',
+            jogo_labirinto: 'Labirinto', jogo_labirinto_d: 'Abre as portas com contas e encontra o tesouro.',
+            jogo_quiz: 'Quiz com tempo', jogo_quiz_d: 'Quantas contas consegues acertar antes de o tempo acabar?',
+            jogo_caca: 'Caça aos múltiplos', jogo_caca_d: 'Toca só nos números que pertencem à tabuada.',
+            jogo_memoria: 'Memória', jogo_memoria_d: 'Encontra a conta e o resultado que combinam.',
+            resumo_tabuadas: 'Tabuadas: %1',
+            mudar: 'Mudar',
+            certo_1: 'Muito bem!', certo_2: 'Boa!', certo_3: 'Fantástico!', certo_4: 'Acertaste!', certo_5: 'Estás um craque!',
+            errado_1: 'Quase! Tenta outra vez.', errado_2: 'Ainda não. Tenta de novo!', errado_3: 'Não faz mal, tenta outra vez.',
+            resposta_ph: 'A tua resposta',
+            responder: 'Responder',
+            ganhaste: 'Ganhaste %1 estrelas!',
+            ganhaste_1: 'Ganhaste 1 estrela!',
+            jogar_outra: 'Jogar outra vez',
+            fechar: 'Fechar',
+            versao: 'Versão',
+            dica: 'Dica',
+
+            ap_instr: 'Escolhe um número e vê a tabuada dele.',
+            ap_numero: 'Número',
+            ap_ver: 'Ver tabuada',
+            ap_tapar: 'Tapar respostas',
+            ap_mostrar: 'Mostrar respostas',
+            ap_espreitar: 'Toca numa resposta tapada para espreitar.',
+            ap_tabuada_do: 'Tabuada do %1',
+            ap_aguardando: 'Escolhe um número para começar.',
+            ap_erro_vazio: 'Escreve um número!',
+            ap_erro_invalido: 'Escreve um número inteiro de 0 a 100!',
+
+            lab_instr: 'Move o Tabi com as setas, com WASD ou com os botões. Acerta nas contas para abrir as portas!',
+            lab_portas: 'Portas: %1/%2',
+            lab_estrelinhas: 'Estrelas apanhadas: %1',
+            lab_porta: 'Porta fechada! Resolve a conta para a abrir.',
+            lab_aberta: 'Porta aberta!',
+            lab_ganhou: 'Chegaste ao tesouro!',
+            lab_novo: 'Outro labirinto',
+            lab_total: 'Labirintos concluídos: %1',
+            lab_cima: 'Para cima', lab_baixo: 'Para baixo', lab_esquerda: 'Para a esquerda', lab_direita: 'Para a direita',
+            lab_dica: 'Dica: a tabuada do %1',
+
+            qz_instr: 'Responde a quantas contas conseguires antes de o tempo acabar!',
+            qz_comecar: 'Começar',
+            qz_pontos: 'Pontos',
+            qz_sequencia: 'Sequência',
+            qz_tempo: 'Tempo',
+            qz_fim: 'Acabou o tempo!',
+            qz_resultado: 'Acertaste %1 de %2 contas.',
+            qz_pontuacao: 'Pontuação: %1',
+            qz_recorde_novo: 'Novo recorde!',
+
+            cc_instr: 'Toca em todos os múltiplos do %1.',
+            cc_ronda: 'Ronda %1 de %2',
+            cc_vidas: 'Vidas',
+            cc_faltam: 'Faltam %1',
+            cc_tempo: 'Tempo',
+            cc_ganhou: 'Apanhaste todos os múltiplos!',
+            cc_perdeu: 'Ficaste sem vidas.',
+            cc_rondas_feitas: 'Rondas completas: %1 de %2.',
+
+            me_instr: 'Vira duas cartas. Combina cada conta com o seu resultado!',
+            me_jogadas: 'Jogadas',
+            me_tempo: 'Tempo',
+            me_pares: 'Pares: %1/%2',
+            me_ganhou: 'Encontraste todos os pares!',
+            me_resultado: 'Em %1 jogadas e %2 segundos.',
+            me_carta: 'Carta virada para baixo'
+        },
+        en: {
+            html_lang: 'en',
+            titulo: 'Times Tables Games',
+            subtitulo: 'Learn and play',
+            ola: "Hi! I'm Tabi. Shall we play with the times tables?",
+            idioma: 'Language',
+            som_aria: 'Turn sound on or off',
+            estrelas: 'Stars',
+            voltar: 'Back',
+            inicio: 'Home',
+            escolhe_tabuadas: 'Pick your tables',
+            todas: 'All',
+            nivel: 'Level',
+            facil: 'Easy',
+            medio: 'Medium',
+            dificil: 'Hard',
+            titulo_rank: 'Your title',
+            rank_0: 'Apprentice',
+            rank_1: 'Explorer',
+            rank_2: 'Champion',
+            rank_3: 'Times Table Master',
+            faltam_rank: '%1 more stars to become %2',
+            rank_max: "You've reached the best title!",
+            escolhe_jogo: 'Pick a game',
+            jogar: 'Play',
+            recorde: 'Best: %1',
+            sem_recorde: 'No record yet',
+            jogo_aprender: 'Learn', jogo_aprender_d: 'See the table of any number and practise by covering the answers.',
+            jogo_labirinto: 'Maze', jogo_labirinto_d: 'Open the doors with sums and find the treasure.',
+            jogo_quiz: 'Timed quiz', jogo_quiz_d: 'How many sums can you get right before time runs out?',
+            jogo_caca: 'Multiples hunt', jogo_caca_d: 'Tap only the numbers that belong to the table.',
+            jogo_memoria: 'Memory', jogo_memoria_d: 'Find the sum and the answer that match.',
+            resumo_tabuadas: 'Tables: %1',
+            mudar: 'Change',
+            certo_1: 'Well done!', certo_2: 'Great!', certo_3: 'Fantastic!', certo_4: 'Correct!', certo_5: "You're a star!",
+            errado_1: 'Almost! Try again.', errado_2: 'Not yet. Try again!', errado_3: "That's okay, try once more.",
+            resposta_ph: 'Your answer',
+            responder: 'Answer',
+            ganhaste: 'You won %1 stars!',
+            ganhaste_1: 'You won 1 star!',
+            jogar_outra: 'Play again',
+            fechar: 'Close',
+            versao: 'Version',
+            dica: 'Hint',
+
+            ap_instr: 'Pick a number and see its table.',
+            ap_numero: 'Number',
+            ap_ver: 'Show table',
+            ap_tapar: 'Cover answers',
+            ap_mostrar: 'Show answers',
+            ap_espreitar: 'Tap a covered answer to peek.',
+            ap_tabuada_do: 'Table of %1',
+            ap_aguardando: 'Pick a number to start.',
+            ap_erro_vazio: 'Type a number!',
+            ap_erro_invalido: 'Type a whole number from 0 to 100!',
+
+            lab_instr: 'Move Tabi with the arrow keys, WASD or the buttons. Solve the sums to open the doors!',
+            lab_portas: 'Doors: %1/%2',
+            lab_estrelinhas: 'Stars collected: %1',
+            lab_porta: 'Locked door! Solve the sum to open it.',
+            lab_aberta: 'Door open!',
+            lab_ganhou: 'You found the treasure!',
+            lab_novo: 'Another maze',
+            lab_total: 'Mazes completed: %1',
+            lab_cima: 'Up', lab_baixo: 'Down', lab_esquerda: 'Left', lab_direita: 'Right',
+            lab_dica: 'Hint: the table of %1',
+
+            qz_instr: 'Answer as many sums as you can before the time runs out!',
+            qz_comecar: 'Start',
+            qz_pontos: 'Points',
+            qz_sequencia: 'Streak',
+            qz_tempo: 'Time',
+            qz_fim: "Time's up!",
+            qz_resultado: 'You got %1 of %2 sums right.',
+            qz_pontuacao: 'Score: %1',
+            qz_recorde_novo: 'New record!',
+
+            cc_instr: 'Tap every multiple of %1.',
+            cc_ronda: 'Round %1 of %2',
+            cc_vidas: 'Lives',
+            cc_faltam: '%1 left',
+            cc_tempo: 'Time',
+            cc_ganhou: 'You found all the multiples!',
+            cc_perdeu: 'You ran out of lives.',
+            cc_rondas_feitas: 'Rounds completed: %1 of %2.',
+
+            me_instr: 'Flip two cards. Match each sum with its answer!',
+            me_jogadas: 'Moves',
+            me_tempo: 'Time',
+            me_pares: 'Pairs: %1/%2',
+            me_ganhou: 'You found all the pairs!',
+            me_resultado: 'In %1 moves and %2 seconds.',
+            me_carta: 'Face-down card'
+        },
+        es: {
+            html_lang: 'es',
+            titulo: 'Tablas de Multiplicar en Juegos',
+            subtitulo: 'Aprende y juega',
+            ola: '¡Hola! Soy Tabi. ¿Jugamos con las tablas de multiplicar?',
+            idioma: 'Idioma',
+            som_aria: 'Activar o desactivar el sonido',
+            estrelas: 'Estrellas',
+            voltar: 'Volver',
+            inicio: 'Inicio',
+            escolhe_tabuadas: 'Elige las tablas',
+            todas: 'Todas',
+            nivel: 'Nivel',
+            facil: 'Fácil',
+            medio: 'Medio',
+            dificil: 'Difícil',
+            titulo_rank: 'Tu título',
+            rank_0: 'Aprendiz',
+            rank_1: 'Explorador',
+            rank_2: 'Campeón',
+            rank_3: 'Maestro de las Tablas',
+            faltam_rank: 'Faltan %1 estrellas para %2',
+            rank_max: '¡Ya tienes el mejor título!',
+            escolhe_jogo: 'Elige un juego',
+            jogar: 'Jugar',
+            recorde: 'Mejor: %1',
+            sem_recorde: 'Aún sin récord',
+            jogo_aprender: 'Aprender', jogo_aprender_d: 'Mira la tabla de cualquier número y practica tapando las respuestas.',
+            jogo_labirinto: 'Laberinto', jogo_labirinto_d: 'Abre las puertas con cuentas y encuentra el tesoro.',
+            jogo_quiz: 'Quiz con tiempo', jogo_quiz_d: '¿Cuántas cuentas aciertas antes de que se acabe el tiempo?',
+            jogo_caca: 'Caza de múltiplos', jogo_caca_d: 'Toca solo los números que pertenecen a la tabla.',
+            jogo_memoria: 'Memoria', jogo_memoria_d: 'Encuentra la cuenta y el resultado que combinan.',
+            resumo_tabuadas: 'Tablas: %1',
+            mudar: 'Cambiar',
+            certo_1: '¡Muy bien!', certo_2: '¡Bien!', certo_3: '¡Fantástico!', certo_4: '¡Acertaste!', certo_5: '¡Eres un crack!',
+            errado_1: '¡Casi! Inténtalo otra vez.', errado_2: 'Todavía no. ¡Prueba de nuevo!', errado_3: 'No pasa nada, inténtalo otra vez.',
+            resposta_ph: 'Tu respuesta',
+            responder: 'Responder',
+            ganhaste: '¡Ganaste %1 estrellas!',
+            ganhaste_1: '¡Ganaste 1 estrella!',
+            jogar_outra: 'Jugar otra vez',
+            fechar: 'Cerrar',
+            versao: 'Versión',
+            dica: 'Pista',
+
+            ap_instr: 'Elige un número y mira su tabla.',
+            ap_numero: 'Número',
+            ap_ver: 'Ver tabla',
+            ap_tapar: 'Tapar respuestas',
+            ap_mostrar: 'Mostrar respuestas',
+            ap_espreitar: 'Toca una respuesta tapada para espiar.',
+            ap_tabuada_do: 'Tabla del %1',
+            ap_aguardando: 'Elige un número para empezar.',
+            ap_erro_vazio: '¡Escribe un número!',
+            ap_erro_invalido: '¡Escribe un número entero de 0 a 100!',
+
+            lab_instr: 'Mueve a Tabi con las flechas, con WASD o con los botones. ¡Acierta las cuentas para abrir las puertas!',
+            lab_portas: 'Puertas: %1/%2',
+            lab_estrelinhas: 'Estrellas recogidas: %1',
+            lab_porta: '¡Puerta cerrada! Resuelve la cuenta para abrirla.',
+            lab_aberta: '¡Puerta abierta!',
+            lab_ganhou: '¡Llegaste al tesoro!',
+            lab_novo: 'Otro laberinto',
+            lab_total: 'Laberintos completados: %1',
+            lab_cima: 'Arriba', lab_baixo: 'Abajo', lab_esquerda: 'A la izquierda', lab_direita: 'A la derecha',
+            lab_dica: 'Pista: la tabla del %1',
+
+            qz_instr: '¡Responde a cuantas cuentas puedas antes de que se acabe el tiempo!',
+            qz_comecar: 'Empezar',
+            qz_pontos: 'Puntos',
+            qz_sequencia: 'Racha',
+            qz_tempo: 'Tiempo',
+            qz_fim: '¡Se acabó el tiempo!',
+            qz_resultado: 'Acertaste %1 de %2 cuentas.',
+            qz_pontuacao: 'Puntuación: %1',
+            qz_recorde_novo: '¡Nuevo récord!',
+
+            cc_instr: 'Toca todos los múltiplos de %1.',
+            cc_ronda: 'Ronda %1 de %2',
+            cc_vidas: 'Vidas',
+            cc_faltam: 'Faltan %1',
+            cc_tempo: 'Tiempo',
+            cc_ganhou: '¡Encontraste todos los múltiplos!',
+            cc_perdeu: 'Te quedaste sin vidas.',
+            cc_rondas_feitas: 'Rondas completadas: %1 de %2.',
+
+            me_instr: 'Da la vuelta a dos cartas. ¡Une cada cuenta con su resultado!',
+            me_jogadas: 'Jugadas',
+            me_tempo: 'Tiempo',
+            me_pares: 'Parejas: %1/%2',
+            me_ganhou: '¡Encontraste todas las parejas!',
+            me_resultado: 'En %1 jugadas y %2 segundos.',
+            me_carta: 'Carta boca abajo'
+        },
+        fr: {
+            html_lang: 'fr',
+            titulo: 'Tables de Multiplication en Jeux',
+            subtitulo: 'Apprends et joue',
+            ola: 'Salut ! Je suis Tabi. On joue avec les tables de multiplication ?',
+            idioma: 'Langue',
+            som_aria: 'Activer ou couper le son',
+            estrelas: 'Étoiles',
+            voltar: 'Retour',
+            inicio: 'Accueil',
+            escolhe_tabuadas: 'Choisis les tables',
+            todas: 'Toutes',
+            nivel: 'Niveau',
+            facil: 'Facile',
+            medio: 'Moyen',
+            dificil: 'Difficile',
+            titulo_rank: 'Ton titre',
+            rank_0: 'Apprenti',
+            rank_1: 'Explorateur',
+            rank_2: 'Champion',
+            rank_3: 'Maître des Tables',
+            faltam_rank: 'Encore %1 étoiles pour devenir %2',
+            rank_max: 'Tu as déjà le meilleur titre !',
+            escolhe_jogo: 'Choisis un jeu',
+            jogar: 'Jouer',
+            recorde: 'Meilleur : %1',
+            sem_recorde: 'Pas encore de record',
+            jogo_aprender: 'Apprendre', jogo_aprender_d: 'Regarde la table de n’importe quel nombre et entraîne-toi en cachant les réponses.',
+            jogo_labirinto: 'Labyrinthe', jogo_labirinto_d: 'Ouvre les portes avec des calculs et trouve le trésor.',
+            jogo_quiz: 'Quiz chronométré', jogo_quiz_d: 'Combien de calculs réussis avant la fin du temps ?',
+            jogo_caca: 'Chasse aux multiples', jogo_caca_d: 'Touche seulement les nombres qui font partie de la table.',
+            jogo_memoria: 'Mémoire', jogo_memoria_d: 'Trouve le calcul et le résultat qui vont ensemble.',
+            resumo_tabuadas: 'Tables : %1',
+            mudar: 'Changer',
+            certo_1: 'Très bien !', certo_2: 'Bravo !', certo_3: 'Fantastique !', certo_4: 'C’est juste !', certo_5: 'Tu es un champion !',
+            errado_1: 'Presque ! Réessaie.', errado_2: 'Pas encore. Essaie encore !', errado_3: 'Ce n’est pas grave, réessaie.',
+            resposta_ph: 'Ta réponse',
+            responder: 'Répondre',
+            ganhaste: 'Tu as gagné %1 étoiles !',
+            ganhaste_1: 'Tu as gagné 1 étoile !',
+            jogar_outra: 'Rejouer',
+            fechar: 'Fermer',
+            versao: 'Version',
+            dica: 'Indice',
+
+            ap_instr: 'Choisis un nombre et regarde sa table.',
+            ap_numero: 'Nombre',
+            ap_ver: 'Voir la table',
+            ap_tapar: 'Cacher les réponses',
+            ap_mostrar: 'Montrer les réponses',
+            ap_espreitar: 'Touche une réponse cachée pour jeter un œil.',
+            ap_tabuada_do: 'Table du %1',
+            ap_aguardando: 'Choisis un nombre pour commencer.',
+            ap_erro_vazio: 'Écris un nombre !',
+            ap_erro_invalido: 'Écris un nombre entier de 0 à 100 !',
+
+            lab_instr: 'Déplace Tabi avec les flèches, WASD ou les boutons. Réussis les calculs pour ouvrir les portes !',
+            lab_portas: 'Portes : %1/%2',
+            lab_estrelinhas: 'Étoiles ramassées : %1',
+            lab_porta: 'Porte fermée ! Résous le calcul pour l’ouvrir.',
+            lab_aberta: 'Porte ouverte !',
+            lab_ganhou: 'Tu as trouvé le trésor !',
+            lab_novo: 'Un autre labyrinthe',
+            lab_total: 'Labyrinthes terminés : %1',
+            lab_cima: 'Vers le haut', lab_baixo: 'Vers le bas', lab_esquerda: 'Vers la gauche', lab_direita: 'Vers la droite',
+            lab_dica: 'Indice : la table du %1',
+
+            qz_instr: 'Réponds à autant de calculs que possible avant la fin du temps !',
+            qz_comecar: 'Commencer',
+            qz_pontos: 'Points',
+            qz_sequencia: 'Série',
+            qz_tempo: 'Temps',
+            qz_fim: 'Le temps est écoulé !',
+            qz_resultado: 'Tu as réussi %1 calculs sur %2.',
+            qz_pontuacao: 'Score : %1',
+            qz_recorde_novo: 'Nouveau record !',
+
+            cc_instr: 'Touche tous les multiples de %1.',
+            cc_ronda: 'Manche %1 sur %2',
+            cc_vidas: 'Vies',
+            cc_faltam: 'Il en reste %1',
+            cc_tempo: 'Temps',
+            cc_ganhou: 'Tu as trouvé tous les multiples !',
+            cc_perdeu: 'Tu n’as plus de vies.',
+            cc_rondas_feitas: 'Manches terminées : %1 sur %2.',
+
+            me_instr: 'Retourne deux cartes. Associe chaque calcul à son résultat !',
+            me_jogadas: 'Coups',
+            me_tempo: 'Temps',
+            me_pares: 'Paires : %1/%2',
+            me_ganhou: 'Tu as trouvé toutes les paires !',
+            me_resultado: 'En %1 coups et %2 secondes.',
+            me_carta: 'Carte face cachée'
+        }
+    };
+
+    function detetar() {
+        try {
+            var guardado = window.localStorage.getItem(CHAVE);
+            if (guardado && SUPORTADOS.indexOf(guardado) !== -1) return guardado;
+        } catch (erro) { /* armazenamento bloqueado */ }
+        var lista = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || 'en'];
+        for (var i = 0; i < lista.length; i++) {
+            var codigo = String(lista[i]).slice(0, 2).toLowerCase();
+            if (SUPORTADOS.indexOf(codigo) !== -1) return codigo;
+        }
+        return 'en';
+    }
+
+    T.SUPORTADOS = SUPORTADOS;
+    T.NOMES = NOMES;
+    T.idioma = detetar();
+    T._textos = TEXTOS;
+
+    T.mudarIdioma = function (codigo) {
+        if (SUPORTADOS.indexOf(codigo) === -1) return;
+        T.idioma = codigo;
+        try { window.localStorage.setItem(CHAVE, codigo); } catch (erro) { /* só dura esta visita */ }
+    };
+
+    /** Texto traduzido; %1, %2... são substituídos pelos argumentos. */
+    T.t = function (chave) {
+        var args = Array.prototype.slice.call(arguments, 1);
+        var texto = (TEXTOS[T.idioma] && TEXTOS[T.idioma][chave]) || TEXTOS.en[chave] || chave;
+        return texto.replace(/%(\d)/g, function (_, n) {
+            var v = args[Number(n) - 1];
+            return v === undefined ? '' : v;
+        });
+    };
+
+    /** Uma das variantes chave_1, chave_2... escolhida ao acaso (ex.: elogios). */
+    T.tr = function (prefixo) {
+        var tabela = TEXTOS[T.idioma] || TEXTOS.en;
+        var n = 0;
+        while (tabela[prefixo + '_' + (n + 1)] !== undefined) n++;
+        return T.t(prefixo + '_' + (1 + Math.floor(Math.random() * n)));
+    };
+})();
