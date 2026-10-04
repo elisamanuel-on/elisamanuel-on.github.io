@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/calculadora.php';
+require_once __DIR__ . '/extras.php';
 
 ini_set('display_errors', '0');
 session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'httponly' => true, 'samesite' => 'Lax']);
@@ -69,7 +70,11 @@ $operacoes = [
     'modulo'        => ['%', 'Módulo (resto)', 'mod'],
 ];
 
-$modo = ($_GET['modo'] ?? 'basica') === 'cientifica' ? 'cientifica' : 'basica';
+$modo = match ($_GET['modo'] ?? 'basica') {
+    'cientifica' => 'cientifica',
+    'desafio'    => 'desafio',
+    default      => 'basica',
+};
 
 // ---------------- Modo 4 operações ----------------
 $num1 = $num2 = '';
@@ -118,6 +123,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// ---------------- Modo desafio ----------------
+// Pergunta guardada na sessão; cada resposta é validada no servidor e o resultado
+// volta como "feedback" de uma só leitura (Post/Redirect/Get).
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['formulario'] ?? '') === 'desafio') {
+    $accao = is_string($_POST['accao'] ?? null) ? $_POST['accao'] : 'responder';
+    $atual = $_SESSION['desafio'] ?? null;
+    $sequencia = (int) ($_SESSION['sequencia'] ?? 0);
+    $pontos = (int) ($_SESSION['pontos'] ?? 0);
+    $novaPergunta = true;
+    $mensagemFeedback = null;
+
+    if ($accao === 'reiniciar') {
+        unset($_SESSION['desafio'], $_SESSION['pontos'], $_SESSION['sequencia'], $_SESSION['melhor']);
+        $novaPergunta = false;
+    } elseif (is_array($atual) && isset($atual['pergunta'], $atual['resposta'], $atual['elemento'])) {
+        $esperada = (float) $atual['resposta'];
+        $textoEsperado = Calculadora::formatar($esperada);
+        $elemento = (string) $atual['elemento'];
+        $conta = (string) $atual['pergunta'];
+
+        if ($accao === 'saltar') {
+            $mensagemFeedback = ['estado' => 'erro', 'mensagem' => "Saltaste. $conta = $textoEsperado.", 'elemento' => $elemento];
+            $sequencia = 0;
+        } else {
+            $dada = lerNumero($_POST['resposta'] ?? null);
+            if ($dada === null) {
+                $mensagemFeedback = ['estado' => 'aviso', 'mensagem' => 'Escreve um número para responder.', 'elemento' => $elemento];
+                $novaPergunta = false;
+            } elseif (respostaCerta($dada, $esperada)) {
+                $ganhos = pontosDaResposta($sequencia);
+                $pontos += $ganhos;
+                $sequencia++;
+                $subiu = nivelDesafio($sequencia) > nivelDesafio($sequencia - 1);
+                $mensagemFeedback = [
+                    'estado'   => 'ok',
+                    'mensagem' => "Certo! $conta = $textoEsperado. +$ganhos pontos" . ($subiu ? ' e subiste de nível!' : '.'),
+                    'elemento' => $elemento,
+                    'subiu'    => $subiu,
+                ];
+                $_SESSION['melhor'] = max((int) ($_SESSION['melhor'] ?? 0), $sequencia);
+            } else {
+                $mensagemFeedback = ['estado' => 'erro', 'mensagem' => "Quase! $conta = $textoEsperado.", 'elemento' => $elemento];
+                $sequencia = 0;
+            }
+        }
+    }
+
+    $_SESSION['pontos'] = $pontos;
+    $_SESSION['sequencia'] = $sequencia;
+    if ($novaPergunta) {
+        $_SESSION['desafio'] = gerarDesafio($sequencia);
+    }
+    if ($mensagemFeedback !== null) {
+        $_SESSION['feedback'] = $mensagemFeedback;
+    }
+    header('Location: ?modo=desafio');
+    exit;
+}
+
+$desafio = null;
+$feedback = null;
+$pontos = (int) ($_SESSION['pontos'] ?? 0);
+$sequencia = (int) ($_SESSION['sequencia'] ?? 0);
+$melhor = (int) ($_SESSION['melhor'] ?? 0);
+if ($modo === 'desafio') {
+    if (!is_array($_SESSION['desafio'] ?? null)) {
+        $_SESSION['desafio'] = gerarDesafio($sequencia);
+    }
+    $desafio = $_SESSION['desafio'];
+    $feedback = $_SESSION['feedback'] ?? null;
+    unset($_SESSION['feedback']);
+}
+
+// ---------------- Estado para os efeitos (certo / errado / poderes usados) ----------------
+$estado = 'neutro';
+$poderes = [];
+if ($modo === 'basica') {
+    if ($erroBasico !== null) {
+        $estado = 'erro';
+    } elseif ($resultadosBasicos !== []) {
+        $estado = array_filter($resultadosBasicos, 'is_string') !== [] ? 'erro' : 'ok';
+        $poderes = ['terra', 'agua', 'fogo', 'ar', 'energia'];
+    }
+} elseif ($modo === 'cientifica') {
+    $poderes = poderesUsados($expressao);
+    if ($erroCientifico !== null) {
+        $estado = 'erro';
+    } elseif ($resultadoCientifico !== null) {
+        $estado = 'ok';
+    }
+} else {
+    $estado = ['ok' => 'ok', 'erro' => 'erro'][$feedback['estado'] ?? ''] ?? 'neutro';
+    $poderes = [(string) ($feedback['elemento'] ?? $desafio['elemento'])];
+}
+
 $historico = $_SESSION['historico'] ?? [];
 $ico = static fn (string $d): string => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $d . '</svg>';
 $elementos = [
@@ -141,21 +241,22 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Científica · Exercício 013</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
-<body>
+<body data-modo="<?= e($modo) ?>" data-estado="<?= e($estado) ?>" data-poderes="<?= e(implode(',', $poderes)) ?>"<?= ($feedback['subiu'] ?? false) ? ' data-subiu="1"' : '' ?>>
     <div class="container">
         <div class="card">
             <h1><?= $iconeCalculadora ?> Calculadora Científica</h1>
             <div class="elementos" aria-hidden="true">
                 <?php foreach ($elementos as $chave => [$nome, $svg]): ?>
-                    <span class="elemento el-<?= e($chave) ?>" title="<?= e($nome) ?>"><?= $svg ?></span>
+                    <span class="elemento el-<?= e($chave) ?>" data-el="<?= e($chave) ?>" title="<?= e($nome) ?>"><?= $svg ?></span>
                 <?php endforeach; ?>
             </div>
 
             <nav class="abas" aria-label="Modo da calculadora">
                 <a class="aba<?= $modo === 'basica' ? ' ativa' : '' ?>" href="?modo=basica"<?= $modo === 'basica' ? ' aria-current="page"' : '' ?>>6 Operações</a>
                 <a class="aba<?= $modo === 'cientifica' ? ' ativa' : '' ?>" href="?modo=cientifica"<?= $modo === 'cientifica' ? ' aria-current="page"' : '' ?>>Científica</a>
+                <a class="aba<?= $modo === 'desafio' ? ' ativa' : '' ?>" href="?modo=desafio"<?= $modo === 'desafio' ? ' aria-current="page"' : '' ?>>Desafio</a>
             </nav>
 
 <?php if ($modo === 'basica'): ?>
@@ -182,7 +283,7 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
             <div class="resultados-area">
                 <?php foreach ($operacoes as $chave => [$simbolo, $nome, $sinal]): ?>
                     <?php $r = $resultadosBasicos[$chave] ?? null; ?>
-                    <div class="resultado-item <?= e($chave) ?>">
+                    <div class="resultado-item <?= e($chave) ?><?= is_string($r) ? ' deu-erro' : '' ?>">
                         <span class="resultado-icon"><?= e($simbolo) ?></span>
                         <div class="resultado-conteudo">
                             <h3><?= e($nome) ?></h3>
@@ -199,13 +300,14 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
                 <?php endforeach; ?>
             </div>
 
-<?php else: ?>
+<?php elseif ($modo === 'cientifica'): ?>
             <form method="post" action="?modo=cientifica" id="formCientifica" autocomplete="off" novalidate>
                 <input type="hidden" name="formulario" value="cientifica">
                 <div class="input-field">
                     <label for="expressao">Expressão</label>
                     <input type="text" id="expressao" name="expressao" value="<?= e($expressao) ?>" maxlength="200"
                            placeholder="0" spellcheck="false" class="visor">
+                    <div class="mistura" id="mistura" aria-hidden="true"></div>
                 </div>
 
                 <div class="linha-opcoes">
@@ -252,11 +354,18 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
 
             <?php if ($resultadoCientifico !== null): ?>
                 <div class="resultados-area uma-coluna">
-                    <div class="resultado-item">
+                    <div class="resultado-item mistura-borda" data-poderes="<?= e(implode(',', $poderes)) ?>">
                         <span class="resultado-icon">=</span>
                         <div class="resultado-conteudo">
                             <h3><?= e($expressao) ?></h3>
                             <p><span class="valor valor-grande"><?= e($resultadoCientifico) ?></span></p>
+                            <?php if ($poderes !== []): ?>
+                                <p class="poderes">
+                                    <?php foreach ($poderes as $p): ?>
+                                        <span class="poder el-<?= e($p) ?>"><?= $elementos[$p][1] ?> <?= e(nomeElemento($p)) ?></span>
+                                    <?php endforeach; ?>
+                                </p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -272,11 +381,47 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
                     </ol>
                 </div>
             <?php endif; ?>
+<?php else: ?>
+            <?php $nivel = (int) $desafio['nivel']; $faltam = 3 - ($sequencia % 3); ?>
+            <div class="placar">
+                <div><span>Pontos</span><strong><?= e($pontos) ?></strong></div>
+                <div><span>Sequência</span><strong><?= e($sequencia) ?></strong></div>
+                <div><span>Melhor</span><strong><?= e($melhor) ?></strong></div>
+                <div><span>Nível</span><strong><?= e($nivel) ?></strong></div>
+            </div>
+            <?php if ($nivel < 4): ?>
+                <div class="progresso" role="progressbar" aria-label="Progresso para o próximo nível" aria-valuemin="0" aria-valuemax="3" aria-valuenow="<?= e($sequencia % 3) ?>">
+                    <span style="width: <?= e((string) round(($sequencia % 3) / 3 * 100)) ?>%"></span>
+                </div>
+                <p class="dica dica-desafio">Mais <?= e($faltam) ?> <?= $faltam === 1 ? 'acerto seguido' : 'acertos seguidos' ?> para o nível <?= e($nivel + 1) ?>.</p>
+            <?php endif; ?>
+
+            <?php if ($feedback !== null): ?>
+                <div class="feedback <?= e($feedback['estado']) ?>" role="status"><?= e($feedback['mensagem']) ?></div>
+            <?php endif; ?>
+
+            <form method="post" action="?modo=desafio" autocomplete="off" novalidate>
+                <input type="hidden" name="formulario" value="desafio">
+                <div class="pergunta el-<?= e($desafio['elemento']) ?>">
+                    <span class="pergunta-poder"><?= $elementos[$desafio['elemento']][1] ?> <?= e(nomeElemento($desafio['elemento'])) ?></span>
+                    <div class="pergunta-conta"><?= e($desafio['pergunta']) ?> = ?</div>
+                </div>
+                <div class="input-field">
+                    <label for="resposta">A tua resposta</label>
+                    <input type="text" inputmode="decimal" id="resposta" name="resposta" placeholder="0" class="visor" autofocus>
+                </div>
+                <button type="submit" name="accao" value="responder">Responder</button>
+                <div class="acoes-desafio">
+                    <button type="submit" name="accao" value="saltar" class="secundario">Saltar</button>
+                    <button type="submit" name="accao" value="reiniciar" class="secundario">Reiniciar pontuação</button>
+                </div>
+            </form>
 <?php endif; ?>
 
         </div>
     </div>
 
     <script src="teclado.js"></script>
+    <script src="efeitos.js?v=1"></script>
 </body>
 </html>
