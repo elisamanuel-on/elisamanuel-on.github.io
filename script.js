@@ -66,6 +66,7 @@ const competencias = [
     { pt: 'Dash', en: 'Dash', es: 'Dash', fr: 'Dash' },
     { pt: 'HTML & CSS', en: 'HTML & CSS', es: 'HTML & CSS', fr: 'HTML & CSS' },
     { pt: 'JavaScript', en: 'JavaScript', es: 'JavaScript', fr: 'JavaScript' },
+    { pt: 'PHP', en: 'PHP', es: 'PHP', fr: 'PHP' },
     { pt: 'Java', en: 'Java', es: 'Java', fr: 'Java' },
     { pt: 'MySQL', en: 'MySQL', es: 'MySQL', fr: 'MySQL' },
     { pt: 'PostgreSQL', en: 'PostgreSQL', es: 'PostgreSQL', fr: 'PostgreSQL' },
@@ -283,14 +284,6 @@ const formacao = [
 // ============================================
 const projetos = [
     {
-        id: '007',
-        titulo: { pt: 'Calculadora 4 Operações', en: '4-Operation Calculator', es: 'Calculadora de 4 Operaciones', fr: 'Calculatrice à 4 Opérations' },
-        descricao: { pt: 'Calculadora com Soma, Subtração, Multiplicação e Divisão', en: 'Calculator with Addition, Subtraction, Multiplication and Division', es: 'Calculadora con Suma, Resta, Multiplicación y División', fr: 'Calculatrice avec Addition, Soustraction, Multiplication et Division' },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO007 - Calculadora/',
-        imagem: 'imagens/projetos/007-calculadora.jpg'
-    },
-    {
         id: '008',
         titulo: { pt: 'Tabuada Interativa', en: 'Interactive Times Table', es: 'Tabla de Multiplicar Interactiva', fr: 'Table de Multiplication Interactive' },
         descricao: { pt: 'Tabuada do 1 ao 10 com design moderno', en: 'Times tables from 1 to 10 with a modern design', es: 'Tablas del 1 al 10 con diseño moderno', fr: 'Tables de 1 à 10 avec un design moderne' },
@@ -324,11 +317,17 @@ const projetos = [
     },
     {
         id: '013',
-        titulo: { pt: 'Calculadora com 4 Operações', en: 'Calculator with 4 Operations', es: 'Calculadora con 4 Operaciones', fr: 'Calculatrice à 4 Opérations' },
-        descricao: { pt: 'Soma, Subtração, Multiplicação e Divisão', en: 'Addition, Subtraction, Multiplication and Division', es: 'Suma, Resta, Multiplicación y División', fr: 'Addition, Soustraction, Multiplication et Division' },
-        tag: 'JavaScript',
+        titulo: { pt: 'Calculadora Científica', en: 'Scientific Calculator', es: 'Calculadora Científica', fr: 'Calculatrice Scientifique' },
+        descricao: {
+            pt: 'Seis operações e modo científico — raiz, trigonometria, logaritmos, fatorial e expressões completas — calculadas no servidor em PHP, sem eval()',
+            en: 'Six operations and a scientific mode — roots, trigonometry, logarithms, factorials and full expressions — computed server-side in PHP, without eval()',
+            es: 'Seis operaciones y modo científico — raíz, trigonometría, logaritmos, factorial y expresiones completas — calculadas en el servidor con PHP, sin eval()',
+            fr: 'Six opérations et mode scientifique — racines, trigonométrie, logarithmes, factorielle et expressions complètes — calculées côté serveur en PHP, sans eval()'
+        },
+        tag: 'PHP',
         caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
-        imagem: 'imagens/projetos/013-calculadora-4-operacoes.jpg'
+        php: true,
+        imagem: 'imagens/projetos/013-calculadora-cientifica.jpg'
     },
     {
         id: '014',
@@ -595,7 +594,7 @@ function carregarProjetos() {
     projetos.forEach(proj => {
         const div = document.createElement('a');
         div.className = 'projeto-card reveal';
-        div.href = proj.url || (proj.caminho + 'index.html');
+        div.href = proj.url || (proj.caminho + (proj.php ? '' : 'index.html'));
         div.target = '_blank';
         div.innerHTML = `
             <div class="projeto-thumb">
