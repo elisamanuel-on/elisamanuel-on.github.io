@@ -293,11 +293,18 @@ const projetos = [
     },
     {
         id: '009',
-        titulo: { pt: 'Registo de Utilizador', en: 'User Registration', es: 'Registro de Usuario', fr: 'Inscription Utilisateur' },
-        descricao: { pt: 'Formulário com Nome, Idade, Curso e Escola', en: 'Form with Name, Age, Course and School', es: 'Formulario con Nombre, Edad, Curso y Escuela', fr: 'Formulaire avec Nom, Âge, Cours et École' },
-        tag: 'HTML',
+        titulo: { pt: 'Sistema de Gestão Escolar', en: 'School Management System', es: 'Sistema de Gestión Escolar', fr: 'Système de Gestion Scolaire' },
+        descricao: {
+            pt: 'Colégio com aluno, professor, secretaria e direção: login seguro, lançamento de notas, pautas e boletins, faltas, horários, avisos, painel com gráficos e Relatório editável em PDF. PHP + SQLite, em 4 idiomas',
+            en: 'A school with student, teacher, office and principal profiles: secure login, grade entry, grade sheets and report cards, absences, timetables, notices, a chart dashboard and an editable PDF Report. PHP + SQLite, in 4 languages',
+            es: 'Un colegio con perfiles de alumno, profesor, secretaría y dirección: acceso seguro, notas, actas y boletines, faltas, horarios, avisos, panel con gráficos e Informe editable en PDF. PHP + SQLite, en 4 idiomas',
+            fr: 'Un collège avec profils élève, professeur, secrétariat et direction : connexion sécurisée, saisie des notes, relevés et bulletins, absences, emplois du temps, annonces, tableau de bord graphique et Rapport PDF modifiable. PHP + SQLite, en 4 langues'
+        },
+        tag: 'PHP',
+        php: true,
         caminho: 'projetos/EXERCICIO009 - Registo de Utilizador/',
-        imagem: 'imagens/projetos/009-registo-utilizador.jpg'
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO009%20-%20Registo%20de%20Utilizador/',
+        imagem: 'imagens/projetos/009-sistema-gestao-escolar.jpg'
     },
     {
         id: '011',

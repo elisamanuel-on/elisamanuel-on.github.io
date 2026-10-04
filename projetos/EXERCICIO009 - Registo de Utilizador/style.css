@@ -186,3 +186,15 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* Aviso da versão 1.0 (estática) */
+.nota-v1 {
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #eef4ff;
+    color: #1e3a8a;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.nota-v1 a { color: #1d4ed8; font-weight: 600; }
