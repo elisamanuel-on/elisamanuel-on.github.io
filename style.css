@@ -5,54 +5,58 @@
 
 /* ===== VARIÁVEIS (DARK MODE - PADRÃO) ===== */
 :root {
-    --cor-fundo: #000000;
-    --cor-card: #1a1a1a;
-    --cor-borda: #333333;
-    --cor-texto: #ffffff;
-    --cor-texto-secundario: #a0aec0;
-    --cor-texto-claro: #cbd5e0;
-    --cor-fundo-input: #0d0d0d;
-    --cor-hover: #2a2a2a;
-    --cor-sombra: rgba(102, 126, 234, 0.15);
-    --cor-placeholder: #4a5568;
-    
-    --cor-email: #33ff66;
-    --cor-telefone: #ffb000;
-    --cor-localizacao: #33ff66;
-    --cor-linkedin: #ffb000;
-    --cor-instagram: #33ff66;
-    --cor-github: #ffb000;
+    --cor-fundo: #0d0f16;
+    --cor-card: #151823;
+    --cor-borda: #262b3a;
+    --cor-texto: #f1f3fa;
+    --cor-texto-secundario: #9aa1b8;
+    --cor-texto-claro: #c9cfe2;
+    --cor-fundo-input: #10131c;
+    --cor-hover: #1d2130;
+    --cor-sombra: rgba(143, 124, 255, 0.16);
+    --cor-placeholder: #596079;
 
-    --cor-primaria: #2ecc55;
-    --cor-secundaria: #ffb000;
-    --cor-destaque: #33ff66;
+    --cor-email: #b4a8ff;
+    --cor-telefone: #ff9cc8;
+    --cor-localizacao: #b4a8ff;
+    --cor-linkedin: #ff9cc8;
+    --cor-instagram: #b4a8ff;
+    --cor-github: #ff9cc8;
+
+    --cor-primaria: #8f7cff;
+    --cor-secundaria: #ff7eb6;
+    --cor-destaque: #b4a8ff;
     --cor-aviso: #ff5f56;
 
     --raio-borda: 20px;
     --raio-pequeno: 12px;
     --fonte-padrao: 'JetBrains Mono', 'Fira Code', Consolas, 'Segoe UI', monospace;
-    --sombra-padrao: 0 20px 60px rgba(51, 255, 102, 0.14);
+    --sombra-padrao: 0 20px 60px rgba(143, 124, 255, 0.14);
 }
 
 /* ===== LIGHT MODE ===== */
 body.light-mode {
-    --cor-fundo: #f4f6f4;
+    --cor-fundo: #f6f5fb;
     --cor-card: #ffffff;
-    --cor-borda: #d7dbd7;
-    --cor-texto: #12140f;
-    --cor-texto-secundario: #5b6259;
-    --cor-texto-claro: #333a32;
-    --cor-fundo-input: #f7f9f7;
-    --cor-hover: #e7ebe6;
-    --cor-sombra: rgba(20, 120, 55, 0.12);
-    --cor-placeholder: #93998f;
+    --cor-borda: #dedaf0;
+    --cor-texto: #16131f;
+    --cor-texto-secundario: #5e5a70;
+    --cor-texto-claro: #38344a;
+    --cor-fundo-input: #faf9fe;
+    --cor-hover: #ece9f8;
+    --cor-sombra: rgba(110, 90, 220, 0.12);
+    --cor-placeholder: #9a96ad;
 
-    --cor-email: #1f9d46;
-    --cor-telefone: #b3790a;
-    --cor-localizacao: #1f9d46;
-    --cor-linkedin: #b3790a;
-    --cor-instagram: #1f9d46;
-    --cor-github: #b3790a;
+    --cor-email: #6a55e6;
+    --cor-telefone: #c2417f;
+    --cor-localizacao: #6a55e6;
+    --cor-linkedin: #c2417f;
+    --cor-instagram: #6a55e6;
+    --cor-github: #c2417f;
+
+    --cor-primaria: #6a55e6;
+    --cor-secundaria: #d9468a;
+    --cor-destaque: #6a55e6;
 }
 
 /* ===== RESET ===== */
@@ -204,7 +208,7 @@ nav a.active {
 
 .lang-btn.ativo {
     background: var(--cor-primaria);
-    color: #08130a;
+    color: #fff;
 }
 
 .theme-text {
@@ -263,24 +267,24 @@ nav a.active {
     font-weight: 700;
     font-size: 0.9rem;
     white-space: nowrap;
+    color: #fff;
     box-shadow: 0 5px 20px var(--cor-sombra);
 }
 
 /* ===== HERO ===== */
 .hero {
     position: relative;
-    overflow: hidden;
 }
 
 .hero-glow {
     position: absolute;
-    top: -120px;
-    right: -160px;
-    width: 480px;
-    height: 480px;
-    background: radial-gradient(circle, var(--cor-primaria) 0%, transparent 70%);
-    opacity: 0.18;
-    filter: blur(10px);
+    top: -60px;
+    right: 0;
+    width: 520px;
+    height: 520px;
+    max-width: 100%;
+    background: radial-gradient(closest-side, var(--cor-primaria) 0%, transparent 100%);
+    opacity: 0.16;
     pointer-events: none;
     z-index: 0;
     animation: flutuar 10s ease-in-out infinite;
@@ -826,17 +830,21 @@ h2 {
 }
 
 .projeto-card .projeto-link {
-    display: inline-block;
-    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    margin-top: 14px;
+    padding: 8px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--cor-primaria);
     color: var(--cor-primaria);
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 700;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
 }
 
 .projeto-card:hover .projeto-link {
-    transform: translateX(5px);
-    color: var(--cor-secundaria);
+    background: var(--cor-primaria);
+    color: #fff;
 }
 
 .projetos-footer {
@@ -1041,25 +1049,25 @@ h2 {
 .contacto-email::before,
 .contacto-localizacao::before,
 .contacto-instagram::before {
-    background: linear-gradient(135deg, rgba(51, 255, 102, 0.14), rgba(51, 255, 102, 0.04));
+    background: linear-gradient(135deg, rgba(143, 124, 255, 0.14), rgba(143, 124, 255, 0.04));
 }
 .contacto-email:hover,
 .contacto-localizacao:hover,
 .contacto-instagram:hover {
     border-color: var(--cor-primaria);
-    box-shadow: 0 10px 30px rgba(51, 255, 102, 0.18);
+    box-shadow: 0 10px 30px rgba(143, 124, 255, 0.18);
 }
 
 .contacto-telefone::before,
 .contacto-linkedin::before,
 .contacto-github::before {
-    background: linear-gradient(135deg, rgba(255, 176, 0, 0.14), rgba(255, 176, 0, 0.04));
+    background: linear-gradient(135deg, rgba(255, 126, 182, 0.14), rgba(255, 126, 182, 0.04));
 }
 .contacto-telefone:hover,
 .contacto-linkedin:hover,
 .contacto-github:hover {
     border-color: var(--cor-secundaria);
-    box-shadow: 0 10px 30px rgba(255, 176, 0, 0.18);
+    box-shadow: 0 10px 30px rgba(255, 126, 182, 0.18);
 }
 
 .contacto-icon-wrapper {
@@ -1305,32 +1313,7 @@ footer p {
     }
 }
 
-/* ===== SETAS DESENHADAS (substituem as setas de texto) ===== */
-.btn-secundario::after,
-.projeto-card .projeto-link::after,
-.boot-saltar::after,
-.contacto-seta::after {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    margin-left: 0.4em;
-    vertical-align: -0.15em;
-    background: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3Cpolyline points='12 5 19 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
-}
-
-.contacto-seta::after {
-    margin-left: 0;
-    width: 1.3rem;
-    height: 1.3rem;
-}
-
-/* Botão "Voltar ao Início" sem seta */
-.voltar .btn-secundario::after {
-    content: none;
-}
+/* ===== SEM SETAS: botões simples ===== */
 
 /* ===== TECNOLOGIAS AGRUPADAS POR ÁREA ===== */
 .skills-grupo {
@@ -1361,4 +1344,8 @@ footer p {
 #tagsContainer {
     display: block;
     margin-top: 1.2rem;
+}
+
+.contacto-seta {
+    display: none;
 }
