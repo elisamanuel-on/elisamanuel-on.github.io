@@ -11,7 +11,7 @@ declare(strict_types=1);
  * Versão da calculadora (atualizar a cada alteração publicada).
  * 1.x = versão original em JavaScript; 2.0 = PHP científico; 2.1 = tema, poderes e modo Desafio; 3.0 = layout novo, histórico, memória e 4 idiomas.
  */
-const VERSAO = '3.0.0';
+const VERSAO = '3.1.0';
 
 /** Cada elemento tem um grupo de funções/símbolos da calculadora. */
 const PODERES_PADROES = [

@@ -14,6 +14,7 @@
 declare(strict_types=1);
 
 const IDIOMAS_SUPORTADOS = ['pt' => 'PT', 'en' => 'EN', 'es' => 'ES', 'fr' => 'FR'];
+const IDIOMAS_NOMES = ['pt' => 'Português', 'en' => 'English', 'es' => 'Español', 'fr' => 'Français'];
 const IDIOMA_OMISSAO = 'en';
 
 /** Primeiro idioma suportado do cabeçalho Accept-Language, respeitando os valores q. */
@@ -95,6 +96,9 @@ function textos(): array
             'idioma_aria' => 'Idioma',
             'aba_basica' => '6 Operações', 'aba_cientifica' => 'Científica', 'aba_desafio' => 'Desafio',
             'aria_modo' => 'Modo da calculadora',
+            'aba_manual' => 'Manual', 'menu_aria' => 'Menu da calculadora',
+            'copiar' => 'Copiar resultado', 'copiado' => 'Copiado!', 'desfazer' => 'Desfazer', 'refazer' => 'Refazer',
+            'angulo_alternar' => 'Alternar entre graus e radianos', 'manual_indice' => 'Neste manual',
             'num1' => 'Primeiro número', 'num2' => 'Segundo número', 'num_ph' => 'Insira um número',
             'calcular' => 'Calcular', 'aguardando' => 'Aguardando números...',
             'err_vazio' => 'Por favor, preencha ambos os números!', 'err_invalido' => 'Por favor, insira números válidos!',
@@ -128,6 +132,9 @@ function textos(): array
             'idioma_aria' => 'Language',
             'aba_basica' => '6 Operations', 'aba_cientifica' => 'Scientific', 'aba_desafio' => 'Challenge',
             'aria_modo' => 'Calculator mode',
+            'aba_manual' => 'Manual', 'menu_aria' => 'Calculator menu',
+            'copiar' => 'Copy result', 'copiado' => 'Copied!', 'desfazer' => 'Undo', 'refazer' => 'Redo',
+            'angulo_alternar' => 'Switch between degrees and radians', 'manual_indice' => 'In this manual',
             'num1' => 'First number', 'num2' => 'Second number', 'num_ph' => 'Enter a number',
             'calcular' => 'Calculate', 'aguardando' => 'Waiting for numbers...',
             'err_vazio' => 'Please fill in both numbers!', 'err_invalido' => 'Please enter valid numbers!',
@@ -161,6 +168,9 @@ function textos(): array
             'idioma_aria' => 'Idioma',
             'aba_basica' => '6 Operaciones', 'aba_cientifica' => 'Científica', 'aba_desafio' => 'Desafío',
             'aria_modo' => 'Modo de la calculadora',
+            'aba_manual' => 'Manual', 'menu_aria' => 'Menú de la calculadora',
+            'copiar' => 'Copiar resultado', 'copiado' => '¡Copiado!', 'desfazer' => 'Deshacer', 'refazer' => 'Rehacer',
+            'angulo_alternar' => 'Alternar entre grados y radianes', 'manual_indice' => 'En este manual',
             'num1' => 'Primer número', 'num2' => 'Segundo número', 'num_ph' => 'Introduce un número',
             'calcular' => 'Calcular', 'aguardando' => 'Esperando números...',
             'err_vazio' => '¡Por favor, rellena ambos números!', 'err_invalido' => '¡Por favor, introduce números válidos!',
@@ -194,6 +204,9 @@ function textos(): array
             'idioma_aria' => 'Langue',
             'aba_basica' => '6 opérations', 'aba_cientifica' => 'Scientifique', 'aba_desafio' => 'Défi',
             'aria_modo' => 'Mode de la calculatrice',
+            'aba_manual' => 'Manuel', 'menu_aria' => 'Menu de la calculatrice',
+            'copiar' => 'Copier le résultat', 'copiado' => 'Copié !', 'desfazer' => 'Annuler', 'refazer' => 'Rétablir',
+            'angulo_alternar' => 'Basculer entre degrés et radians', 'manual_indice' => 'Dans ce manuel',
             'num1' => 'Premier nombre', 'num2' => 'Deuxième nombre', 'num_ph' => 'Saisis un nombre',
             'calcular' => 'Calculer', 'aguardando' => 'En attente de nombres...',
             'err_vazio' => 'Veuillez remplir les deux nombres !', 'err_invalido' => 'Veuillez saisir des nombres valides !',

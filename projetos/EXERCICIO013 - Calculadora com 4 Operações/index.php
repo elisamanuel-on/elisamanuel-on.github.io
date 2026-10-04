@@ -12,6 +12,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/calculadora.php';
 require_once __DIR__ . '/extras.php';
 require_once __DIR__ . '/idiomas.php';
+require_once __DIR__ . '/manual.php';
 
 ini_set('display_errors', '0');
 session_set_cookie_params(['lifetime' => 0, 'path' => '/', 'httponly' => true, 'samesite' => 'Lax']);
@@ -78,6 +79,7 @@ $operacoes = [
 $modo = match ($_GET['modo'] ?? 'basica') {
     'cientifica' => 'cientifica',
     'desafio'    => 'desafio',
+    'manual'     => 'manual',
     default      => 'basica',
 };
 
@@ -224,7 +226,7 @@ if ($modo === 'basica') {
     } elseif ($resultadoCientifico !== null) {
         $estado = 'ok';
     }
-} else {
+} elseif ($modo === 'desafio') {
     $estado = ['ok' => 'ok', 'erro' => 'erro'][$feedback['estado'] ?? ''] ?? 'neutro';
     $poderes = [(string) ($feedback['elemento'] ?? $desafio['elemento'])];
 }
@@ -236,6 +238,16 @@ $historico = array_values(array_filter(
 ));
 
 $ico = static fn (string $d): string => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $d . '</svg>';
+$iconesMenu = [
+    'basica'     => $ico('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M9 12h.01M12 12h.01M15 12h.01M9 16h.01M12 16h.01M15 16h.01"/>'),
+    'cientifica' => $ico('<path d="M18 5H7l6 7-6 7h11"/>'),
+    'desafio'    => $ico('<path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M9 20h6"/>'),
+    'manual'     => $ico('<path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5v-15z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/>'),
+];
+$iconeIdioma = $ico('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/>');
+$iconeDesfazer = $ico('<path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/>');
+$iconeRefazer = $ico('<path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/>');
+$iconeCopiar = $ico('<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>');
 $elementos = [
     'agua'    => $ico('<path d="M12 3C12 3 5.5 10.2 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 10.2 12 3 12 3z"/>'),
     'fogo'    => $ico('<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.2 1.4 1 2.2 1.8 2.2C10.5 8 11 5.5 12 3z"/>'),
@@ -266,34 +278,47 @@ function ligacao(string $modo, ?string $idioma = null): string
     <link rel="stylesheet" href="style.css?v=<?= e(VERSAO) ?>">
 </head>
 <body data-modo="<?= e($modo) ?>" data-estado="<?= e($estado) ?>" data-poderes="<?= e(implode(',', $poderes)) ?>"<?= ($feedback['subiu'] ?? false) ? ' data-subiu="1"' : '' ?>>
-    <div class="container">
-        <header class="topo-calc">
-            <div class="marca">
-                <img class="logo" src="logo.svg" width="46" height="46" alt="">
-                <div class="marca-texto">
-                    <h1 class="marca-nome"><?= e(t('marca')) ?></h1>
+    <div class="app">
+        <aside class="lateral">
+            <a class="marca" href="<?= e(ligacao('basica')) ?>">
+                <img class="logo" src="logo.svg" width="44" height="44" alt="">
+                <span class="marca-texto">
+                    <span class="marca-nome"><?= e(t('marca')) ?></span>
                     <span class="marca-sub"><?= e(t('marca_sub')) ?></span>
-                </div>
-            </div>
-            <nav class="idiomas" aria-label="<?= e(t('idioma_aria')) ?>">
-                <?php foreach (IDIOMAS_SUPORTADOS as $codigo => $rotulo): ?>
-                    <a href="<?= e(ligacao($modo, $codigo)) ?>" lang="<?= e($codigo) ?>" hreflang="<?= e($codigo) ?>"<?= $codigo === idiomaAtivo() ? ' class="ativo" aria-current="true"' : '' ?>><?= e($rotulo) ?></a>
+                </span>
+            </a>
+
+            <nav class="menu" aria-label="<?= e(t('menu_aria')) ?>">
+                <?php foreach (['basica', 'cientifica', 'desafio', 'manual'] as $entrada): ?>
+                    <a class="menu-item<?= $modo === $entrada ? ' ativa' : '' ?>" href="<?= e(ligacao($entrada)) ?>"<?= $modo === $entrada ? ' aria-current="page"' : '' ?>>
+                        <?= $iconesMenu[$entrada] ?>
+                        <span><?= e(t($entrada === 'basica' ? 'aba_basica' : 'aba_' . $entrada)) ?></span>
+                    </a>
                 <?php endforeach; ?>
             </nav>
-        </header>
 
+            <div class="lateral-base">
+                <form method="get" action="" class="idioma-form">
+                    <input type="hidden" name="modo" value="<?= e($modo) ?>">
+                    <label for="idioma"><?= $iconeIdioma ?> <span><?= e(t('idioma_aria')) ?></span></label>
+                    <select id="idioma" name="lang">
+                        <?php foreach (IDIOMAS_NOMES as $codigo => $nome): ?>
+                            <option value="<?= e($codigo) ?>" lang="<?= e($codigo) ?>"<?= $codigo === idiomaAtivo() ? ' selected' : '' ?>><?= e($nome) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <noscript><button type="submit" class="btn-idioma">OK</button></noscript>
+                </form>
+                <p class="versao">v<?= e(VERSAO) ?></p>
+            </div>
+        </aside>
+
+        <main class="principal">
         <div class="card">
             <div class="elementos" aria-hidden="true">
                 <?php foreach ($elementos as $chave => $svg): ?>
                     <span class="elemento el-<?= e($chave) ?>" data-el="<?= e($chave) ?>" title="<?= e(nomeElemento($chave)) ?>"><?= $svg ?></span>
                 <?php endforeach; ?>
             </div>
-
-            <nav class="abas" aria-label="<?= e(t('aria_modo')) ?>">
-                <a class="aba<?= $modo === 'basica' ? ' ativa' : '' ?>" href="<?= e(ligacao('basica')) ?>"<?= $modo === 'basica' ? ' aria-current="page"' : '' ?>><?= e(t('aba_basica')) ?></a>
-                <a class="aba<?= $modo === 'cientifica' ? ' ativa' : '' ?>" href="<?= e(ligacao('cientifica')) ?>"<?= $modo === 'cientifica' ? ' aria-current="page"' : '' ?>><?= e(t('aba_cientifica')) ?></a>
-                <a class="aba<?= $modo === 'desafio' ? ' ativa' : '' ?>" href="<?= e(ligacao('desafio')) ?>"<?= $modo === 'desafio' ? ' aria-current="page"' : '' ?>><?= e(t('aba_desafio')) ?></a>
-            </nav>
 
 <?php if ($modo === 'basica'): ?>
             <form method="post" action="<?= e(ligacao('basica')) ?>" novalidate>
@@ -344,7 +369,14 @@ function ligacao(string $modo, ?string $idioma = null): string
                     <form method="post" action="<?= e(ligacao('cientifica')) ?>" id="formCientifica" autocomplete="off" novalidate data-ans="<?= e((string) ($_SESSION['ans'] ?? 0)) ?>">
                         <input type="hidden" name="formulario" value="cientifica">
                         <div class="input-field">
-                            <label for="expressao"><?= e(t('expressao')) ?></label>
+                            <div class="visor-topo">
+                                <label for="expressao"><?= e(t('expressao')) ?></label>
+                                <div class="visor-ferramentas">
+                                    <button type="button" class="chip-angulo" id="anguloBadge" aria-label="<?= e(t('angulo_alternar')) ?>" title="<?= e(t('angulo_alternar')) ?>"><?= $angulo === 'rad' ? 'RAD' : 'DEG' ?></button>
+                                    <button type="button" class="btn-icone" id="desfazer" aria-label="<?= e(t('desfazer')) ?>" title="<?= e(t('desfazer')) ?> (Ctrl+Z)" disabled><?= $iconeDesfazer ?></button>
+                                    <button type="button" class="btn-icone" id="refazer" aria-label="<?= e(t('refazer')) ?>" title="<?= e(t('refazer')) ?> (Ctrl+Y)" disabled><?= $iconeRefazer ?></button>
+                                </div>
+                            </div>
                             <input type="text" id="expressao" name="expressao" value="<?= e($expressao) ?>" maxlength="200"
                                    placeholder="0" spellcheck="false" class="visor">
                             <div class="mistura" id="mistura" aria-hidden="true"></div>
@@ -360,7 +392,10 @@ function ligacao(string $modo, ?string $idioma = null): string
                                     <span class="resultado-icon">=</span>
                                     <div class="resultado-conteudo">
                                         <h3><?= e($expressao) ?></h3>
-                                        <p><span class="valor valor-grande"><?= e($resultadoCientifico) ?></span></p>
+                                        <p class="valor-linha">
+                                            <span class="valor valor-grande" id="valorResultado"><?= e($resultadoCientifico) ?></span>
+                                            <button type="button" class="btn-icone btn-copiar" id="copiar" data-valor="<?= e($resultadoCientifico) ?>" data-copiado="<?= e(t('copiado')) ?>" aria-label="<?= e(t('copiar')) ?>" title="<?= e(t('copiar')) ?>"><?= $iconeCopiar ?></button>
+                                        </p>
                                         <?php if ($poderes !== []): ?>
                                             <p class="poderes">
                                                 <?php foreach ($poderes as $p): ?>
@@ -447,6 +482,35 @@ function ligacao(string $modo, ?string $idioma = null): string
                     <?php endif; ?>
                 </aside>
             </div>
+<?php elseif ($modo === 'manual'): ?>
+            <?php $secoes = secoesDoManual(); ?>
+            <article class="manual">
+                <h2 class="manual-titulo"><?= e(t('aba_manual')) ?></h2>
+                <nav class="manual-indice" aria-label="<?= e(t('manual_indice')) ?>">
+                    <?php foreach ($secoes as $secao): ?>
+                        <a href="#<?= e($secao['id']) ?>"><?= e($secao['titulo']) ?></a>
+                    <?php endforeach; ?>
+                </nav>
+
+                <?php foreach ($secoes as $posicao => $secao): ?>
+                    <section class="manual-secao el-<?= e(['agua', 'fogo', 'terra', 'ar', 'energia'][$posicao % 5]) ?>" id="<?= e($secao['id']) ?>">
+                        <h3><?= e($secao['titulo']) ?></h3>
+                        <?php if (isset($secao['texto'])): ?>
+                            <p><?= e($secao['texto']) ?></p>
+                        <?php endif; ?>
+                        <?php if (isset($secao['itens'])): ?>
+                            <dl>
+                                <?php foreach ($secao['itens'] as [$termo, $descricao]): ?>
+                                    <div class="manual-item">
+                                        <dt><?= e($termo) ?></dt>
+                                        <dd><?= e($descricao) ?></dd>
+                                    </div>
+                                <?php endforeach; ?>
+                            </dl>
+                        <?php endif; ?>
+                    </section>
+                <?php endforeach; ?>
+            </article>
 <?php else: ?>
             <?php $nivel = (int) $desafio['nivel']; $faltam = 3 - ($sequencia % 3); ?>
             <div class="placar">
@@ -484,10 +548,11 @@ function ligacao(string $modo, ?string $idioma = null): string
             </form>
 <?php endif; ?>
 
-            <p class="versao">v<?= e(VERSAO) ?></p>
         </div>
+        </main>
     </div>
 
+    <script src="geral.js?v=<?= e(VERSAO) ?>"></script>
     <script src="teclado.js?v=<?= e(VERSAO) ?>"></script>
     <script src="efeitos.js?v=<?= e(VERSAO) ?>"></script>
 </body>
