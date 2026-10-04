@@ -1,4 +1,4 @@
-# Portfólio — Elisama Manuel
+# Portfólio | Elisama Manuel
 
 Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal interativo, boot animado), 12 projetos práticos e um formulário de contacto ligado diretamente ao Gmail.
 
@@ -9,10 +9,10 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal i
 ## Stack técnica
 
 - **Frontend:** HTML + CSS + JavaScript puro (sem frameworks), com sistema de temas (dark/light) via CSS custom properties
-- **Internacionalização:** sistema de tradução próprio (`i18n.js`) — o site está disponível em Português, Inglês, Espanhol e Francês, com deteção automática do idioma do browser
-- **Terminal interativo:** motor próprio (`terminal-core.js`) — animação de arranque na página inicial e uma consola funcional (`terminal.html`) com comandos reais (`help`, `sobre`, `skills`, `experiencia`, `projetos`, `contacto`, `cv`, `github`, `linkedin`, entre outros), também traduzidos por idioma
+- **Internacionalização:** sistema de tradução próprio (`i18n.js`) - o site está disponível em Português, Inglês, Espanhol e Francês, com deteção automática do idioma do browser
+- **Terminal interativo:** motor próprio (`terminal-core.js`) - animação de arranque na página inicial e uma consola funcional (`terminal.html`) com comandos reais (`help`, `sobre`, `skills`, `experiencia`, `projetos`, `contacto`, `cv`, `github`, `linkedin`, entre outros), também traduzidos por idioma
 - **Formulário de contacto:** envia diretamente para o Gmail via Google Apps Script (`MailApp.sendEmail`), sem serviços de terceiros
-- **Analítica:** [GoatCounter](https://www.goatcounter.com/) — estatísticas de visitas simples e sem cookies
+- **Analítica:** [GoatCounter](https://www.goatcounter.com/) - estatísticas de visitas simples e sem cookies
 - **Alojamento:** GitHub Pages
 
 ## Estrutura do site
@@ -50,4 +50,4 @@ python -m http.server 8000
 E aceder a `http://localhost:8000`.
 
 ---
-Desenvolvido por Elisama Manuel — Técnica Especialista em Tecnologias e Programação de Sistemas de Informação (IEFP), em transição de Finanças & Contabilidade para Tecnologia.
+Desenvolvido por Elisama Manuel - Técnica Especialista em Tecnologias e Programação de Sistemas de Informação (IEFP), em transição de Finanças & Contabilidade para Tecnologia.
