@@ -119,6 +119,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $historico = $_SESSION['historico'] ?? [];
+$ico = static fn (string $d): string => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' . $d . '</svg>';
+$elementos = [
+    'agua'    => ['Água',    $ico('<path d="M12 3C12 3 5.5 10.2 5.5 14.5a6.5 6.5 0 0 0 13 0C18.5 10.2 12 3 12 3z"/>')],
+    'fogo'    => ['Fogo',    $ico('<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.2 1.4 1 2.2 1.8 2.2C10.5 8 11 5.5 12 3z"/>')],
+    'terra'   => ['Terra',   $ico('<path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14z"/><path d="M5 19l8-8"/>')],
+    'ar'      => ['Ar',      $ico('<path d="M3 9h10a3 3 0 1 0-3-3"/><path d="M3 14h14a3 3 0 1 1-3 3"/><path d="M3 19h5"/>')],
+    'energia' => ['Energia', $ico('<polygon points="12 3 14.6 9 21 9.6 16.2 13.8 17.7 20.2 12 16.8 6.3 20.2 7.8 13.8 3 9.6 9.4 9"/>')],
+];
+// cor (elemento) de cada tecla científica, pelo texto mostrado
+$corTecla = [
+    'sin' => 'ar', 'cos' => 'ar', 'tan' => 'ar', 'asin' => 'ar', 'acos' => 'ar', 'atan' => 'ar',
+    'ln' => 'terra', 'log' => 'terra', 'exp' => 'terra', '√' => 'terra', '∛' => 'terra', '|x|' => 'terra', '1/x' => 'terra', 'x²' => 'terra', 'x!' => 'terra',
+    'π' => 'agua', 'e' => 'agua', 'ans' => 'agua', '(' => 'agua', ')' => 'agua',
+];
 $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8.01" y2="10"/><line x1="12" y1="10" x2="12.01" y2="10"/><line x1="16" y1="10" x2="16.01" y2="10"/><line x1="8" y1="14" x2="8.01" y2="14"/><line x1="12" y1="14" x2="12.01" y2="14"/><line x1="16" y1="14" x2="16.01" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>';
 ?>
 <!DOCTYPE html>
@@ -127,12 +141,17 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Científica · Exercício 013</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body>
     <div class="container">
         <div class="card">
             <h1><?= $iconeCalculadora ?> Calculadora Científica</h1>
+            <div class="elementos" aria-hidden="true">
+                <?php foreach ($elementos as $chave => [$nome, $svg]): ?>
+                    <span class="elemento el-<?= e($chave) ?>" title="<?= e($nome) ?>"><?= $svg ?></span>
+                <?php endforeach; ?>
+            </div>
 
             <nav class="abas" aria-label="Modo da calculadora">
                 <a class="aba<?= $modo === 'basica' ? ' ativa' : '' ?>" href="?modo=basica"<?= $modo === 'basica' ? ' aria-current="page"' : '' ?>>6 Operações</a>
@@ -225,7 +244,7 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
                         <?php elseif ($texto === '='): ?>
                             <button type="submit" class="tecla igual">=</button>
                         <?php else: ?>
-                            <button type="button" class="tecla <?= e($classe) ?>" data-insere="<?= e($insere) ?>"><?= e($texto) ?></button>
+                            <button type="button" class="tecla <?= e(trim($classe . ' ' . (isset($corTecla[$texto]) ? 'el-' . $corTecla[$texto] : ''))) ?>" data-insere="<?= e($insere) ?>"><?= e($texto) ?></button>
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>

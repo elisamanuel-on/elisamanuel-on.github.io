@@ -438,3 +438,272 @@ button:active {
 .card h1 {
     margin-bottom: 28px;
 }
+
+
+/* ============================================
+   TEMA "CINCO ELEMENTOS" (desenho original)
+   Noite violeta com cinco cores: água, fogo, terra, ar e energia
+   ============================================ */
+:root {
+    --noite: #0b0614;
+    --noite-2: #150b24;
+    --vidro: rgba(26, 15, 44, 0.88);
+    --linha: rgba(176, 132, 255, 0.28);
+    --texto: #efe6ff;
+    --suave: #9c8bb8;
+    --agua: #4cc9f0;
+    --fogo: #ff8a4c;
+    --terra: #6fd27f;
+    --ar: #c7b6ff;
+    --energia: #ff5fb0;
+    --violeta: #8f5cff;
+}
+
+body {
+    background:
+        radial-gradient(60rem 40rem at 12% -10%, rgba(143, 92, 255, 0.28), transparent 60%),
+        radial-gradient(50rem 36rem at 105% 10%, rgba(255, 95, 176, 0.18), transparent 60%),
+        radial-gradient(46rem 34rem at 50% 115%, rgba(76, 201, 240, 0.16), transparent 60%),
+        var(--noite);
+    background-attachment: fixed;
+    color: var(--texto);
+}
+
+.card {
+    background: var(--vidro);
+    border: 1px solid var(--linha);
+    box-shadow: 0 24px 70px rgba(143, 92, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(90deg, var(--agua), var(--terra), var(--fogo), var(--energia), var(--ar));
+}
+
+h1 {
+    background: linear-gradient(135deg, #ffd1ef, #c7b6ff 45%, #8fe3ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.3px;
+}
+
+/* faixa dos cinco elementos */
+.card h1 {
+    margin-bottom: 12px;
+}
+
+.elementos {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 26px;
+}
+
+.elemento {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    background: color-mix(in srgb, currentColor 14%, transparent);
+    box-shadow: 0 0 14px color-mix(in srgb, currentColor 35%, transparent);
+}
+
+.elemento svg {
+    width: 18px;
+    height: 18px;
+}
+
+.el-agua { color: var(--agua); }
+.el-fogo { color: var(--fogo); }
+.el-terra { color: var(--terra); }
+.el-ar { color: var(--ar); }
+.el-energia { color: var(--energia); }
+
+/* abas */
+.aba {
+    border-color: var(--linha);
+    color: var(--suave);
+}
+
+.aba:hover {
+    color: var(--texto);
+    border-color: var(--violeta);
+}
+
+.aba.ativa {
+    background: linear-gradient(135deg, var(--violeta), var(--energia));
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(143, 92, 255, 0.35);
+}
+
+/* campos */
+.input-field label {
+    color: var(--ar);
+}
+
+.input-field input,
+.input-field select {
+    background: var(--noite);
+    border-color: var(--linha);
+    color: var(--texto);
+}
+
+.input-field input:focus,
+.input-field select:focus {
+    border-color: var(--violeta);
+    box-shadow: 0 0 0 3px rgba(143, 92, 255, 0.25);
+    background: var(--noite-2);
+}
+
+.input-field input::placeholder {
+    color: #5d4d78;
+}
+
+.dica,
+.resultado-conteudo .conta {
+    color: var(--suave);
+}
+
+.dica code,
+.erro code {
+    background: var(--noite);
+    color: var(--ar);
+}
+
+/* botão Calcular */
+button[type="submit"]:not(.tecla) {
+    background: linear-gradient(135deg, var(--violeta), var(--energia));
+}
+
+button:hover {
+    box-shadow: 0 10px 30px rgba(143, 92, 255, 0.4);
+}
+
+/* teclado: cada grupo com a cor de um elemento */
+.teclado .tecla {
+    background: var(--noite);
+    border: 1px solid var(--linha);
+    color: var(--texto);
+}
+
+.teclado .tecla:hover {
+    border-color: var(--violeta);
+    background: var(--noite-2);
+}
+
+.teclado .tecla.el-ar,
+.teclado .tecla.el-terra,
+.teclado .tecla.el-agua {
+    border-color: color-mix(in srgb, currentColor 40%, transparent);
+}
+
+.teclado .tecla.el-ar { color: var(--ar); }
+.teclado .tecla.el-terra { color: var(--terra); }
+.teclado .tecla.el-agua { color: var(--agua); }
+
+.teclado .tecla.el-ar:hover,
+.teclado .tecla.el-terra:hover,
+.teclado .tecla.el-agua:hover {
+    background: color-mix(in srgb, currentColor 14%, var(--noite));
+    border-color: currentColor;
+    box-shadow: 0 0 14px color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.teclado .tecla.op {
+    color: var(--fogo);
+    border-color: color-mix(in srgb, var(--fogo) 40%, transparent);
+}
+
+.teclado .tecla.op:hover {
+    background: color-mix(in srgb, var(--fogo) 14%, var(--noite));
+    border-color: var(--fogo);
+    box-shadow: 0 0 14px rgba(255, 138, 76, 0.3);
+}
+
+.teclado .tecla.limpar {
+    color: var(--energia);
+    border-color: color-mix(in srgb, var(--energia) 40%, transparent);
+}
+
+.teclado .tecla.igual {
+    background: linear-gradient(135deg, var(--violeta), var(--energia));
+    border-color: transparent;
+    color: #fff;
+}
+
+/* resultados: um elemento para cada operação */
+.resultado-item {
+    background: var(--noite);
+    border: 1px solid var(--linha);
+    border-left: 4px solid var(--violeta);
+}
+
+.resultado-item:hover {
+    background: var(--noite-2);
+}
+
+.resultado-conteudo h3,
+.historico h3 {
+    color: var(--suave);
+}
+
+.resultado-conteudo p {
+    color: var(--texto);
+}
+
+.resultado-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 700;
+    border: 1px solid currentColor;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.resultados-area .resultado-item.soma { border-left-color: var(--terra); }
+.resultados-area .resultado-item.soma .resultado-icon,
+.resultados-area .resultado-item.soma .resultado-conteudo .valor { color: var(--terra); }
+
+.resultados-area .resultado-item.subtracao { border-left-color: var(--agua); }
+.resultados-area .resultado-item.subtracao .resultado-icon,
+.resultados-area .resultado-item.subtracao .resultado-conteudo .valor { color: var(--agua); }
+
+.resultados-area .resultado-item.multiplicacao { border-left-color: var(--fogo); }
+.resultados-area .resultado-item.multiplicacao .resultado-icon,
+.resultados-area .resultado-item.multiplicacao .resultado-conteudo .valor { color: var(--fogo); }
+
+.resultados-area .resultado-item.divisao { border-left-color: var(--ar); }
+.resultados-area .resultado-item.divisao .resultado-icon,
+.resultados-area .resultado-item.divisao .resultado-conteudo .valor { color: var(--ar); }
+
+.resultados-area .resultado-item.potencia { border-left-color: var(--energia); }
+.resultados-area .resultado-item.potencia .resultado-icon,
+.resultados-area .resultado-item.potencia .resultado-conteudo .valor { color: var(--energia); }
+
+.resultados-area .resultado-item.modulo { border-left-color: var(--violeta); }
+.resultados-area .resultado-item.modulo .resultado-icon,
+.resultados-area .resultado-item.modulo .resultado-conteudo .valor { color: #b794ff; }
+
+/* resultado científico */
+.resultados-area.uma-coluna .resultado-item { border-left-color: var(--energia); }
+.resultados-area.uma-coluna .resultado-icon,
+.resultados-area.uma-coluna .resultado-conteudo .valor { color: var(--energia); }
+
+.historico { border-top-color: var(--linha); }
+.historico ol { color: var(--suave); }
+
+.erro {
+    color: #ff9db8;
+    background: rgba(255, 95, 176, 0.1);
+    border-left-color: var(--energia);
+}
