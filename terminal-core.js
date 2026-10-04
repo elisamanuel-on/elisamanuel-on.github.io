@@ -28,16 +28,16 @@ function pausa(ms) {
 const LOCALES = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
 
 /* ============================================
-   BOOT SEQUENCE (index.html) — traduzida
+   BOOT SEQUENCE (index.html), traduzida
    ============================================ */
 const BOOT_DADOS = [
     {
         comando: { pt: 'whoami', en: 'whoami', es: 'whoami', fr: 'whoami' },
         saida: {
-            pt: ['Elisama Manuel — Desenvolvedora Web Júnior (Full-Stack)'],
-            en: ['Elisama Manuel — Junior Full-Stack Web Developer'],
-            es: ['Elisama Manuel — Desarrolladora Web Júnior (Full-Stack)'],
-            fr: ['Elisama Manuel — Développeuse Web Junior (Full-Stack)']
+            pt: ['Elisama Manuel: Desenvolvedora Web Júnior (Full-Stack)'],
+            en: ['Elisama Manuel: Junior Full-Stack Web Developer'],
+            es: ['Elisama Manuel: Desarrolladora Web Júnior (Full-Stack)'],
+            fr: ['Elisama Manuel: Développeuse Web Junior (Full-Stack)']
         }
     },
     {
@@ -131,7 +131,7 @@ function configurarBotaoSaltar() {
 }
 
 /* ============================================
-   TERMINAL INTERATIVO (terminal.html) — totalmente traduzido
+   TERMINAL INTERATIVO (terminal.html), totalmente traduzido
    ============================================ */
 
 /* Palavra que aciona cada comando, por idioma. "id" é o identificador interno (não muda). */
@@ -155,10 +155,10 @@ const AJUDA_LISTA = [
 
 const TEXTOS_TERMINAL = {
     sobre: {
-        pt: ['Elisama Manuel — Desenvolvedora Web Júnior (Full-Stack).', 'Transição de Finanças &amp; Contabilidade para Tecnologia.', 'Foco em Python, Automação (RPA), Análise de Dados e Web.'],
-        en: ['Elisama Manuel — Junior Full-Stack Web Developer.', 'Transitioning from Finance &amp; Accounting into Tech.', 'Focused on Python, Automation (RPA), Data Analysis and Web.'],
-        es: ['Elisama Manuel — Desarrolladora Web Júnior (Full-Stack).', 'Transición de Finanzas y Contabilidad hacia la Tecnología.', 'Enfocada en Python, Automatización (RPA), Análisis de Datos y Web.'],
-        fr: ['Elisama Manuel — Développeuse Web Junior (Full-Stack).', 'Transition de la Finance &amp; Comptabilité vers la Technologie.', 'Axée sur Python, Automatisation (RPA), Analyse de Données et Web.']
+        pt: ['Elisama Manuel: Desenvolvedora Web Júnior (Full-Stack).', 'Transição de Finanças &amp; Contabilidade para Tecnologia.', 'Foco em Python, Automação (RPA), Análise de Dados e Web.'],
+        en: ['Elisama Manuel: Junior Full-Stack Web Developer.', 'Transitioning from Finance &amp; Accounting into Tech.', 'Focused on Python, Automation (RPA), Data Analysis and Web.'],
+        es: ['Elisama Manuel: Desarrolladora Web Júnior (Full-Stack).', 'Transición de Finanzas y Contabilidad hacia la Tecnología.', 'Enfocada en Python, Automatización (RPA), Análisis de Datos y Web.'],
+        fr: ['Elisama Manuel: Développeuse Web Junior (Full-Stack).', 'Transition de la Finance &amp; Comptabilité vers la Technologie.', 'Axée sur Python, Automatisation (RPA), Analyse de Données et Web.']
     },
     skills: {
         pt: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning'],
@@ -167,16 +167,16 @@ const TEXTOS_TERMINAL = {
         fr: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning']
     },
     experiencia: {
-        pt: '7 experiências profissionais — ver perfil completo em',
-        en: '7 professional roles — see full profile at',
-        es: '7 experiencias profesionales — ver perfil completo en',
-        fr: '7 expériences professionnelles — voir le profil complet sur'
+        pt: '7 experiências profissionais, ver perfil completo em',
+        en: '7 professional roles, see full profile at',
+        es: '7 experiencias profesionales, ver perfil completo en',
+        fr: '7 expériences professionnelles, voir le profil complet sur'
     },
     projetos: {
-        pt: '12 projetos disponíveis →',
-        en: '12 projects available →',
-        es: '12 proyectos disponibles →',
-        fr: '12 projets disponibles →'
+        pt: '12 projetos disponíveis',
+        en: '12 projects available',
+        es: '12 proyectos disponibles',
+        fr: '12 projets disponibles'
     },
     contacto: {
         pt: ['email: elisamanueljob@gmail.com', 'tel:&nbsp;&nbsp;&nbsp;+351 913 516 395'],
@@ -273,7 +273,7 @@ function iniciarTerminalInterativo() {
 
     function mostrarBanner() {
         desenharCaixa([
-            'ELISAMA MANUEL — TERMINAL',
+            'ELISAMA MANUEL: TERMINAL',
             L(TEXTOS_TERMINAL.banner_subtitulo)
         ]);
     }
@@ -284,11 +284,11 @@ function iniciarTerminalInterativo() {
             imprimir(t('term_help_titulo'));
             AJUDA_LISTA.forEach(item => {
                 const palavra = Object.keys(gatilhos).find(k => gatilhos[k] === item.id);
-                imprimir(`&nbsp;&nbsp;${palavra.padEnd(14, ' ')} — ${L(item.desc)}`);
+                imprimir(`&nbsp;&nbsp;${palavra.padEnd(14, ' ')}: ${L(item.desc)}`);
             });
             const ghKey = Object.keys(gatilhos).find(k => gatilhos[k] === 'github');
             const liKey = Object.keys(gatilhos).find(k => gatilhos[k] === 'linkedin');
-            imprimir(`&nbsp;&nbsp;${(ghKey + ' / ' + liKey).padEnd(14, ' ')} — ${t('term_help_perfis')}`);
+            imprimir(`&nbsp;&nbsp;${(ghKey + ' / ' + liKey).padEnd(14, ' ')}: ${t('term_help_perfis')}`);
         },
         sobre: () => L(TEXTOS_TERMINAL.sobre).forEach(l => imprimir(l)),
         skills: () => L(TEXTOS_TERMINAL.skills).forEach(l => imprimir(l)),

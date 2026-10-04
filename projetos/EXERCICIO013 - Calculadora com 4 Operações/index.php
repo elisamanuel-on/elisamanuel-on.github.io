@@ -1,6 +1,6 @@
 <?php
 /**
- * Exercício 013 — Calculadora Científica (com PHP)
+ * Exercício 013 · Calculadora Científica (com PHP)
  *
  * Evolução da calculadora de 4 operações em JavaScript: agora o cálculo é feito
  * no servidor, com validação, e há um modo científico com expressões completas.
@@ -126,7 +126,7 @@ $iconeCalculadora = '<svg class="icon" style="width:1em;height:1em;vertical-alig
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Científica - Exercício 013</title>
+    <title>Calculadora Científica · Exercício 013</title>
     <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>

@@ -20,7 +20,7 @@ const TRADUCOES = {
         hero_p1: 'Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.',
         hero_p2: 'Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.',
         hero_btn_cv: 'Descarregar CV',
-        hero_btn_projetos: 'Ver Projetos →',
+        hero_btn_projetos: 'Ver Projetos',
         stat_projetos: 'Projetos',
         stat_tecnologias: 'Tecnologias',
         stat_experiencias: 'Experiências',
@@ -30,12 +30,12 @@ const TRADUCOES = {
         titulo_formacao: 'Formação Académica',
 
         footer_tagline: 'Tecnologias e Programação de Sistemas de Informação',
-        voltar_inicio: '← Voltar ao Início',
+        voltar_inicio: 'Voltar ao Início',
 
         portfolio_titulo: 'MEUS PROJETOS',
         portfolio_subtitulo: 'Clique num projeto para ver o código-fonte e demonstração',
         portfolio_footer: 'Todos os projetos foram desenvolvidos durante a formação em <strong>Programação Web (Client-Side)</strong> e por iniciativa própria',
-        projeto_ver: 'Ver Projeto →',
+        projeto_ver: 'Ver Projeto',
 
         contacto_titulo: 'CONTACTO',
         contacto_subtitulo: 'Entre em contacto para oportunidades profissionais',
@@ -80,7 +80,7 @@ const TRADUCOES = {
         hero_p1: 'With a solid background in <strong>Finance and Accounting</strong> and a strategic move into tech, I am currently a Specialist Technician in <strong>Information Systems Technology and Programming</strong> at IEFP (Portuguese Institute for Employment and Vocational Training).',
         hero_p2: 'I specialize in <strong>Python, Process Automation (RPA), Data Analysis and Web Development</strong>. My mission is to combine management and business experience with technical skills to build innovative solutions.',
         hero_btn_cv: 'Download CV',
-        hero_btn_projetos: 'View Projects →',
+        hero_btn_projetos: 'View Projects',
         stat_projetos: 'Projects',
         stat_tecnologias: 'Technologies',
         stat_experiencias: 'Roles',
@@ -90,12 +90,12 @@ const TRADUCOES = {
         titulo_formacao: 'Education',
 
         footer_tagline: 'Information Systems Technology and Programming',
-        voltar_inicio: '← Back to Home',
+        voltar_inicio: 'Back to Home',
 
         portfolio_titulo: 'MY PROJECTS',
         portfolio_subtitulo: 'Click a project to see the source code and live demo',
         portfolio_footer: 'All projects were built during <strong>Web Programming (Client-Side)</strong> training, and on my own initiative',
-        projeto_ver: 'View Project →',
+        projeto_ver: 'View Project',
 
         contacto_titulo: 'CONTACT',
         contacto_subtitulo: 'Get in touch about professional opportunities',
@@ -140,7 +140,7 @@ const TRADUCOES = {
         hero_p1: 'Con una base sólida en <strong>Finanzas y Contabilidad</strong> y una transición estratégica hacia el área tecnológica, actualmente soy Técnica Especialista en <strong>Tecnologías y Programación de Sistemas de Información</strong> en el IEFP (Instituto portugués de Empleo y Formación Profesional).',
         hero_p2: 'Me especializo en <strong>Python, Automatización de Procesos (RPA), Análisis de Datos y Desarrollo Web</strong>. Mi misión es combinar la experiencia en gestión y negocios con competencias técnicas para crear soluciones innovadoras.',
         hero_btn_cv: 'Descargar CV',
-        hero_btn_projetos: 'Ver Proyectos →',
+        hero_btn_projetos: 'Ver Proyectos',
         stat_projetos: 'Proyectos',
         stat_tecnologias: 'Tecnologías',
         stat_experiencias: 'Experiencias',
@@ -150,12 +150,12 @@ const TRADUCOES = {
         titulo_formacao: 'Formación Académica',
 
         footer_tagline: 'Tecnologías y Programación de Sistemas de Información',
-        voltar_inicio: '← Volver al Inicio',
+        voltar_inicio: 'Volver al Inicio',
 
         portfolio_titulo: 'MIS PROYECTOS',
         portfolio_subtitulo: 'Haz clic en un proyecto para ver el código fuente y la demo',
         portfolio_footer: 'Todos los proyectos fueron desarrollados durante la formación en <strong>Programación Web (Client-Side)</strong> y por iniciativa propia',
-        projeto_ver: 'Ver Proyecto →',
+        projeto_ver: 'Ver Proyecto',
 
         contacto_titulo: 'CONTACTO',
         contacto_subtitulo: 'Ponte en contacto para oportunidades profesionales',
@@ -200,7 +200,7 @@ const TRADUCOES = {
         hero_p1: 'Avec une solide base en <strong>Finance et Comptabilité</strong> et une transition stratégique vers le domaine technologique, je suis actuellement Technicienne Spécialiste en <strong>Technologies et Programmation des Systèmes d\'Information</strong> à l\'IEFP (Institut portugais de l\'Emploi et de la Formation Professionnelle).',
         hero_p2: 'Je me spécialise en <strong>Python, Automatisation des Processus (RPA), Analyse de Données et Développement Web</strong>. Ma mission est d\'allier l\'expérience en gestion et en affaires à des compétences techniques pour créer des solutions innovantes.',
         hero_btn_cv: 'Télécharger le CV',
-        hero_btn_projetos: 'Voir les Projets →',
+        hero_btn_projetos: 'Voir les Projets',
         stat_projetos: 'Projets',
         stat_tecnologias: 'Technologies',
         stat_experiencias: 'Expériences',
@@ -210,12 +210,12 @@ const TRADUCOES = {
         titulo_formacao: 'Formation Académique',
 
         footer_tagline: 'Technologies et Programmation des Systèmes d\'Information',
-        voltar_inicio: "← Retour à l'Accueil",
+        voltar_inicio: "Retour à l'Accueil",
 
         portfolio_titulo: 'MES PROJETS',
         portfolio_subtitulo: 'Cliquez sur un projet pour voir le code source et la démo',
         portfolio_footer: 'Tous les projets ont été développés pendant la formation en <strong>Programmation Web (Client-Side)</strong> et de ma propre initiative',
-        projeto_ver: 'Voir le Projet →',
+        projeto_ver: 'Voir le Projet',
 
         contacto_titulo: 'CONTACT',
         contacto_subtitulo: 'Contactez-moi pour des opportunités professionnelles',
@@ -258,10 +258,10 @@ const PAGINAS = {
             fr: 'Elisama Manuel | Portfolio Développeuse'
         },
         descricao: {
-            pt: 'Elisama Manuel — Desenvolvedora em formação, especializada em Python, automação (RPA), análise de dados e desenvolvimento web. Veja os meus projetos e percurso.',
-            en: 'Elisama Manuel — Developer in training, specializing in Python, process automation (RPA), data analysis and web development. See my projects and career path.',
-            es: 'Elisama Manuel — Desarrolladora en formación, especializada en Python, automatización de procesos (RPA), análisis de datos y desarrollo web. Descubre mis proyectos y trayectoria.',
-            fr: "Elisama Manuel — Développeuse en formation, spécialisée en Python, automatisation des processus (RPA), analyse de données et développement web. Découvrez mes projets et mon parcours."
+            pt: 'Elisama Manuel: Desenvolvedora em formação, especializada em Python, automação (RPA), análise de dados e desenvolvimento web. Veja os meus projetos e percurso.',
+            en: 'Elisama Manuel: Developer in training, specializing in Python, process automation (RPA), data analysis and web development. See my projects and career path.',
+            es: 'Elisama Manuel: Desarrolladora en formación, especializada en Python, automatización de procesos (RPA), análisis de datos y desarrollo web. Descubre mis proyectos y trayectoria.',
+            fr: "Elisama Manuel: Développeuse en formation, spécialisée en Python, automatisation des processus (RPA), analyse de données et développement web. Découvrez mes projets et mon parcours."
         }
     },
     portfolio: {
@@ -272,10 +272,10 @@ const PAGINAS = {
             fr: 'Elisama | Portfolio'
         },
         descricao: {
-            pt: 'Projetos práticos de Elisama Manuel em JavaScript, HTML e CSS — desenvolvidos durante a formação em Programação Web.',
-            en: 'Hands-on projects by Elisama Manuel in JavaScript, HTML and CSS — built during Web Programming training.',
-            es: 'Proyectos prácticos de Elisama Manuel en JavaScript, HTML y CSS — desarrollados durante la formación en Programación Web.',
-            fr: "Projets pratiques d'Elisama Manuel en JavaScript, HTML et CSS — développés pendant la formation en Programmation Web."
+            pt: 'Projetos práticos de Elisama Manuel em JavaScript, HTML e CSS, desenvolvidos durante a formação em Programação Web.',
+            en: 'Hands-on projects by Elisama Manuel in JavaScript, HTML and CSS, built during Web Programming training.',
+            es: 'Proyectos prácticos de Elisama Manuel en JavaScript, HTML y CSS, desarrollados durante la formación en Programación Web.',
+            fr: "Projets pratiques d'Elisama Manuel en JavaScript, HTML et CSS, développés pendant la formation en Programmation Web."
         }
     },
     contacto: {
@@ -300,10 +300,10 @@ const PAGINAS = {
             fr: 'Elisama | Terminal'
         },
         descricao: {
-            pt: "Terminal interativo do portfólio de Elisama Manuel — escreve 'help' para explorar.",
-            en: "Interactive terminal from Elisama Manuel's portfolio — type 'help' to explore.",
-            es: "Terminal interactivo del portafolio de Elisama Manuel — escribe 'help' para explorar.",
-            fr: "Terminal interactif du portfolio d'Elisama Manuel — tapez 'help' pour explorer."
+            pt: "Terminal interativo do portfólio de Elisama Manuel. Escreve 'help' para explorar.",
+            en: "Interactive terminal from Elisama Manuel's portfolio. Type 'help' to explore.",
+            es: "Terminal interactivo del portafolio de Elisama Manuel. Escribe 'help' para explorar.",
+            fr: "Terminal interactif du portfolio d'Elisama Manuel. Tapez 'help' pour explorer."
         }
     }
 };

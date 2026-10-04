@@ -6,7 +6,7 @@
 console.log('Portfólio CV carregado!');
 
 // ============================================
-// ÍCONES SVG (substituem emojis — cor herdada via currentColor)
+// ÍCONES SVG (substituem emojis, cor herdada via currentColor)
 // ============================================
 const ICONES = {
     sol: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
@@ -81,7 +81,7 @@ const competencias = [
     { pt: 'Machine Learning', en: 'Machine Learning', es: 'Machine Learning', fr: 'Machine Learning' }
 ];
 
-// Competências complementares (gestão/negócio) — reforça a transição de carreira
+// Competências complementares (gestão/negócio), reforça a transição de carreira
 const competenciasComplementares = [
     { pt: 'Excel Avançado', en: 'Advanced Excel', es: 'Excel Avanzado', fr: 'Excel Avancé' },
     { pt: 'SAP (ERP)', en: 'SAP (ERP)', es: 'SAP (ERP)', fr: 'SAP (ERP)' },
@@ -101,12 +101,12 @@ const experiencias = [
             es: 'Estratega Comercial y Consultora de Imagen Corporativa',
             fr: 'Stratège Commerciale & Consultante en Image Corporative'
         },
-        empresa: 'Perfil Azul – Prestadora de Serviços',
+        empresa: 'Perfil Azul, Prestadora de Serviços',
         periodo: {
-            pt: 'Outubro 2025 – Dezembro 2025',
-            en: 'October 2025 – December 2025',
-            es: 'Octubre 2025 – Diciembre 2025',
-            fr: 'Octobre 2025 – Décembre 2025'
+            pt: 'Outubro 2025 a Dezembro 2025',
+            en: 'October 2025 to December 2025',
+            es: 'Octubre 2025 a Diciembre 2025',
+            fr: 'Octobre 2025 à Décembre 2025'
         },
         descricao: {
             pt: 'Desenvolvimento de estratégias comerciais para fortalecer a presença e competitividade da marca. Consultoria em imagem corporativa e posicionamento de mercado.',
@@ -124,10 +124,10 @@ const experiencias = [
         },
         empresa: 'Fitness Up, Famalicão',
         periodo: {
-            pt: 'Dezembro 2024 – Fevereiro 2025',
-            en: 'December 2024 – February 2025',
-            es: 'Diciembre 2024 – Febrero 2025',
-            fr: 'Décembre 2024 – Février 2025'
+            pt: 'Dezembro 2024 a Fevereiro 2025',
+            en: 'December 2024 to February 2025',
+            es: 'Diciembre 2024 a Febrero 2025',
+            fr: 'Décembre 2024 à Février 2025'
         },
         descricao: {
             pt: 'Gestão e desenvolvimento do relacionamento com clientes. Atendimento direto, resolução de reclamações e apoio comercial.',
@@ -145,10 +145,10 @@ const experiencias = [
         },
         empresa: 'Di Cuore Eventos, Lda., Luanda',
         periodo: {
-            pt: 'Dezembro 2022 – Julho 2024',
-            en: 'December 2022 – July 2024',
-            es: 'Diciembre 2022 – Julio 2024',
-            fr: 'Décembre 2022 – Juillet 2024'
+            pt: 'Dezembro 2022 a Julho 2024',
+            en: 'December 2022 to July 2024',
+            es: 'Diciembre 2022 a Julio 2024',
+            fr: 'Décembre 2022 à Juillet 2024'
         },
         descricao: {
             pt: 'Suporte à gestão editorial e organização de conteúdos. Supervisão de equipa e coordenação de processos internos.',
@@ -164,12 +164,12 @@ const experiencias = [
             es: 'Directora del Departamento de Formación',
             fr: 'Directrice du Département de Formation'
         },
-        empresa: 'CEDE – Centro de Desenvolvimento Empresarial, Luanda',
+        empresa: 'CEDE, Centro de Desenvolvimento Empresarial, Luanda',
         periodo: {
-            pt: 'Fevereiro 2022 – Novembro 2022',
-            en: 'February 2022 – November 2022',
-            es: 'Febrero 2022 – Noviembre 2022',
-            fr: 'Février 2022 – Novembre 2022'
+            pt: 'Fevereiro 2022 a Novembro 2022',
+            en: 'February 2022 to November 2022',
+            es: 'Febrero 2022 a Noviembre 2022',
+            fr: 'Février 2022 à Novembre 2022'
         },
         descricao: {
             pt: 'Supervisão de equipa, gestão de programas e implementação de ações de capacitação.',
@@ -187,10 +187,10 @@ const experiencias = [
         },
         empresa: 'Infocontabil Consultoria SU LDA, Luanda',
         periodo: {
-            pt: 'Novembro 2021 – Janeiro 2022',
-            en: 'November 2021 – January 2022',
-            es: 'Noviembre 2021 – Enero 2022',
-            fr: 'Novembre 2021 – Janvier 2022'
+            pt: 'Novembro 2021 a Janeiro 2022',
+            en: 'November 2021 to January 2022',
+            es: 'Noviembre 2021 a Enero 2022',
+            fr: 'Novembre 2021 à Janvier 2022'
         },
         descricao: {
             pt: 'Análises financeiras e preparação de demonstrativos contábeis. Apoio na tomada de decisões estratégicas.',
@@ -208,10 +208,10 @@ const experiencias = [
         },
         empresa: 'Miragos Empreendimentos LDA, Luanda',
         periodo: {
-            pt: 'Junho 2018 – Novembro 2018',
-            en: 'June 2018 – November 2018',
-            es: 'Junio 2018 – Noviembre 2018',
-            fr: 'Juin 2018 – Novembre 2018'
+            pt: 'Junho 2018 a Novembro 2018',
+            en: 'June 2018 to November 2018',
+            es: 'Junio 2018 a Noviembre 2018',
+            fr: 'Juin 2018 à Novembre 2018'
         },
         descricao: {
             pt: 'Atendimento ao cliente, vendas de serviços e gestão de comunicação. Apoio na organização de eventos e coordenação de stock.',
@@ -229,10 +229,10 @@ const experiencias = [
         },
         empresa: 'Escritório de Contabilidade e Consultoria Dr. Rui Manuel, Luanda',
         periodo: {
-            pt: 'Março 2017 – Abril 2018',
-            en: 'March 2017 – April 2018',
-            es: 'Marzo 2017 – Abril 2018',
-            fr: 'Mars 2017 – Avril 2018'
+            pt: 'Março 2017 a Abril 2018',
+            en: 'March 2017 to April 2018',
+            es: 'Marzo 2017 a Abril 2018',
+            fr: 'Mars 2017 à Avril 2018'
         },
         descricao: {
             pt: 'Organização financeira, apoio administrativo e controlo de documentos.',
@@ -254,8 +254,8 @@ const formacao = [
             es: 'Técnica Especialista en Tecnologías y Programación de Sistemas de Información',
             fr: 'Technicienne Spécialiste en Technologies et Programmation des Systèmes d\'Information'
         },
-        instituicao: 'IEFP – Instituto de Emprego e Formação Profissional',
-        periodo: '2025 – 2026'
+        instituicao: 'IEFP, Instituto de Emprego e Formação Profissional',
+        periodo: '2025/2026'
     },
     {
         curso: {
@@ -265,7 +265,7 @@ const formacao = [
             fr: 'Licence en Finance et Comptabilité'
         },
         instituicao: 'Universidade Independente de Angola',
-        periodo: '2018 – 2022'
+        periodo: '2018/2022'
     },
     {
         curso: {
@@ -275,7 +275,7 @@ const formacao = [
             fr: 'Cours Technique en Finance'
         },
         instituicao: 'Instituto Médio de Administração e Gestão, Luanda',
-        periodo: '2014 – 2017'
+        periodo: '2014/2017'
     }
 ];
 
@@ -319,10 +319,10 @@ const projetos = [
         id: '013',
         titulo: { pt: 'Calculadora Científica', en: 'Scientific Calculator', es: 'Calculadora Científica', fr: 'Calculatrice Scientifique' },
         descricao: {
-            pt: 'Seis operações e modo científico — raiz, trigonometria, logaritmos, fatorial e expressões completas — calculadas no servidor em PHP, sem eval()',
-            en: 'Six operations and a scientific mode — roots, trigonometry, logarithms, factorials and full expressions — computed server-side in PHP, without eval()',
-            es: 'Seis operaciones y modo científico — raíz, trigonometría, logaritmos, factorial y expresiones completas — calculadas en el servidor con PHP, sin eval()',
-            fr: 'Six opérations et mode scientifique — racines, trigonométrie, logarithmes, factorielle et expressions complètes — calculées côté serveur en PHP, sans eval()'
+            pt: 'Seis operações e modo científico: raiz, trigonometria, logaritmos, fatorial e expressões completas, calculadas no servidor em PHP, sem eval()',
+            en: 'Six operations and a scientific mode: roots, trigonometry, logarithms, factorials and full expressions, computed server-side in PHP, without eval()',
+            es: 'Seis operaciones y modo científico: raíz, trigonometría, logaritmos, factorial y expresiones completas, calculadas en el servidor con PHP, sin eval()',
+            fr: 'Six opérations et mode scientifique: racines, trigonométrie, logarithmes, factorielle et expressions complètes, calculées côté serveur en PHP, sans eval()'
         },
         tag: 'PHP',
         caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
@@ -401,10 +401,10 @@ const projetos = [
             fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
         },
         descricao: {
-            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows — tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
-            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app — all stored in MongoDB with automated robots via GitHub Actions',
-            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows — todo guardado en MongoDB con robots automáticos vía GitHub Actions',
-            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows — le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
+            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows, tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
+            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app, all stored in MongoDB with automated robots via GitHub Actions',
+            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows, todo guardado en MongoDB con robots automáticos vía GitHub Actions',
+            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows, le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
         },
         tag: 'FastAPI',
         url: 'https://monitor-vagas-noticias.onrender.com',
@@ -437,10 +437,10 @@ const projetos = [
             fr: 'Portail d\'Automatisation Interne'
         },
         descricao: {
-            pt: 'Portal web para automatizar tarefas internas de escritório — organização de ficheiros, geração de relatórios e backups — com histórico de execuções e agendamento automático via cron',
-            en: 'Web portal to automate internal office tasks — file organization, report generation and backups — with an execution history and automatic scheduling via cron',
-            es: 'Portal web para automatizar tareas internas de oficina — organización de archivos, generación de informes y copias de seguridad — con historial de ejecuciones y programación automática vía cron',
-            fr: 'Portail web pour automatiser des tâches internes de bureau — organisation de fichiers, génération de rapports et sauvegardes — avec historique d\'exécutions et planification automatique via cron'
+            pt: 'Portal web para automatizar tarefas internas de escritório: organização de ficheiros, geração de relatórios e backups, com histórico de execuções e agendamento automático via cron',
+            en: 'Web portal to automate internal office tasks: file organization, report generation and backups, with an execution history and automatic scheduling via cron',
+            es: 'Portal web para automatizar tareas internas de oficina: organización de archivos, generación de informes y copias de seguridad, con historial de ejecuciones y programación automática vía cron',
+            fr: 'Portail web pour automatiser des tâches internes de bureau: organisation de fichiers, génération de rapports et sauvegardes, avec historique d\'exécutions et planification automatique via cron'
         },
         tag: 'FastAPI',
         url: 'https://portal-automacao-interna.onrender.com',
@@ -449,16 +449,16 @@ const projetos = [
     {
         id: '025',
         titulo: {
-            pt: 'Template Interativo para Negócios — Aro Alto',
-            en: 'Interactive Business Template — Aro Alto',
-            es: 'Plantilla Interactiva para Negocios — Aro Alto',
-            fr: 'Modèle Interactif pour Entreprises — Aro Alto'
+            pt: 'Template Interativo para Negócios: Aro Alto',
+            en: 'Interactive Business Template: Aro Alto',
+            es: 'Plantilla Interactiva para Negocios: Aro Alto',
+            fr: 'Modèle Interactif pour Entreprises: Aro Alto'
         },
         descricao: {
-            pt: 'Template reutilizável para negócios de serviços, com catálogo interativo, calculadora de orçamento automática, marcação de horários e formulário de contacto — aqui reskinado como o site de uma academia de basquetebol fictícia',
-            en: 'Reusable template for service businesses, with an interactive catalog, automatic budget calculator, appointment booking and a contact form — reskinned here as the site of a fictional basketball academy',
-            es: 'Plantilla reutilizable para negocios de servicios, con catálogo interactivo, calculadora de presupuesto automática, reserva de horarios y formulario de contacto — aquí adaptada como el sitio de una academia de baloncesto ficticia',
-            fr: 'Modèle réutilisable pour entreprises de services, avec catalogue interactif, calculateur de devis automatique, prise de rendez-vous et formulaire de contact — ici décliné comme le site d\'une académie de basketball fictive'
+            pt: 'Template reutilizável para negócios de serviços, com catálogo interativo, calculadora de orçamento automática, marcação de horários e formulário de contacto, aqui reskinado como o site de uma academia de basquetebol fictícia',
+            en: 'Reusable template for service businesses, with an interactive catalog, automatic budget calculator, appointment booking and a contact form, reskinned here as the site of a fictional basketball academy',
+            es: 'Plantilla reutilizable para negocios de servicios, con catálogo interactivo, calculadora de presupuesto automática, reserva de horarios y formulario de contacto, aquí adaptada como el sitio de una academia de baloncesto ficticia',
+            fr: 'Modèle réutilisable pour entreprises de services, avec catalogue interactif, calculateur de devis automatique, prise de rendez-vous et formulaire de contact, ici décliné comme le site d\'une académie de basketball fictive'
         },
         tag: 'Template',
         url: 'https://template-interativo.onrender.com',
@@ -467,16 +467,16 @@ const projetos = [
     {
         id: '026',
         titulo: {
-            pt: 'Template Vitrine para Negócios — Sole House',
-            en: 'Business Showcase Template — Sole House',
-            es: 'Plantilla Vitrina para Negocios — Sole House',
-            fr: 'Modèle Vitrine pour Entreprises — Sole House'
+            pt: 'Template Vitrine para Negócios: Sole House',
+            en: 'Business Showcase Template: Sole House',
+            es: 'Plantilla Vitrina para Negocios: Sole House',
+            fr: 'Modèle Vitrine pour Entreprises: Sole House'
         },
         descricao: {
-            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio — aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
-            en: 'One-page institutional template, ready to adapt to any business — reskinned here as the store of a fictional sneaker and streetwear brand',
-            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio — aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
-            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise — ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
+            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio, aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
+            en: 'One-page institutional template, ready to adapt to any business, reskinned here as the store of a fictional sneaker and streetwear brand',
+            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio, aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
+            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise, ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
         },
         tag: 'Template',
         url: 'https://sole-house.onrender.com',
@@ -485,16 +485,16 @@ const projetos = [
     {
         id: '027',
         titulo: {
-            pt: 'Quiosques Interativos — Museu Aurora & Mesa Lume',
-            en: 'Interactive Kiosks — Museu Aurora & Mesa Lume',
-            es: 'Quioscos Interactivos — Museu Aurora y Mesa Lume',
-            fr: 'Bornes Interactives — Museu Aurora et Mesa Lume'
+            pt: 'Quiosques Interativos: Museu Aurora & Mesa Lume',
+            en: 'Interactive Kiosks: Museu Aurora & Mesa Lume',
+            es: 'Quioscos Interactivos: Museu Aurora y Mesa Lume',
+            fr: 'Bornes Interactives: Museu Aurora et Mesa Lume'
         },
         descricao: {
-            pt: 'Duas demonstrações de interface para ecrãs táteis e totens — um guia de museu e um menu de restaurante — com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
-            en: 'Two touchscreen interface demos — a museum guide and a restaurant menu — with touch navigation, an ordering system and a call-server button, all in PT/EN',
-            es: 'Dos demostraciones de interfaz táctil — una guía de museo y un menú de restaurante — con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
-            fr: 'Deux démonstrations d\'interface tactile — un guide de musée et un menu de restaurant — avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
+            pt: 'Duas demonstrações de interface para ecrãs táteis e totens: um guia de museu e um menu de restaurante, com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
+            en: 'Two touchscreen interface demos: a museum guide and a restaurant menu, with touch navigation, an ordering system and a call-server button, all in PT/EN',
+            es: 'Dos demostraciones de interfaz táctil: una guía de museo y un menú de restaurante, con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
+            fr: 'Deux démonstrations d\'interface tactile: un guide de musée et un menu de restaurant, avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
         },
         tag: 'Template',
         url: 'https://demo-wingsys.onrender.com',
