@@ -235,3 +235,209 @@ button:active {
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================
+   EXERCÍCIO 013 (versão PHP) — acrescentos
+   ============================================ */
+
+/* ===== ABAS ===== */
+.abas {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.aba {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    color: #888;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.aba:hover {
+    color: #fff;
+    border-color: #667eea;
+}
+
+.aba.ativa {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* ===== RESULTADOS EXTRA (potência e módulo) ===== */
+.resultado-item.potencia {
+    border-left-color: #63b3ed;
+}
+
+.resultado-item.potencia .resultado-conteudo .valor {
+    color: #63b3ed;
+}
+
+.resultado-item.modulo {
+    border-left-color: #b794f4;
+}
+
+.resultado-item.modulo .resultado-conteudo .valor {
+    color: #b794f4;
+}
+
+/* o :nth-child(4) original pintava a 4ª caixa de vermelho; mantém-se, e a divisão continua vermelha */
+.resultado-conteudo .conta {
+    color: #4a5568;
+    font-size: 0.8rem;
+    margin-left: 8px;
+}
+
+.resultados-area.uma-coluna {
+    grid-template-columns: 1fr;
+    margin-top: 20px;
+}
+
+.valor-grande {
+    font-size: 1.7rem;
+    word-break: break-all;
+}
+
+.resultado-conteudo h3 {
+    word-break: break-word;
+}
+
+/* ===== MODO CIENTÍFICO ===== */
+.visor {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: 1.3rem;
+}
+
+.linha-opcoes {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    margin: 15px 0 20px;
+    flex-wrap: wrap;
+}
+
+.linha-opcoes .input-field {
+    flex: 0 0 160px;
+    min-width: 0;
+}
+
+.input-field select {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #333;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    background: #0d0d0d;
+    color: #fff;
+}
+
+.input-field select:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.dica {
+    color: #888;
+    font-size: 0.9rem;
+    padding-bottom: 14px;
+}
+
+.dica code,
+.erro code {
+    background: #0d0d0d;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+.teclado {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.teclado .tecla {
+    width: auto;
+    padding: 13px 4px;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #0d0d0d;
+    border: 1px solid #333;
+    color: #e2e8f0;
+}
+
+.teclado .tecla:hover {
+    border-color: #667eea;
+    box-shadow: none;
+    transform: translateY(-1px);
+}
+
+.teclado .tecla.op {
+    color: #667eea;
+}
+
+.teclado .tecla.limpar {
+    color: #fc8181;
+}
+
+.teclado .tecla.igual {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-color: transparent;
+    color: #fff;
+}
+
+.historico {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #333;
+}
+
+.historico h3 {
+    color: #4a5568;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.historico ol {
+    padding-left: 20px;
+    color: #a0aec0;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.rodape-php {
+    text-align: center;
+    color: #4a5568;
+    font-size: 0.78rem;
+    margin-top: 25px;
+}
+
+@media (max-width: 550px) {
+    .teclado {
+        gap: 6px;
+    }
+
+    .teclado .tecla {
+        padding: 12px 2px;
+        font-size: 0.9rem;
+    }
+
+    .linha-opcoes .input-field {
+        flex: 1 1 100%;
+    }
+}
+
+.resultados-area.uma-coluna .resultado-conteudo h3 {
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: Consolas, 'Courier New', monospace;
+}
