@@ -308,11 +308,16 @@ const projetos = [
     },
     {
         id: '011',
-        titulo: { pt: 'Curiosidades Escondidas', en: 'Hidden Facts', es: 'Curiosidades Escondidas', fr: 'Curiosités Cachées' },
-        descricao: { pt: '3 curiosidades reveladas com clique', en: '3 fun facts revealed with a click', es: '3 curiosidades reveladas con un clic', fr: '3 anecdotes révélées d\'un clic' },
+        titulo: { pt: 'Curiosidades do Mundo', en: 'Curiosities of the World', es: 'Curiosidades del Mundo', fr: 'Curiosités du Monde' },
+        descricao: {
+            pt: 'Curiosidades reais da Wikipédia por áreas (ciência, natureza, história, artes, teologia…), com mais dados escondidos para revelar ao clicar. Dados de uma API, em 4 idiomas',
+            en: 'Real Wikipedia curiosities by area (science, nature, history, arts, theology…), with more hidden facts to reveal on click. Data from an API, in 4 languages',
+            es: 'Curiosidades reales de Wikipedia por áreas (ciencia, naturaleza, historia, artes, teología…), con más datos escondidos para revelar al hacer clic. Datos de una API, en 4 idiomas',
+            fr: 'Curiosités réelles de Wikipédia par domaine (science, nature, histoire, arts, théologie…), avec plus de données cachées à révéler d\'un clic. Données d\'une API, en 4 langues'
+        },
         tag: 'JavaScript',
         caminho: 'projetos/EXERCICIO011 - Curiosidades Escondidas/',
-        imagem: 'imagens/projetos/011-curiosidades.jpg'
+        imagem: 'imagens/projetos/011-curiosidades-do-mundo.jpg'
     },
     {
         id: '012',

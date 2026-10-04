@@ -1,52 +1,40 @@
 <!DOCTYPE html>
-<html lang="pt-pt">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curiosidades - Exercício 011</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Curiosidades do Mundo · Exercício 011</title>
+    <meta name="description" content="Curiosidades reais da Wikipédia por áreas, com mais dados para revelar ao clicar.">
+    <link rel="icon" href="icone.svg?v=2.0.0" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css?v=2.0.0">
 </head>
 <body>
     <div class="container">
         <div class="card">
-            <h1><svg class="icon" style="width:1em;height:1em;vertical-align:-0.125em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg> Curiosidades</h1>
-            <p class="subtitle">Clica no botão para revelar 3 curiosidades</p>
-
-            <!-- Botão -->
-            <button id="revelarBtn">Revelar Curiosidades</button>
-
-            <!-- Mensagem de Erro -->
-            <div id="erro" class="erro"></div>
-
-            <!-- Área de Curiosidades -->
-            <div id="curiosidades" class="curiosidades-area">
-                <div class="curiosidade-item" id="curiosidade1" style="display: none;">
-                    <span class="curiosidade-numero">01</span>
-                    <div class="curiosidade-conteudo">
-                        <h3>Curiosidade 1</h3>
-                        <p>O primeiro site do mundo ainda está online. Foi criado por Tim Berners-Lee em 1991 e está disponível em <a href="http://info.cern.ch" target="_blank">info.cern.ch</a>.</p>
-                    </div>
+            <header class="cabecalho">
+                <div class="idioma-caixa">
+                    <label for="idioma" id="rotulo-idioma">Idioma</label>
+                    <select id="idioma"></select>
                 </div>
+                <h1><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5.76.76 1.23 1.52 1.41 2.5"/></svg> <span id="titulo">Curiosidades do Mundo</span></h1>
+                <p class="subtitle" id="subtitulo">Escolhe uma área e descobre algo real da Wikipédia</p>
+            </header>
 
-                <div class="curiosidade-item" id="curiosidade2" style="display: none;">
-                    <span class="curiosidade-numero">02</span>
-                    <div class="curiosidade-conteudo">
-                        <h3>Curiosidade 2</h3>
-                        <p>O nome "Python" não tem nada a ver com a cobra. Guido van Rossum escolheu o nome por ser fã do grupo de comédia britânico "Monty Python".</p>
-                    </div>
-                </div>
+            <h2 class="rotulo-areas" id="rotulo-areas">Escolhe uma área</h2>
+            <div class="areas" id="areas" role="group" aria-labelledby="rotulo-areas"></div>
 
-                <div class="curiosidade-item" id="curiosidade3" style="display: none;">
-                    <span class="curiosidade-numero">03</span>
-                    <div class="curiosidade-conteudo">
-                        <h3>Curiosidade 3</h3>
-                        <p>O primeiro bug informático foi encontrado em 1947. Era uma mariposa presa num relé do computador Harvard Mark II.</p>
-                    </div>
-                </div>
-            </div>
+            <div id="resultado" class="resultado" aria-live="polite"></div>
+
+            <footer class="rodape">
+                <span id="descobertas" class="chip-info"></span>
+                <p id="fonte"></p>
+                <p class="versao" id="versao">Versão 2.0.0</p>
+            </footer>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <noscript><p style="text-align:center;color:#fc8181">JavaScript is required.</p></noscript>
+    <script src="idiomas.js?v=2.0.0"></script>
+    <script src="script.js?v=2.0.0"></script>
 </body>
 </html>
