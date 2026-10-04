@@ -319,10 +319,10 @@ const projetos = [
         id: '013',
         titulo: { pt: 'Calculadora Científica', en: 'Scientific Calculator', es: 'Calculadora Científica', fr: 'Calculatrice Scientifique' },
         descricao: {
-            pt: 'Seis operações e modo científico: raiz, trigonometria, logaritmos, fatorial e expressões completas, calculadas no servidor em PHP, sem eval()',
-            en: 'Six operations and a scientific mode: roots, trigonometry, logarithms, factorials and full expressions, computed server-side in PHP, without eval()',
-            es: 'Seis operaciones y modo científico: raíz, trigonometría, logaritmos, factorial y expresiones completas, calculadas en el servidor con PHP, sin eval()',
-            fr: 'Six opérations et mode scientifique: racines, trigonométrie, logarithmes, factorielle et expressions complètes, calculées côté serveur en PHP, sans eval()'
+            pt: 'Seis operações, modo científico, Desafio com níveis e Manual: raiz, trigonometria, logaritmos, histórico e memória. Calculada no servidor em PHP, sem eval(), em 4 idiomas',
+            en: 'Six operations, scientific mode, a levelled Challenge and a Manual: roots, trigonometry, logarithms, history and memory. Computed server-side in PHP, without eval(), in 4 languages',
+            es: 'Seis operaciones, modo científico, Desafío con niveles y Manual: raíz, trigonometría, logaritmos, historial y memoria. Calculada en el servidor con PHP, sin eval(), en 4 idiomas',
+            fr: 'Six opérations, mode scientifique, Défi par niveaux et Manuel: racines, trigonométrie, logarithmes, historique et mémoire. Calculée côté serveur en PHP, sans eval(), en 4 langues'
         },
         tag: 'PHP',
         caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
