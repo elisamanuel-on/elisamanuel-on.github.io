@@ -1208,13 +1208,7 @@ footer p {
 }
 
 .voltar a {
-    color: var(--cor-texto-secundario);
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.voltar a:hover {
-    color: var(--cor-primaria);
+    display: inline-flex;
 }
 
 /* ===== RESPONSIVO ===== */
@@ -1341,14 +1335,7 @@ footer p {
     height: 1.3rem;
 }
 
-.voltar a::before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    margin-right: 0.4em;
-    vertical-align: -0.15em;
-    background: currentColor;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='19' y1='12' x2='5' y2='12'/%3E%3Cpolyline points='12 5 5 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='19' y1='12' x2='5' y2='12'/%3E%3Cpolyline points='12 5 5 12 12 19'/%3E%3C/svg%3E") center / contain no-repeat;
+/* Botão "Voltar ao Início" sem seta */
+.voltar .btn-secundario::after {
+    content: none;
 }
