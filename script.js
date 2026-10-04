@@ -327,6 +327,7 @@ const projetos = [
         tag: 'PHP',
         caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
         php: true,
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO013%20-%20Calculadora%20com%204%20Opera%C3%A7%C3%B5es/',
         imagem: 'imagens/projetos/013-calculadora-cientifica.jpg'
     },
     {
