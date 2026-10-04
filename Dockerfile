@@ -5,12 +5,14 @@ FROM php:8.3-apache
 RUN a2enmod headers \
  && mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
+# Nas pastas dos projetos o PHP tem prioridade sobre o index.html (que fica só para a GitHub Pages).
 # Sem listagem de pastas, sem versão do servidor à vista e com cabeçalhos básicos de segurança
 RUN printf '%s\n' \
     'ServerTokens Prod' \
     'ServerSignature Off' \
     'Header always set X-Content-Type-Options "nosniff"' \
     'Header always set Referrer-Policy "strict-origin-when-cross-origin"' \
+    'DirectoryIndex index.php index.html' \
     '<Directory /var/www/html>' \
     '    Options -Indexes' \
     '</Directory>' \
