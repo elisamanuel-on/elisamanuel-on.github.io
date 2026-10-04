@@ -322,8 +322,13 @@ const projetos = [
     {
         id: '012',
         titulo: { pt: 'Imagem Escondida', en: 'Hidden Image', es: 'Imagen Escondida', fr: 'Image Cachée' },
-        descricao: { pt: 'Revelação com hover sobre a área', en: 'Revealed on hover over the area', es: 'Se revela al pasar el cursor sobre el área', fr: 'Révélée au survol de la zone' },
-        tag: 'CSS',
+        descricao: {
+            pt: 'Jogo de geografia em 3 níveis com cronómetro e vidas: continentes, países e bandeiras, capitais e curiosidades da Wikipédia. Mapa clicável, ficha de cada país, jogadores com recordes e ranking, em 4 idiomas',
+            en: 'Three-level geography game with a timer and lives: continents, countries and flags, capitals and Wikipedia curiosities. Clickable map, a profile for each country, players with records and ranking, in 4 languages',
+            es: 'Juego de geografía de 3 niveles con cronómetro y vidas: continentes, países y banderas, capitales y curiosidades de Wikipedia. Mapa en el que se hace clic, ficha de cada país, jugadores con récords y ranking, en 4 idiomas',
+            fr: 'Jeu de géographie en 3 niveaux avec chronomètre et vies : continents, pays et drapeaux, capitales et curiosités de Wikipédia. Carte cliquable, fiche de chaque pays, joueurs avec records et classement, en 4 langues'
+        },
+        tag: 'JavaScript',
         caminho: 'projetos/EXERCICIO012 - Imagem Escondida/',
         imagem: 'imagens/projetos/012-imagem-escondida.jpg'
     },
