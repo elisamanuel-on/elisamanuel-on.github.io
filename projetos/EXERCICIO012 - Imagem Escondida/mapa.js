@@ -1,6 +1,7 @@
 /* Mapa do jogo (Leaflet). Os países são desenhados a partir das fronteiras locais (dados/mundo.js),
    sem nomes, para as perguntas de clicar não terem a resposta escrita no mapa.
-   Depois de cada resposta pode mostrar-se o mapa do OpenStreetMap por baixo, para dar contexto. */
+   Depois de cada resposta mostra-se por baixo um mapa de ruas SEM nomes (OpenStreetMap, estilo CARTO) e os nomes dos países
+   e dos mares são escritos por cima, na língua do jogo (as ruas do OpenStreetMap trazem os nomes na língua local). */
 (function () {
     'use strict';
 
@@ -23,6 +24,34 @@
     var tiles = null;
     var comContexto = false;
     var estaSobre = null;
+    var rotulos = null;    // camada com os nomes por cima do mapa de contexto
+    var candidatos = null; // países com centro e área, para decidir que nomes cabem
+
+
+    // Oceanos e mares: [nome em pt, en, es, fr], [latitude, longitude], zoom mínimo
+    var MARES = [
+        [['Oceano Atlântico', 'Atlantic Ocean', 'Océano Atlántico', 'océan Atlantique'], [28, -42], 1],
+        [['Oceano Atlântico', 'Atlantic Ocean', 'Océano Atlántico', 'océan Atlantique'], [-22, -14], 1],
+        [['Oceano Pacífico', 'Pacific Ocean', 'Océano Pacífico', 'océan Pacifique'], [22, -150], 1],
+        [['Oceano Pacífico', 'Pacific Ocean', 'Océano Pacífico', 'océan Pacifique'], [-24, -128], 1],
+        [['Oceano Índico', 'Indian Ocean', 'Océano Índico', 'océan Indien'], [-16, 80], 1],
+        [['Oceano Antártico', 'Southern Ocean', 'Océano Austral', 'océan Austral'], [-56, 40], 1],
+        [['Oceano Ártico', 'Arctic Ocean', 'Océano Ártico', 'océan Arctique'], [79, -30], 1],
+        [['Mar Mediterrâneo', 'Mediterranean Sea', 'Mar Mediterráneo', 'mer Méditerranée'], [34.6, 18], 3],
+        [['Mar Negro', 'Black Sea', 'Mar Negro', 'mer Noire'], [43.3, 34.5], 3.5],
+        [['Mar Vermelho', 'Red Sea', 'Mar Rojo', 'mer Rouge'], [20.5, 38.3], 3.5],
+        [['Mar do Norte', 'North Sea', 'Mar del Norte', 'mer du Nord'], [56, 3], 3.5],
+        [['Mar Báltico', 'Baltic Sea', 'Mar Báltico', 'mer Baltique'], [58.3, 20], 4],
+        [['Golfo Pérsico', 'Persian Gulf', 'Golfo Pérsico', 'golfe Persique'], [27.2, 51.5], 4],
+        [['Mar Cáspio', 'Caspian Sea', 'Mar Caspio', 'mer Caspienne'], [41.6, 50.6], 3.5],
+        [['Mar das Caraíbas', 'Caribbean Sea', 'Mar Caribe', 'mer des Caraïbes'], [15, -74], 3],
+        [['Golfo do México', 'Gulf of Mexico', 'Golfo de México', 'golfe du Mexique'], [25, -90], 3],
+        [['Mar da China Meridional', 'South China Sea', 'Mar de la China Meridional', 'mer de Chine méridionale'], [13, 114], 3],
+        [['Mar do Japão', 'Sea of Japan', 'Mar del Japón', 'mer du Japon'], [40, 134], 3.5],
+        [['Mar Arábico', 'Arabian Sea', 'Mar Arábigo', "mer d'Arabie"], [15, 65], 3],
+        [['Baía de Bengala', 'Bay of Bengal', 'Bahía de Bengala', 'golfe du Bengale'], [14, 89], 3],
+        [['Mar da Tasmânia', 'Tasman Sea', 'Mar de Tasmania', 'mer de Tasman'], [-39, 160], 3.5]
+    ];
 
     function estiloDe(cc) {
         var nome = cc ? (estado[cc] || 'base') : 'neutro';
@@ -140,8 +169,75 @@
             }
         }).addTo(mapa);
 
+        mapa.on('zoomend moveend', function () { if (comContexto) { desenharNomes(); } });
+
         mundo();
         return mapa;
+    }
+
+
+    // ---------- nomes por cima do mapa de contexto (língua do jogo) ----------
+    function esc(t) {
+        return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+    }
+
+    function indiceIdioma() {
+        return (window.Jogo && typeof window.Jogo.indice === 'function') ? window.Jogo.indice() : 0;
+    }
+
+    function prepararCandidatos() {
+        if (candidatos || !window.PAISES) { return; }
+        candidatos = [];
+        window.PAISES.forEach(function (p) {
+            var cx = limites[p.c], centro = null;
+            if (cx) { centro = [(cx[0][0] + cx[1][0]) / 2, (cx[0][1] + cx[1][1]) / 2]; }
+            else if (p.ll) { centro = p.ll; }
+            if (centro) { candidatos.push({ cc: p.c, nomes: p.n, ar: p.ar || 0, ll: centro }); }
+        });
+        candidatos.sort(function (a, b) { return b.ar - a.ar; });
+    }
+
+    function desenharNomes() {
+        if (!mapa) { return; }
+        if (!rotulos) { rotulos = L.layerGroup(); }
+        rotulos.clearLayers();
+        if (!comContexto) { if (mapa.hasLayer(rotulos)) { mapa.removeLayer(rotulos); } return; }
+        if (!mapa.hasLayer(rotulos)) { rotulos.addTo(mapa); }
+        prepararCandidatos();
+
+        var z = mapa.getZoom(), idx = indiceIdioma();
+        var tam = mapa.getSize();
+        var minimo = 2.2e6 * Math.pow(0.25, z - 2);   // área mínima (km²) para o nome caber neste zoom
+        var ocupadas = [];
+
+        function cabe(x, y, w, h) {
+            if (x + w / 2 < 0 || x - w / 2 > tam.x || y + h / 2 < 0 || y - h / 2 > tam.y) { return false; }
+            for (var i = 0; i < ocupadas.length; i++) {
+                var o = ocupadas[i];
+                if (Math.abs(x - o[0]) < (w + o[2]) / 2 + 3 && Math.abs(y - o[1]) < (h + o[3]) / 2 + 1) { return false; }
+            }
+            return true;
+        }
+        function colocar(ll, texto, classe, larguraLetra) {
+            var pt = mapa.latLngToContainerPoint(ll);
+            var w = texto.length * larguraLetra + 8, h = classe === 'nm-alvo' ? 20 : 15;
+            if (!cabe(pt.x, pt.y, w, h)) { return; }
+            ocupadas.push([pt.x, pt.y, w, h]);
+            L.marker(ll, {
+                interactive: false, keyboard: false, zIndexOffset: classe === 'nm-alvo' ? 500 : 0,
+                icon: L.divIcon({ className: 'nm ' + classe, html: '<span>' + esc(texto) + '</span>', iconSize: [0, 0] })
+            }).addTo(rotulos);
+        }
+
+        var prioritarios = [], outros = [];
+        candidatos.forEach(function (c) {
+            var e = estado[c.cc];
+            if (e === 'certo' || e === 'errado' || e === 'alvo') { prioritarios.push(c); }
+            else if (c.ar >= minimo) { outros.push(c); }
+        });
+        prioritarios.forEach(function (c) { colocar(c.ll, c.nomes[idx], 'nm-alvo', 7.6); });
+        outros.forEach(function (c) { colocar(c.ll, c.nomes[idx], 'nm-pais', 6.1); });
+        MARES.forEach(function (m) { if (z >= m[2]) { colocar(m[1], m[0][idx], 'nm-mar', 6.4); } });
     }
 
     function camadaSet(cc, nomeEstilo) {
@@ -192,8 +288,10 @@
     function contexto(ligado) {
         if (!mapa) { return; }
         if (ligado && !tiles) {
-            tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 8, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+            // mapa de ruas sem nomes: os nomes são escritos por nós, na língua do jogo
+            tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+                maxZoom: 8, subdomains: 'abcd',
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>'
             });
             tiles.addTo(mapa);
         } else if (!ligado && tiles) {
@@ -202,11 +300,12 @@
         }
         comContexto = !!ligado && !!tiles;
         aplicarEstilos();
+        desenharNomes();
     }
 
     window.Mapa = {
         iniciar: iniciar, modoClique: modoClique, repor: repor, destacar: destacar,
-        ajustar: ajustar, contexto: contexto, mundo: mundo, redimensionar: redimensionar,
+        ajustar: ajustar, contexto: contexto, atualizarNomes: desenharNomes, mundo: mundo, redimensionar: redimensionar,
         clicavel: function (cc) { return !!camadas[cc]; },
         // usado nos testes automáticos: dispara o clique de um país
         simular: function (cc) { if (camadas[cc] && camadas[cc][0]) { camadas[cc][0].fire('click'); } },

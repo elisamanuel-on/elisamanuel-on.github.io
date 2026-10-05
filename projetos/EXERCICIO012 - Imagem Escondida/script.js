@@ -932,7 +932,7 @@
         limpar(cur);
         var token = ++fichaToken;
         if (fichaP) {
-            cur.appendChild(el('h3', { text: t('sabias') }));
+            cabecalhoCuriosidade(cur, fichaP);
             cur.appendChild(el('p', { class: 'pequeno', text: t('a_procurar') }));
             var lingua = J.idioma();
             var promessa;
@@ -943,7 +943,7 @@
             promessa.then(function (w) {
                 if (token !== fichaToken || ecra !== 'ecra-jogo') { return; }
                 limpar(cur);
-                cur.appendChild(el('h3', { text: t('sabias') }));
+                cabecalhoCuriosidade(cur, fichaP);
                 if (!w) { cur.appendChild(el('p', { class: 'pequeno', text: t('sem_curiosidade') })); return; }
                 var corpo = el('div', { class: 'curiosidade-corpo' });
                 if (w.imagem) {
@@ -972,6 +972,37 @@
         btn.focus({ preventScroll: true });
         var reduzir = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         fb.scrollIntoView({ block: 'nearest', behavior: reduzir ? 'auto' : 'smooth' });
+    }
+
+    /** «Nome verdadeiro»: como o país se chama no próprio território (dados/nomes-locais.js). Só aparece depois da resposta. */
+    function blocoNomeLocal(p) {
+        var lista = p && window.NOMES_LOCAIS && window.NOMES_LOCAIS[p.c];
+        if (!lista || !lista.length) { return null; }
+        var idx = J.indice();
+        var caixa = el('div', { class: 'nome-local' });
+        caixa.appendChild(el('strong', { class: 'nome-local-titulo', text: t('nome_local') }));
+        caixa.appendChild(el('span', { class: 'nome-local-ajuda', text: t('nome_local_ajuda') }));
+        var ul = el('ul');
+        lista.slice(0, 3).forEach(function (e) {
+            var comum = e[1] || e[2];
+            var li = el('li');
+            li.appendChild(el('span', { class: 'nl-nome', dir: 'auto', text: comum }));
+            if (e[2] && e[2] !== comum) {
+                li.appendChild(document.createTextNode(' · '));
+                li.appendChild(el('span', { class: 'nl-oficial', dir: 'auto', text: e[2] }));
+            }
+            if (e[3] && e[3][idx]) { li.appendChild(el('small', { class: 'nl-lingua', text: ' (' + capitalizar(e[3][idx]) + ')' })); }
+            ul.appendChild(li);
+        });
+        if (lista.length > 3) { ul.appendChild(el('li', { class: 'nl-mais', text: t('nome_local_mais', lista.length - 3) })); }
+        caixa.appendChild(ul);
+        return caixa;
+    }
+
+    function cabecalhoCuriosidade(cur, p) {
+        cur.appendChild(el('h3', { text: t('sabias') }));
+        var nl = blocoNomeLocal(p);
+        if (nl) { cur.appendChild(nl); }
     }
 
     function renderFicha(p) {
@@ -1061,7 +1092,7 @@
         var sel = $('idioma');
         J.SUPORTADOS.forEach(function (c) { sel.appendChild(el('option', { value: c, text: J.NOMES[c] })); });
         sel.value = J.idioma();
-        sel.addEventListener('change', function () { J.definirIdioma(sel.value); renderTudo(); });
+        sel.addEventListener('change', function () { J.definirIdioma(sel.value); renderTudo(); if (window.Mapa && mapaIniciado) { window.Mapa.atualizarNomes(); } });
 
         $('btn-jogador').addEventListener('click', function () {
             if (ecra === 'ecra-jogo') { return; }

@@ -1,4 +1,4 @@
-# Imagem Escondida (Exercício 012) — versão 2.0.0
+# Imagem Escondida (Exercício 012) — versão 2.1.0
 
 Jogo de geografia em JavaScript puro, com 3 níveis, cronómetro, vidas, mapa e ficha de cada país.
 Funciona em GitHub Pages (não precisa de servidor nem de chaves).
@@ -18,7 +18,7 @@ Pontos por resposta certa: 100 + até 100 pela rapidez + 20 se for escrita + bó
 ## Identidades
 
 - **Jogador:** nome e avatar, recordes e estrelas por nível, ranking local (guardados no `localStorage` deste navegador, máximo 8 jogadores).
-- **País:** depois de cada resposta aparece a ficha do país (capital, continente, línguas, moeda, área, domínio, indicativo e fronteiras), a curiosidade da Wikipédia e os botões «Ver no Google Maps» e «Ler na Wikipédia».
+- **País:** depois de cada resposta aparece a ficha do país (capital, continente, línguas, moeda, área, domínio, indicativo e fronteiras), o «nome verdadeiro» do país (como se chama no próprio território), a curiosidade da Wikipédia e os botões «Ver no Google Maps» e «Ler na Wikipédia».
 - **Visual:** logótipo próprio (`icone.svg`) e as cores do projeto (fundo preto, cartão #1a1a1a, degradê roxo).
 
 ## Idiomas
@@ -28,7 +28,7 @@ Nomes de países e capitais, línguas, moedas e curiosidades seguem o idioma esc
 
 ## Mapa e Google Maps
 
-O mapa é o Leaflet com as fronteiras locais (sem nomes, para as perguntas de clicar não terem a resposta escrita). Depois de cada resposta mostra-se por baixo o mapa do OpenStreetMap, para dar contexto.
+O mapa é o Leaflet com as fronteiras locais (sem nomes, para as perguntas de clicar não terem a resposta escrita). Depois de cada resposta mostra-se por baixo um mapa de ruas **sem nomes** (dados do OpenStreetMap, estilo CARTO «Voyager sem etiquetas») e os nomes dos países e dos mares são escritos por cima, **na língua do jogo** (pt, en, es, fr), só os que cabem para o zoom atual. O mapa normal do OpenStreetMap escreve tudo na língua local de cada sítio, por isso não serve para isto.
 O Google Maps entra como ligação (`https://www.google.com/maps/search/?api=1&query=...`), que não precisa de chave.
 Pôr o mapa do Google dentro do jogo exige uma conta Google Cloud com faturação e uma chave restringida ao domínio; fica como evolução possível.
 
@@ -40,6 +40,7 @@ Pôr o mapa do Google dentro do jogo exige uma conta Google Cloud com faturaçã
 - `perfil.js` — jogadores, recordes e ranking.
 - `mapa.js` — mapa (Leaflet) e fronteiras.
 - `wiki.js` — curiosidades (API MediaWiki; só texto simples e imagens de `upload.wikimedia.org`).
+- `dados/nomes-locais.js` — como cada país se chama no seu próprio território (nome comum e oficial, na(s) língua(s) local(is)), de world-countries.
 - `dados/paises.js`, `dados/mundo.js` — países (nomes, capitais, línguas, moedas) e fronteiras.
 - `dados/bandeiras.js` — 194 bandeiras em SVG.
 - `vendor/` — Leaflet e topojson-client.
@@ -61,4 +62,5 @@ As ligações externas abrem com `rel="noopener noreferrer"` e só para `google.
 
 ## Versões
 
+- **2.1.0** — nomes dos países e dos mares no mapa na língua do jogo (mapa de contexto sem nomes) e, no «Sabias que…», o «nome verdadeiro» do país na língua local (com o nome oficial).
 - **2.0.0** — jogo de geografia com 3 níveis, cronómetro, vidas, mapa, jogadores e ficha de país (substitui a versão 1.x, que revelava uma imagem ao passar o rato).

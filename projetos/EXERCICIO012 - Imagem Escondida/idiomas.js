@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    var VERSAO = '2.0.0';
+    var VERSAO = '2.1.0';
     var SUPORTADOS = ['pt', 'en', 'es', 'fr'];
     var NOMES = { pt: 'Português', en: 'English', es: 'Español', fr: 'Français' };
     var LOCALES = { pt: 'pt-PT', en: 'en-GB', es: 'es-ES', fr: 'fr-FR' };
@@ -135,6 +135,9 @@
         f_interior: ['Sem acesso ao mar', 'Landlocked', 'Sin acceso al mar', 'Sans accès à la mer'],
         km2: ['km²', 'km²', 'km²', 'km²'],
         sabias: ['Sabias que…', 'Did you know…', '¿Sabías que…?', 'Le savais-tu ?'],
+        nome_local: ['Nome verdadeiro', 'Real name', 'Nombre verdadero', 'Vrai nom'],
+        nome_local_ajuda: ['Como o país se chama no seu próprio território (nome comum · nome oficial)', 'What the country is called in its own land (common name · official name)', 'Cómo se llama el país en su propio territorio (nombre común · nombre oficial)', 'Comment le pays s’appelle chez lui (nom courant · nom officiel)'],
+        nome_local_mais: ['e mais %1 língua(s)', 'and %1 more language(s)', 'y %1 lengua(s) más', 'et %1 autre(s) langue(s)'],
         a_procurar: ['A procurar na Wikipédia…', 'Searching Wikipedia…', 'Buscando en Wikipedia…', 'Recherche sur Wikipédia…'],
         sem_curiosidade: [
             'A Wikipédia não respondeu agora. Podes continuar o jogo.',
@@ -163,10 +166,10 @@
         // ----- rodapé -----
         versao: ['Versão %1', 'Version %1', 'Versión %1', 'Version %1'],
         fontes: [
-            'Fontes: world-countries, Natural Earth, country-flag-icons, OpenStreetMap e Wikipédia.',
-            'Sources: world-countries, Natural Earth, country-flag-icons, OpenStreetMap and Wikipedia.',
-            'Fuentes: world-countries, Natural Earth, country-flag-icons, OpenStreetMap y Wikipedia.',
-            'Sources : world-countries, Natural Earth, country-flag-icons, OpenStreetMap et Wikipédia.'
+            'Fontes: world-countries, Natural Earth, country-flag-icons, OpenStreetMap, CARTO e Wikipédia.',
+            'Sources: world-countries, Natural Earth, country-flag-icons, OpenStreetMap, CARTO and Wikipedia.',
+            'Fuentes: world-countries, Natural Earth, country-flag-icons, OpenStreetMap, CARTO y Wikipedia.',
+            'Sources : world-countries, Natural Earth, country-flag-icons, OpenStreetMap, CARTO et Wikipédia.'
         ],
         carregar_erro: ['Não foi possível carregar o jogo. Recarrega a página.', 'The game could not be loaded. Reload the page.', 'No se pudo cargar el juego. Recarga la página.', 'Le jeu n’a pas pu être chargé. Recharge la page.']
     };
