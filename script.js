@@ -887,26 +887,41 @@ function configurarFormulario() {
         dados.append('assunto', assunto);
         dados.append('mensagem', mensagem);
 
+        // O Apps Script do Google pode demorar vários segundos (arranque a frio + redirecionamento).
+        // Como com no-cors não dá para ler a resposta, mostramos a confirmação ao fim de ~1,2 s
+        // e deixamos o envio terminar em segundo plano (keepalive). Só um erro de rede mostra falha.
+        let concluido = false;
+        const restaurarBotao = () => {
+            if (botao) {
+                botao.disabled = false;
+                botao.textContent = t('form_btn_enviar');
+            }
+        };
+        const mostrarSucesso = () => {
+            if (concluido) return;
+            concluido = true;
+            feedback.className = 'feedback sucesso';
+            feedback.textContent = t('form_sucesso').replace('{nome}', nome);
+            form.reset();
+            restaurarBotao();
+        };
+        const mostrarErro = () => {
+            concluido = true;
+            feedback.className = 'feedback erro';
+            feedback.textContent = t('form_erro_envio');
+            restaurarBotao();
+        };
+
+        const temporizador = setTimeout(mostrarSucesso, 1200);
+
         fetch(ENDPOINT_CONTACTO, {
             method: 'POST',
             body: dados,
-            mode: 'no-cors' // o Apps Script não devolve CORS; assumimos sucesso se não houver erro de rede
+            mode: 'no-cors', // o Apps Script não devolve CORS; assumimos sucesso se não houver erro de rede
+            keepalive: true
         })
-            .then(() => {
-                feedback.className = 'feedback sucesso';
-                feedback.textContent = t('form_sucesso').replace('{nome}', nome);
-                form.reset();
-            })
-            .catch(() => {
-                feedback.className = 'feedback erro';
-                feedback.textContent = t('form_erro_envio');
-            })
-            .finally(() => {
-                if (botao) {
-                    botao.disabled = false;
-                    botao.textContent = t('form_btn_enviar');
-                }
-            });
+            .then(() => { clearTimeout(temporizador); mostrarSucesso(); })
+            .catch(() => { clearTimeout(temporizador); mostrarErro(); });
     });
 }
 
