@@ -1,4 +1,4 @@
-# Sistema de Gestão Escolar · Exercício 009 · v2.2.0
+# Sistema de Gestão Escolar · Exercício 009 · v2.3.0
 
 Evolução do "Registo de Utilizador" para um sistema prático de colégio (fictício: **Colégio Horizonte**), feito em **PHP + SQLite (PDO)**, com sete perfis: aluno, professor, secretaria, direção, **Conselho Geral**, **contabilidade** e **portaria**; inclui uma parte financeira (propinas, salários, impostos e relatórios em Excel/PDF).
 
@@ -33,6 +33,13 @@ O Financeiro tem cinco separadores: **Resumo**, **Despesas e receitas**, **Propi
 - **Editar:** despesas e receitas, propinas (mesmo as pagas), recibos de vencimento (o IRS, a Segurança Social e o líquido recalculam-se sozinhos, ao escrever e no servidor) e contratos.
 - **Apagar dados errados:** sempre com **justificação obrigatória** (mínimo 8 caracteres), também propinas e salários já pagos. Nada se perde: o que foi apagado, quem apagou, quando e porquê ficam no separador **Alterações** (só leitura, também em Excel).
 - **Cálculos automáticos:** IVA ao escrever (valor com ou sem IVA, o sistema separa a base e o imposto), IRS, Segurança Social, líquido e custo para a escola nos contratos e recibos, totais e resultado do painel.
+
+### Adicionar, editar e pagar (v2.3.0)
+
+- **Propinas:** além de emitir as do mês, a contabilidade **adiciona** uma propina a um aluno, **edita** qualquer uma (valor, vencimento, método, NIF e encarregado de educação) e **regista o pagamento** com data e método. **Atualizar para todos** muda o valor ou o vencimento de uma só vez, por ano de escolaridade ou turma, e **só nas propinas por pagar**.
+- **Salários:** **adicionar** um recibo à mão (o bruto e o IRS vêm do contrato), **editar** o recibo e **pagar** com data e método (transferência, numerário ou cheque); também há "Pagar todos" do mês. Os contratos editam-se num painel próprio.
+- **NIF e empresa:** as visitas (empresa, NIF, contacto), as despesas e receitas (fornecedor ou cliente, NIF, n.º da fatura), as propinas (encarregado e NIF) e a equipa (NIF e NISS) guardam estes dados, que aparecem nas tabelas, nos recibos em PDF e no Excel. O NIF e o NISS são validados (dígito de controlo).
+- **Botões só com ícone** nas tabelas (editar, pagar, anular, apagar, recibo), com dica ao passar o rato, para a tabela caber no cartão.
 
 ### PHP simples: o ciclo ler, criar, editar e apagar
 
@@ -85,6 +92,7 @@ Palavras-passe com `password_hash`; sessões com `HttpOnly`, `SameSite`, regener
 
 ## Versões
 
+- **2.3.0** Adicionar, editar e pagar propinas e salários (data e método), atualizar propinas para todos, NIF, empresa e NISS em visitas, despesas e receitas, propinas e salários.
 - **2.2.0** Financeiro com separadores, editar e apagar com justificação (inclui pagos), registo de alterações, cálculos automáticos e valor com ou sem IVA.
 - **2.1.0** Parte financeira, Excel e PDF, Conselho Geral, contabilidade, equipa não docente e portaria com visitas.
 - **2.0.0** Sistema de gestão escolar completo (este), com Relatório em PDF.

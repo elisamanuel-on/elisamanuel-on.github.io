@@ -46,20 +46,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $base = lerDinheiro($_POST['base'] ?? null);      // valor escrito (sem IVA, ou com IVA se "modo" = com)
         $taxa = inteiro($_POST['taxa'] ?? '');
         $incluiIva = ($_POST['modo'] ?? 'sem') === 'com';
+        $entidade = limpar($_POST['entidade'] ?? '', 80);           // fornecedor ou cliente
+        $nif = lerNif($_POST['nif'] ?? '');                          // '' se vazio, null se estiver errado
+        $documento = limpar($_POST['documento'] ?? '', 30);          // n.º da fatura ou recibo
+        if ($nif === null) {
+            aviso('erro', 'nif_invalido');
+            redirecionar(ligacao('lancamentos', $filtros + ($acao === 'editar' ? ['editar' => $id] : [])));
+        }
         if ($tipo === null || !in_array($categoria, CATEGORIAS[$tipo], true) || $descricao === '' || $data === null || $base === false || $base <= 0 || !in_array($taxa, TAXAS_IVA, true)) {
             aviso('erro', 'dados_invalidos');
             redirecionar(ligacao('lancamentos', $filtros + ($acao === 'editar' ? ['editar' => $id] : [])));
         }
         [$base, $iva, $total] = calcularIvaModo($base, $taxa, $incluiIva);
         if ($acao === 'criar') {
-            $db->prepare('INSERT INTO lancamentos (tipo, categoria, descricao, data, base_cents, iva_taxa, iva_cents, total_cents, criado_por, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-               ->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, (int) $u['id'], date('Y-m-d H:i:s')]);
+            $db->prepare('INSERT INTO lancamentos (tipo, categoria, descricao, data, base_cents, iva_taxa, iva_cents, total_cents, criado_por, criado_em, entidade, nif, documento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+               ->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, (int) $u['id'], date('Y-m-d H:i:s'), $entidade, $nif, $documento]);
             aviso('ok', 'lancamento_criado');
         } else {
             $antes = lancamentoPorId($id);
             if ($antes) {
-                $db->prepare('UPDATE lancamentos SET tipo = ?, categoria = ?, descricao = ?, data = ?, base_cents = ?, iva_taxa = ?, iva_cents = ?, total_cents = ? WHERE id = ?')
-                   ->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $id]);
+                $db->prepare('UPDATE lancamentos SET tipo = ?, categoria = ?, descricao = ?, data = ?, base_cents = ?, iva_taxa = ?, iva_cents = ?, total_cents = ?, entidade = ?, nif = ?, documento = ? WHERE id = ?')
+                   ->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $entidade, $nif, $documento, $id]);
                 $depois = lancamentoPorId($id);
                 registarAuditoria('lancamento', 'editar', resumoLancamentoTexto($antes) . ' → ' . resumoLancamentoTexto($depois), limpar($_POST['motivo'] ?? '', 300));
                 aviso('ok', 'dados_guardados');
@@ -89,7 +96,7 @@ $sql = 'SELECT * FROM lancamentos WHERE 1 = 1';
 $args = [];
 if ($filtroTipo !== '') { $sql .= ' AND tipo = ?'; $args[] = $filtroTipo; }
 if ($mesFiltro !== null) { $sql .= ' AND substr(data, 1, 7) = ?'; $args[] = $mesFiltro; }
-if ($procura !== '') { $sql .= ' AND descricao LIKE ?'; $args[] = '%' . $procura . '%'; }
+if ($procura !== '') { $sql .= ' AND (descricao LIKE ? OR entidade LIKE ? OR nif LIKE ? OR documento LIKE ?)'; array_push($args, '%' . $procura . '%', '%' . $procura . '%', '%' . $procura . '%', '%' . $procura . '%'); }
 $sql .= ' ORDER BY data DESC, id DESC';
 $st = $db->prepare($sql);
 $st->execute($args);
@@ -107,7 +114,7 @@ if ($editarId) {
     $editar = $st->fetch() ?: null;
 }
 $apagar = $apagarId ? lancamentoPorId($apagarId) : null;
-$f = $editar ?? ['tipo' => 'despesa', 'categoria' => '', 'descricao' => '', 'data' => hojeISO(), 'base_cents' => null, 'iva_taxa' => 23];
+$f = $editar ?? ['tipo' => 'despesa', 'categoria' => '', 'descricao' => '', 'data' => hojeISO(), 'base_cents' => null, 'iva_taxa' => 23, 'entidade' => '', 'nif' => '', 'documento' => ''];
 echo separadoresFinancas('lancamentos');
 ?>
 <section class="kpis kpis-3">
@@ -130,18 +137,16 @@ echo separadoresFinancas('lancamentos');
     </form>
     <p class="suave"><?= e(t('n_resultados', count($todos))) ?></p>
     <?php if (!$lista): ?><p class="suave"><?= e(t('sem_lancamentos')) ?></p><?php else: ?>
-    <div class="tabela-rolagem"><table class="tabela">
-        <thead><tr><th><?= e(t('data')) ?></th><th><?= e(t('categoria')) ?></th><th><?= e(t('descricao')) ?></th><th class="num"><?= e(t('valor_sem_iva')) ?></th><th class="num"><?= e(t('iva')) ?></th><th class="num"><?= e(t('total')) ?></th><th></th></tr></thead>
+    <div class="tabela-rolagem"><table class="tabela densa">
+        <thead><tr><th><?= e(t('data')) ?></th><th><?= e(t('categoria')) ?></th><th><?= e(t('descricao')) ?> · <?= e(t('entidade_empresa')) ?></th><th class="num"><?= e(t('total')) ?></th><th></th></tr></thead>
         <tbody>
         <?php foreach ($lista as $l): ?>
             <tr><td><?= e(dataFmt($l['data'])) ?></td>
                 <td><span class="etiqueta <?= $l['tipo'] === 'receita' ? 'pos' : 'neg' ?>"><?= e(nomeCategoria($l['categoria'])) ?></span></td>
-                <td><?= e($l['descricao']) ?></td>
-                <td class="num"><?= e(euro((int) $l['base_cents'])) ?></td>
-                <td class="num"><?= e(euro((int) $l['iva_cents'])) ?> <small>(<?= (int) $l['iva_taxa'] ?>%)</small></td>
-                <td class="num"><strong><?= e(euro((int) $l['total_cents'])) ?></strong></td>
-                <td class="acoes"><?php if ($edita): ?><a class="botao secundario pequeno" href="<?= e(ligacao('lancamentos', $filtros + ['editar' => $l['id']])) ?>"><?= e(t('editar')) ?></a>
-                    <a class="botao secundario pequeno botao-perigo-linha" href="<?= e(ligacao('lancamentos', $filtros + ['apagar' => $l['id']])) ?>"><?= icone('lixo') ?><span><?= e(t('apagar')) ?></span></a><?php endif; ?></td></tr>
+                <td class="col-desc"><?= e($l['descricao']) ?><?php if ($l['entidade'] !== '' || $l['documento'] !== ''): ?><span class="entidade-linha"><?= e(trim($l['entidade'] . ($l['nif'] !== '' ? ' · NIF ' . $l['nif'] : '') . ($l['documento'] !== '' ? ' · ' . $l['documento'] : ''), ' ·')) ?></span><?php endif; ?></td>
+                <td class="num"><strong><?= e(euro((int) $l['total_cents'])) ?></strong><small class="motivo"><?= e(euro((int) $l['base_cents'])) ?> + <?= (int) $l['iva_taxa'] ?>%</small></td>
+                <td class="acoes compactas"><?php if ($edita): ?><?= botaoIcone('editar', t('editar'), ligacao('lancamentos', $filtros + ['editar' => $l['id']])) ?>
+                    <?= botaoIcone('lixo', t('apagar'), ligacao('lancamentos', $filtros + ['apagar' => $l['id']]), 'perigo') ?><?php endif; ?></td></tr>
         <?php endforeach; ?>
         </tbody>
     </table></div>
@@ -172,6 +177,11 @@ echo separadoresFinancas('lancamentos');
             <?php foreach (CATEGORIAS as $tp => $cats): ?><optgroup label="<?= e(t('tipo_' . $tp . 's')) ?>">
                 <?php foreach ($cats as $c): ?><option value="<?= e($c) ?>"<?= $c === $f['categoria'] ? ' selected' : '' ?>><?= e(nomeCategoria($c)) ?></option><?php endforeach; ?></optgroup><?php endforeach; ?></select></label>
         <label><span><?= e(t('descricao')) ?></span><input type="text" name="descricao" value="<?= e($f['descricao']) ?>" maxlength="120" required></label>
+        <label><span><?= e(t('entidade_empresa')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" name="entidade" value="<?= e($f['entidade']) ?>" maxlength="80" placeholder="<?= e(t('entidade_exemplo')) ?>" autocomplete="off"></label>
+        <div class="linha-campos">
+            <label><span><?= e(t('nif')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" inputmode="numeric" name="nif" value="<?= e($f['nif']) ?>" maxlength="14" autocomplete="off" placeholder="9 <?= e(t('digitos')) ?>"></label>
+            <label><span><?= e(t('documento_n')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" name="documento" value="<?= e($f['documento']) ?>" maxlength="30" autocomplete="off" placeholder="FT 2026/123"></label>
+        </div>
         <div class="linha-campos">
             <label><span><?= e(t('data')) ?></span><input type="date" name="data" value="<?= e($f['data']) ?>" required></label>
             <label><span><span data-iva-rotulo data-sem="<?= e(t('valor_sem_iva')) ?>" data-com="<?= e(t('valor_com_iva')) ?>"><?= e(t('valor_sem_iva')) ?></span> (€)</span><input type="text" inputmode="decimal" name="base" value="<?= e($f['base_cents'] !== null ? numCents((int) $f['base_cents']) : '') ?>" maxlength="12" required data-iva-base></label>

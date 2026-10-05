@@ -1,4 +1,4 @@
-/* Sistema de Gestão Escolar · v2.2.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
+/* Sistema de Gestão Escolar · v2.3.0 · comportamento das páginas (sem bibliotecas, ficheiro externo por causa da política de segurança) */
 (function () {
     'use strict';
 
@@ -104,9 +104,22 @@
         atualizar();
     });
 
+    /* ---------- novo recibo: ao escolher a pessoa, preenche o bruto e o IRS do contrato ---------- */
+    document.querySelectorAll('select[data-preencher]').forEach(function (sel) {
+        var caixa = sel.form, bruto = caixa && caixa.querySelector('input[data-bruto]'), irs = caixa && caixa.querySelector('input[data-irs]');
+        function preencher() {
+            var op = sel.options[sel.selectedIndex];
+            if (!op || !bruto || !irs) { return; }
+            bruto.value = op.getAttribute('data-bruto') || ''; irs.value = op.getAttribute('data-irs') || '';
+            bruto.dispatchEvent(new Event('input')); irs.dispatchEvent(new Event('input'));
+        }
+        sel.addEventListener('change', preencher);
+        preencher();
+    });
+
     /* ---------- salários: IRS, Segurança Social, líquido e custo ao escrever o bruto e a taxa de IRS ---------- */
     document.querySelectorAll('[data-calc-salario]').forEach(function (caixa) {
-        var bruto = caixa.querySelector('[data-bruto]'), irs = caixa.querySelector('[data-irs]');
+        var bruto = caixa.querySelector('input[data-bruto]'), irs = caixa.querySelector('input[data-irs]');
         if (!bruto || !irs) { return; }
         var ssT = Number(caixa.getAttribute('data-ss-trab')) || 0, ssE = Number(caixa.getAttribute('data-ss-ent')) || 0;
         function saida(nome, valor) { caixa.querySelectorAll('[data-out="' + nome + '"]').forEach(function (el) { el.textContent = valor; }); }

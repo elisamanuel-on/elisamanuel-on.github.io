@@ -11,8 +11,8 @@ if (!defined('APP')) {
     exit;
 }
 
-const VERSAO = '2.2.0';          // versão da aplicação (também usada nos ficheiros, para a cache do navegador)
-const VERSAO_BD = 3;             // muda quando o esquema da base de dados muda
+const VERSAO = '2.3.0';          // versão da aplicação (também usada nos ficheiros, para a cache do navegador)
+const VERSAO_BD = 4;             // muda quando o esquema da base de dados muda
 const ANO_LETIVO = '2026/2027';
 const NOTA_POSITIVA = 10;        // escala 0 a 20: 10 ou mais é positiva
 const FALTAS_RISCO = 3;          // faltas injustificadas a partir das quais o aluno aparece "em risco"
@@ -86,6 +86,8 @@ const MENU_FINANCAS = ['financeiro', 'propinas', 'salarios', 'lancamentos'];
 
 // Separadores do Financeiro (contabilidade edita; direção e Conselho Geral consultam). Cada perfil só vê os separadores a que tem acesso.
 const SEPARADORES_FINANCAS = ['financeiro', 'lancamentos', 'propinas', 'salarios', 'alteracoes'];
+// Métodos de pagamento dos salários
+const METODOS_SALARIO = ['transferencia', 'numerario', 'cheque'];
 const ENTIDADES_AUDITORIA = ['lancamento', 'propina', 'salario'];
 const ACOES_AUDITORIA = ['editar', 'apagar', 'anular'];
 

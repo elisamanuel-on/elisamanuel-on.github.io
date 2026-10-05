@@ -303,7 +303,7 @@ function rotuloPessoa(array $p): string
 function pessoalComContrato(): array
 {
     return bd()->query(
-        "SELECT u.id, u.nome, u.perfil, u.ativo, f.area, COALESCE(NULLIF(c.cargo, ''), f.cargo) AS cargo, c.bruto_cents, c.irs_taxa
+        "SELECT u.id, u.nome, u.perfil, u.ativo, f.area, COALESCE(NULLIF(c.cargo, ''), f.cargo) AS cargo, c.bruto_cents, c.irs_taxa, c.nif, c.niss
            FROM utilizadores u LEFT JOIN contratos c ON c.utilizador_id = u.id LEFT JOIN funcionarios f ON f.utilizador_id = u.id
           WHERE u.perfil IN (" . listaPerfisPessoal() . ") AND u.ativo = 1
           ORDER BY CASE u.perfil WHEN 'direcao' THEN 0 WHEN 'contabilidade' THEN 1 WHEN 'secretaria' THEN 2 WHEN 'professor' THEN 3 ELSE 4 END, f.area, u.nome"
@@ -349,7 +349,7 @@ function resumoSalarioTexto(array $s): string
 
 function resumoLancamentoTexto(array $l): string
 {
-    return $l['tipo'] . ' · ' . $l['categoria'] . ' · ' . $l['descricao'] . ' · ' . $l['data'] . ' · ' . euro((int) $l['base_cents']) . ($l['iva_taxa'] > 0 ? ' + IVA ' . (int) $l['iva_taxa'] . ' %' : '');
+    return $l['tipo'] . ' · ' . $l['categoria'] . ' · ' . $l['descricao'] . ' · ' . $l['data'] . (($l['entidade'] ?? '') !== '' ? ' · ' . $l['entidade'] . (($l['nif'] ?? '') !== '' ? ' (NIF ' . $l['nif'] . ')' : '') : '') . ' · ' . euro((int) $l['base_cents']) . ($l['iva_taxa'] > 0 ? ' + IVA ' . (int) $l['iva_taxa'] . ' %' : '');
 }
 
 /**
@@ -364,4 +364,50 @@ function calcularIvaModo(int $valor, int $taxa, bool $incluiIva): array
     }
     [$iva, $total] = calcularIva($valor, $taxa);
     return [$valor, $iva, $total];
+}
+
+
+// ---------- NIF (número de identificação fiscal português) ----------
+
+/** Junta o dígito de controlo a 8 dígitos: soma de cada dígito x (9 - posição), módulo 11. */
+function nifComControlo(string $oito): string
+{
+    $soma = 0;
+    for ($i = 0; $i < 8; $i++) {
+        $soma += (int) $oito[$i] * (9 - $i);
+    }
+    $controlo = 11 - ($soma % 11);
+    return $oito . ($controlo >= 10 ? 0 : $controlo);
+}
+
+function nifValido(string $nif): bool
+{
+    return preg_match('/^[1235-9][0-9]{8}$/', $nif) === 1 && nifComControlo(substr($nif, 0, 8)) === $nif;
+}
+
+/**
+ * Lê um NIF escrito num formulário: '' se estiver vazio (é opcional), os 9 dígitos se for válido, ou null se estiver errado.
+ * Aceita espaços e o prefixo PT.
+ */
+function lerNif(mixed $texto): ?string
+{
+    $nif = preg_replace('/^PT|[\s.\-]/i', '', is_string($texto) ? trim($texto) : '') ?? '';
+    if ($nif === '') {
+        return '';
+    }
+    return nifValido($nif) ? $nif : null;
+}
+
+
+/** Lê o n.º da Segurança Social: '' se vazio (é opcional), os 11 dígitos se estiver certo, ou null se estiver errado. */
+function lerNiss(mixed $texto): ?string
+{
+    $niss = preg_replace('/[\s.\-]/', '', is_string($texto) ? trim($texto) : '') ?? '';
+    return $niss === '' ? '' : (preg_match('/^[0-9]{11}$/', $niss) === 1 ? $niss : null);
+}
+
+/** Método de pagamento de um salário (transferência, numerário ou cheque), ou null se não for válido. */
+function lerMetodoSalario(mixed $valor): ?string
+{
+    return is_string($valor) && in_array($valor, METODOS_SALARIO, true) ? $valor : null;
 }

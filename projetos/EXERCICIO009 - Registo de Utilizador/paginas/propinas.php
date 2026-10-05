@@ -14,7 +14,7 @@ $db = bd();
 function propinaCompleta(int $id): ?array
 {
     $st = bd()->prepare(
-        'SELECT p.*, u.nome, t.nome AS turma, a.numero FROM propinas p
+        'SELECT p.*, u.nome, t.nome AS turma, a.numero, a.nif, a.encarregado FROM propinas p
            JOIN utilizadores u ON u.id = p.aluno_id JOIN alunos a ON a.utilizador_id = u.id JOIN turmas t ON t.id = a.turma_id WHERE p.id = ?'
     );
     $st->execute([$id]);
@@ -51,6 +51,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $n = emitirPropinas($db, $mes);
             aviso($n > 0 ? 'ok' : 'erro', $n > 0 ? 'propinas_emitidas' : 'propinas_ja_emitidas', $n);
         }
+    } elseif ($acao === 'nova') {
+        // adicionar a propina de um aluno (por exemplo, um aluno que entrou a meio do ano), com pagamento opcional
+        $alunoId = inteiro($_POST['aluno_id'] ?? '');
+        $mesNova = mesValido($_POST['mes'] ?? null);
+        $valor = lerDinheiro($_POST['valor'] ?? null);
+        $venc = dataValida($_POST['vencimento'] ?? null, true);
+        $dataPag = ($_POST['data_pagamento'] ?? '') !== '' ? dataValida($_POST['data_pagamento'] ?? null) : '';
+        $metodo = is_string($_POST['metodo'] ?? null) && in_array($_POST['metodo'], metodosPagamento(), true) ? $_POST['metodo'] : null;
+        $aluno = $db->prepare('SELECT 1 FROM alunos a JOIN utilizadores u ON u.id = a.utilizador_id WHERE u.id = ? AND u.ativo = 1');
+        $aluno->execute([$alunoId]);
+        $existe = $db->prepare('SELECT 1 FROM propinas WHERE aluno_id = ? AND mes = ?');
+        $existe->execute([$alunoId, $mesNova]);
+        if (!$aluno->fetchColumn() || $mesNova === null || $valor === false || $valor <= 0 || $venc === null || $dataPag === null || ($dataPag !== '' && $metodo === null)) {
+            aviso('erro', 'dados_invalidos');
+        } elseif ($existe->fetchColumn()) {
+            aviso('erro', 'propina_existe');
+        } else {
+            $db->prepare('INSERT INTO propinas (aluno_id, mes, valor_cents, vencimento, pago_em, metodo) VALUES (?, ?, ?, ?, ?, ?)')
+               ->execute([$alunoId, $mesNova, $valor, $venc, $dataPag !== '' ? $dataPag : null, $dataPag !== '' ? $metodo : null]);
+            aviso('ok', 'propina_adicionada');
+        }
+        $irPara = ['mes' => $mesNova ?? ''];
+    } elseif ($acao === 'massa') {
+        // atualizar de uma vez as propinas ainda por pagar (nunca as já pagas): novo valor e/ou novo dia de vencimento
+        $mesDe = mesValido($_POST['mes'] ?? null);
+        $seguintes = !empty($_POST['seguintes']);
+        $ano = inteiro($_POST['ano'] ?? '');
+        $valor = ($_POST['valor'] ?? '') !== '' ? lerDinheiro($_POST['valor'] ?? null) : null;
+        $dia = ($_POST['dia'] ?? '') !== '' ? inteiro($_POST['dia'] ?? '') : null;
+        $motivo = motivoValido($_POST['motivo'] ?? '');
+        $guardarPadrao = !empty($_POST['guardar_padrao']) && in_array($ano, [7, 8, 9], true) && $valor !== null && $valor !== false;
+        if ($mesDe === null || !in_array($ano, [0, 7, 8, 9], true) || $valor === false || ($valor !== null && $valor <= 0) || ($dia !== null && ($dia < 1 || $dia > 28)) || ($valor === null && $dia === null)) {
+            aviso('erro', 'dados_invalidos');
+        } elseif ($motivo === null) {
+            aviso('erro', 'motivo_curto');
+        } else {
+            $sql = 'SELECT p.id, p.mes, p.valor_cents FROM propinas p JOIN alunos a ON a.utilizador_id = p.aluno_id JOIN turmas t ON t.id = a.turma_id
+                     WHERE p.pago_em IS NULL AND ' . ($seguintes ? 'p.mes >= ?' : 'p.mes = ?') . ($ano > 0 ? ' AND t.ano = ?' : '');
+            $st = $db->prepare($sql);
+            $st->execute($ano > 0 ? [$mesDe, $ano] : [$mesDe]);
+            $alvo = $st->fetchAll();
+            if (!$alvo) {
+                aviso('erro', 'massa_nada');
+            } else {
+                $db->beginTransaction();
+                $upd = $db->prepare('UPDATE propinas SET valor_cents = COALESCE(?, valor_cents), vencimento = CASE WHEN ? IS NULL THEN vencimento ELSE substr(mes, 1, 7) || \'-\' || printf(\'%02d\', ?) END WHERE id = ?');
+                foreach ($alvo as $l) {
+                    $upd->execute([$valor, $dia, $dia, (int) $l['id']]);
+                }
+                if ($guardarPadrao) {
+                    $db->prepare('INSERT INTO parametros (chave, valor) VALUES (?, ?) ON CONFLICT (chave) DO UPDATE SET valor = excluded.valor')
+                       ->execute(['propina_' . $ano, numCents($valor)]);
+                }
+                $db->commit();
+                $descricao = count($alvo) . ' · ' . $mesDe . ($seguintes ? '+' : '') . ' · ' . ($ano > 0 ? $ano . '.º' : '*')
+                    . ($valor !== null ? ' · → ' . euro($valor) : '') . ($dia !== null ? ' · ' . $dia : '') . ($guardarPadrao ? ' · ' . t('valor_padrao') : '');
+                registarAuditoria('propina', 'editar', $descricao, $motivo);
+                aviso('ok', 'propinas_atualizadas', count($alvo));
+            }
+        }
+        $irPara = ['mes' => $mesDe ?? ''];
     } elseif ($acao === 'pagar') {
         $data = dataValida($_POST['data'] ?? null);
         $metodo = is_string($_POST['metodo'] ?? null) && in_array($_POST['metodo'], metodosPagamento(), true) ? $_POST['metodo'] : null;
@@ -89,9 +150,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $venc = dataValida($_POST['vencimento'] ?? null, true);
             $dataPag = $paga ? dataValida($_POST['data_pagamento'] ?? null) : null;
             $metodo = $paga && is_string($_POST['metodo'] ?? null) && in_array($_POST['metodo'], metodosPagamento(), true) ? $_POST['metodo'] : null;
-            if ($valor === false || $valor <= 0 || $venc === null || ($paga && ($dataPag === null || $metodo === null))) {
+            $encarregado = limpar($_POST['encarregado'] ?? '', 80);   // quem paga: nome e NIF aparecem no recibo
+            $nifPaga = lerNif($_POST['nif'] ?? '');
+            if ($nifPaga === null) {
+                aviso('erro', 'nif_invalido');
+                redirecionar(ligacao('propinas', $voltaPainel));
+            } elseif ($valor === false || $valor <= 0 || $venc === null || ($paga && ($dataPag === null || $metodo === null))) {
                 aviso('erro', 'dados_invalidos');
             } else {
+                $db->prepare('UPDATE alunos SET encarregado = ?, nif = ? WHERE utilizador_id = ?')->execute([$encarregado, $nifPaga, (int) $p['aluno_id']]);
                 if ($paga) {
                     $db->prepare('UPDATE propinas SET valor_cents = ?, vencimento = ?, pago_em = ?, metodo = ? WHERE id = ?')->execute([$valor, $venc, $dataPag, $metodo, $id]);
                 } else {
@@ -103,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-    $volta = array_filter([
+    $volta = isset($irPara) ? $irPara : array_filter([
         'turma' => inteiro($_POST['f_turma'] ?? '') ?: null,
         'mes' => is_string($_POST['f_mes'] ?? null) ? $_POST['f_mes'] : null,
         'estado' => is_string($_POST['f_estado'] ?? null) ? $_POST['f_estado'] : null,
@@ -161,7 +228,7 @@ $editarId = $edita ? inteiro($_GET['editar'] ?? '') : 0;
 $apagarId = $edita ? inteiro($_GET['apagar'] ?? '') : 0;
 $anularId = $edita ? inteiro($_GET['anular'] ?? '') : 0;
 
-$sql = 'SELECT p.*, u.nome, t.nome AS turma, a.numero FROM propinas p
+$sql = 'SELECT p.*, u.nome, t.nome AS turma, a.numero, a.nif, a.encarregado FROM propinas p
           JOIN utilizadores u ON u.id = p.aluno_id JOIN alunos a ON a.utilizador_id = u.id JOIN turmas t ON t.id = a.turma_id WHERE 1 = 1';
 $args = [];
 if ($filtroTurma) { $sql .= ' AND t.id = ?'; $args[] = $filtroTurma; }
@@ -180,6 +247,8 @@ $res = resumoFinanceiro();
 $aPagar = $pagarId ? propinaCompleta($pagarId) : null;
 $aEditar = $editarId ? propinaCompleta($editarId) : null;
 $aApagar = $apagarId ? propinaCompleta($apagarId) : null;
+$mesPadrao = in_array(substr(hojeISO(), 0, 7), MESES_LETIVOS, true) ? substr(hojeISO(), 0, 7) : MESES_LETIVOS[0];
+$alunosLista = $edita ? $db->query('SELECT u.id, u.nome, t.nome AS turma FROM alunos a JOIN utilizadores u ON u.id = a.utilizador_id JOIN turmas t ON t.id = a.turma_id WHERE u.ativo = 1 ORDER BY t.ano, t.nome, a.numero')->fetchAll() : [];
 $aAnular = $anularId ? propinaCompleta($anularId) : null;
 $filtros = array_filter(['turma' => $filtroTurma ?: null, 'mes' => $mesFiltro ?? '', 'estado' => $estadoFiltro ?: null, 'q' => $procura ?: null], static fn ($v) => $v !== null);
 echo separadoresFinancas('propinas');
@@ -206,24 +275,24 @@ echo separadoresFinancas('propinas');
     </form>
     <p class="suave"><?= e(t('n_resultados', $total)) ?> · <?= e(t('total_emitido')) ?>: <strong><?= e(euro($somaLista)) ?></strong> · <?= e(t('total_recebido')) ?>: <strong><?= e(euro($somaPaga)) ?></strong></p>
     <?php if (!$lista): ?><p class="suave"><?= e(t('sem_propinas')) ?></p><?php else: ?>
-    <div class="tabela-rolagem"><table class="tabela">
-        <thead><tr><th><?= e(t('aluno')) ?></th><th><?= e(t('turma')) ?></th><th><?= e(t('mes')) ?></th><th class="num"><?= e(t('valor')) ?></th><th><?= e(t('vencimento')) ?></th><th><?= e(t('estado')) ?></th><th></th></tr></thead>
+    <div class="tabela-rolagem"><table class="tabela densa">
+        <thead><tr><th><?= e(t('aluno')) ?> · <?= e(t('turma')) ?></th><?php if ($mesFiltro === null): ?><th><?= e(t('mes')) ?></th><?php endif; ?><th class="num"><?= e(t('valor')) ?></th><th><?= e(t('vencimento')) ?></th><th><?= e(t('estado')) ?></th><th></th></tr></thead>
         <tbody>
         <?php foreach ($lista as $p): $estado = estadoPropina($p); ?>
-            <tr><td><?= e($p['nome']) ?></td><td><?= e($p['turma']) ?></td><td><?= e(nomeMes($p['mes'], true)) ?></td>
+            <tr><td><?= e($p['nome']) ?><small class="motivo"><?= e($p['turma']) ?><?= $p['nif'] !== '' ? ' · NIF ' . e($p['nif']) : '' ?></small></td><?php if ($mesFiltro === null): ?><td><?= e(nomeMes($p['mes'], true)) ?></td><?php endif; ?>
                 <td class="num"><?= e(euro((int) $p['valor_cents'])) ?></td><td><?= e(dataFmt($p['vencimento'])) ?></td>
                 <td><span class="etiqueta <?= $estado === 'paga' ? 'pos' : ($estado === 'atraso' ? 'neg' : '') ?>"><?= e(t('estado_' . $estado)) ?></span>
                     <?php if ($p['pago_em']): ?><small class="motivo"><?= e(dataFmt($p['pago_em'])) ?></small><?php endif; ?></td>
-                <td class="acoes">
+                <td class="acoes compactas">
                 <?php if ($estado === 'paga'): ?>
-                    <a class="botao secundario pequeno" href="<?= e(ligacao('propinas', ['pdf' => $p['id']])) ?>"><?= icone('baixar') ?><span><?= e(t('recibo')) ?></span></a>
+                    <?= botaoIcone('baixar', t('recibo'), ligacao('propinas', ['pdf' => $p['id']])) ?>
                 <?php elseif ($edita): ?>
-                    <a class="botao pequeno" href="<?= e(ligacao('propinas', $filtros + ['pagar' => $p['id']])) ?>"><?= e(t('registar_pagamento')) ?></a>
+                    <?= botaoIcone('certo', t('registar_pagamento'), ligacao('propinas', $filtros + ['pagar' => $p['id']]), 'verde') ?>
                 <?php endif; ?>
                 <?php if ($edita): ?>
-                    <a class="botao secundario pequeno" href="<?= e(ligacao('propinas', $filtros + ['editar' => $p['id']])) ?>"><?= e(t('editar')) ?></a>
-                    <?php if ($estado === 'paga'): ?><a class="botao secundario pequeno" href="<?= e(ligacao('propinas', $filtros + ['anular' => $p['id']])) ?>"><?= e(t('anular_pagamento')) ?></a><?php endif; ?>
-                    <a class="botao secundario pequeno botao-perigo-linha" href="<?= e(ligacao('propinas', $filtros + ['apagar' => $p['id']])) ?>" title="<?= e(t('apagar')) ?>"><?= icone('lixo') ?><span><?= e(t('apagar')) ?></span></a>
+                    <?= botaoIcone('editar', t('editar'), ligacao('propinas', $filtros + ['editar' => $p['id']])) ?>
+                    <?php if ($estado === 'paga'): ?><?= botaoIcone('desfazer', t('anular_pagamento'), ligacao('propinas', $filtros + ['anular' => $p['id']])) ?><?php endif; ?>
+                    <?= botaoIcone('lixo', t('apagar'), ligacao('propinas', $filtros + ['apagar' => $p['id']]), 'perigo') ?>
                 <?php endif; ?>
                 </td></tr>
         <?php endforeach; ?>
@@ -256,6 +325,11 @@ echo separadoresFinancas('propinas');
         <input type="hidden" name="f_turma" value="<?= (int) $filtroTurma ?>"><input type="hidden" name="f_mes" value="<?= e($mesFiltro ?? '') ?>"><input type="hidden" name="f_estado" value="<?= e($estadoFiltro) ?>">
         <label><span><?= e(t('valor')) ?> (€)</span><input type="text" inputmode="decimal" name="valor" value="<?= e(numCents((int) $aEditar['valor_cents'])) ?>" maxlength="12" required></label>
         <label><span><?= e(t('vencimento')) ?></span><input type="date" name="vencimento" value="<?= e($aEditar['vencimento']) ?>" required></label>
+        <div class="linha-campos">
+            <label><span><?= e(t('encarregado_paga')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" name="encarregado" value="<?= e($aEditar['encarregado']) ?>" maxlength="80" autocomplete="off"></label>
+            <label><span><?= e(t('nif')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="text" inputmode="numeric" name="nif" value="<?= e($aEditar['nif']) ?>" maxlength="14" autocomplete="off" placeholder="9 <?= e(t('digitos')) ?>"></label>
+        </div>
+        <p class="suave pequeno"><?= e(t('ajuda_nif_propina')) ?></p>
         <?php if ($editaPaga): ?>
         <label><span><?= e(t('pago_em')) ?></span><input type="date" name="data_pagamento" value="<?= e($aEditar['pago_em']) ?>" max="<?= e(hojeISO()) ?>" required></label>
         <label><span><?= e(t('metodo')) ?></span><select name="metodo"><?php foreach (metodosPagamento() as $mp): ?><option value="<?= e($mp) ?>"<?= $mp === $aEditar['metodo'] ? ' selected' : '' ?>><?= e(t('metodo_' . $mp)) ?></option><?php endforeach; ?></select></label>
@@ -276,13 +350,55 @@ echo separadoresFinancas('propinas');
         <p class="barra-acoes"><button type="submit" class="botao botao-perigo"><?= $modoApagar ? icone('lixo') . '<span>' . e(t('apagar_definitivamente')) . '</span>' : e(t('anular_pagamento')) ?></button> <a class="botao secundario" href="<?= e(ligacao('propinas', $filtros)) ?>"><?= e(t('cancelar')) ?></a></p>
     </form>
 <?php else: ?>
+    <div class="bloco-form">
     <h2><?= e(t('emitir_propinas')) ?></h2>
     <form method="post" class="formulario">
         <?= csrfCampo() ?><input type="hidden" name="acao" value="emitir">
-        <label><span><?= e(t('mes')) ?></span><select name="mes"><?php foreach (MESES_LETIVOS as $m): ?><option value="<?= e($m) ?>"><?= e(nomeMes($m)) ?></option><?php endforeach; ?></select></label>
+        <label><span><?= e(t('mes')) ?></span><select name="mes"><?php foreach (MESES_LETIVOS as $m): ?><option value="<?= e($m) ?>"<?= $m === $mesPadrao ? ' selected' : '' ?>><?= e(nomeMes($m)) ?></option><?php endforeach; ?></select></label>
         <button type="submit" class="botao"><?= icone('mais') ?><span><?= e(t('emitir_propinas')) ?></span></button>
         <p class="suave"><?= e(t('ajuda_emitir', euro(propinaDoAno(7)), euro(propinaDoAno(8)), euro(propinaDoAno(9)), (int) parametro('dia_vencimento'))) ?></p>
     </form>
+    </div>
+
+    <div class="bloco-form">
+    <h3><?= e(t('adicionar_propina')) ?></h3>
+    <form method="post" class="formulario">
+        <?= csrfCampo() ?><input type="hidden" name="acao" value="nova">
+        <label><span><?= e(t('aluno')) ?></span><select name="aluno_id" required>
+            <?php foreach ($alunosLista as $al): ?><option value="<?= (int) $al['id'] ?>"><?= e($al['turma'] . ' · ' . $al['nome']) ?></option><?php endforeach; ?></select></label>
+        <div class="linha-campos">
+            <label><span><?= e(t('mes')) ?></span><select name="mes"><?php foreach (MESES_LETIVOS as $m): ?><option value="<?= e($m) ?>"<?= $m === $mesPadrao ? ' selected' : '' ?>><?= e(nomeMes($m)) ?></option><?php endforeach; ?></select></label>
+            <label><span><?= e(t('valor')) ?> (€)</span><input type="text" inputmode="decimal" name="valor" maxlength="12" required placeholder="<?= e(numCents(propinaDoAno(7))) ?>"></label>
+        </div>
+        <label><span><?= e(t('vencimento')) ?></span><input type="date" name="vencimento" value="<?= e(($mesPadrao ?? '2026-09') . '-' . sprintf('%02d', (int) parametro('dia_vencimento'))) ?>" required></label>
+        <div class="linha-campos">
+            <label><span><?= e(t('pago_em')) ?> <small>(<?= e(t('opcional')) ?>)</small></span><input type="date" name="data_pagamento" max="<?= e(hojeISO()) ?>"></label>
+            <label><span><?= e(t('metodo')) ?></span><select name="metodo"><?php foreach (metodosPagamento() as $mp): ?><option value="<?= e($mp) ?>"><?= e(t('metodo_' . $mp)) ?></option><?php endforeach; ?></select></label>
+        </div>
+        <button type="submit" class="botao"><?= icone('mais') ?><span><?= e(t('adicionar_propina')) ?></span></button>
+        <p class="suave pequeno"><?= e(t('ajuda_adicionar_propina')) ?></p>
+    </form>
+    </div>
+
+    <div class="bloco-form">
+    <h3><?= e(t('atualizar_em_massa')) ?></h3>
+    <form method="post" class="formulario">
+        <?= csrfCampo() ?><input type="hidden" name="acao" value="massa">
+        <div class="linha-campos">
+            <label><span><?= e(t('mes')) ?></span><select name="mes"><?php foreach (MESES_LETIVOS as $m): ?><option value="<?= e($m) ?>"<?= $m === $mesPadrao ? ' selected' : '' ?>><?= e(nomeMes($m)) ?></option><?php endforeach; ?></select></label>
+            <label><span><?= e(t('ano_escolaridade')) ?></span><select name="ano"><option value="0"><?= e(t('todos')) ?></option><?php foreach ([7, 8, 9] as $an): ?><option value="<?= $an ?>"><?= $an ?>.º</option><?php endforeach; ?></select></label>
+        </div>
+        <label class="linha-check"><input type="checkbox" name="seguintes" value="1"> <span><?= e(t('e_meses_seguintes')) ?></span></label>
+        <div class="linha-campos">
+            <label><span><?= e(t('novo_valor')) ?> (€)</span><input type="text" inputmode="decimal" name="valor" maxlength="12" placeholder="<?= e(t('deixar_vazio')) ?>"></label>
+            <label><span><?= e(t('novo_dia_vencimento')) ?></span><input type="number" name="dia" min="1" max="28" placeholder="<?= e(t('deixar_vazio')) ?>"></label>
+        </div>
+        <label class="linha-check"><input type="checkbox" name="guardar_padrao" value="1"> <span><?= e(t('guardar_como_padrao')) ?></span></label>
+        <label><span><?= e(t('justificacao')) ?></span><textarea name="motivo" rows="2" maxlength="300" minlength="8" required placeholder="<?= e(t('justificacao_exemplo_massa')) ?>"></textarea></label>
+        <button type="submit" class="botao" data-confirmar-botao="<?= e(t('confirmar_massa')) ?>"><?= e(t('atualizar_propinas')) ?></button>
+        <p class="suave pequeno"><?= e(t('ajuda_massa')) ?></p>
+    </form>
+    </div>
     <?php if (temPerfil(...PAGINAS['financeiro'])): ?><p><a class="botao secundario" href="<?= e(ligacao('financeiro', ['excel' => 'propinas'])) ?>"><?= icone('excel') ?><span><?= e(t('baixar_excel')) ?></span></a></p><?php endif; ?>
 <?php endif; ?>
 </section>

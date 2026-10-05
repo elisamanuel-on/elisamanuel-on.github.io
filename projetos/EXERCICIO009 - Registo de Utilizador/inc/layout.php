@@ -40,12 +40,23 @@ const ICONES = [
     'guardar'     => 'M5 3h12l4 4v14H3V3z M7 3v6h8V3 M7 21v-8h10v8',
     'alerta'      => 'M12 3l10 18H2z M12 10v5 M12 18v.5',
     'certo'       => 'M4 12l5 5L20 6',
+    'editar'      => 'M12 20h9 M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z',
+    'desfazer'    => 'M9 14L4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3',
 ];
 
 function icone(string $nome): string
 {
     $caminho = ICONES[$nome] ?? '';
     return '<svg class="icone" viewBox="0 0 24 24" aria-hidden="true"><path d="' . $caminho . '"/></svg>';
+}
+
+/**
+ * Botão só com ícone para as linhas das tabelas (editar, pagar, anular, apagar, recibo). O texto fica para os leitores de ecrã
+ * e aparece como dica ao passar o rato. $classe: '' | 'perigo' | 'verde'.
+ */
+function botaoIcone(string $icone, string $texto, string $href, string $classe = ''): string
+{
+    return '<a class="icone-botao pequeno ' . $classe . '" href="' . e($href) . '" title="' . e($texto) . '">' . icone($icone) . '<span class="so-leitor">' . e($texto) . '</span></a>';
 }
 
 /** Ligações PT · EN · ES · FR que mantêm a página em que se está. */

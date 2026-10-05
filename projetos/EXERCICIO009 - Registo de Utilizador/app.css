@@ -1,4 +1,4 @@
-/* Sistema de Gestão Escolar · v2.2.0 · painel claro, azul e verde */
+/* Sistema de Gestão Escolar · v2.3.0 · painel claro, azul e verde */
 :root {
     --azul: #2563eb;
     --azul-escuro: #1d4ed8;
@@ -90,7 +90,7 @@ small { font-size: .8rem; color: var(--suave); }
 }
 .cartao > :last-child { margin-bottom: 0; }
 .duas-colunas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
-.duas-colunas.largo-esq { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); }
+.duas-colunas.largo-esq { grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr); }
 .duas-colunas > .cartao, .duas-colunas > section > .cartao:last-child { margin-bottom: 18px; }
 
 .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 18px; }
@@ -167,8 +167,8 @@ input[type="checkbox"] { width: 18px; height: 18px; padding: 0; accent-color: va
 .tabela tbody tr:hover { background: #f8fafd; }
 .tabela tfoot td { font-weight: 650; border-bottom: 0; }
 .tabela .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.tabela .acoes { text-align: right; white-space: nowrap; }
-.tabela .acoes > * { display: inline-flex; vertical-align: middle; margin-left: 4px; }
+.tabela .acoes { text-align: right; white-space: normal; min-width: 150px; }
+.tabela .acoes > * { display: inline-flex; vertical-align: middle; margin: 2px 0 2px 4px; }
 .tabela tr.inativo td { color: var(--suave); }
 .form-linha { display: inline-flex; gap: 6px; align-items: center; margin: 0; }
 .form-linha input[type="text"] { width: 130px; padding: 5px 8px; font-size: .85rem; }
@@ -384,3 +384,34 @@ rect.g-col-a:hover, rect.g-col-b:hover { opacity: .8; }
 .calculo dd { margin: 0; font-weight: 700; }
 .acoes .botao-perigo-linha { color: #b91c1c; }
 .linha-antes-depois { color: var(--suave); font-size: .85rem; }
+
+/* ---------- v2.3.0: formulários empilhados ao lado, separador de blocos ---------- */
+.bloco-form { border-top: 1px solid var(--borda); margin-top: 16px; padding-top: 16px; }
+.bloco-form:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+.bloco-form h3 { font-size: .98rem; margin-bottom: 8px; }
+.entidade-linha { display: block; color: var(--suave); font-size: .8rem; }
+.linha-check { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+.linha-check input { width: auto; }
+
+/* a coluna de ações fica sempre à vista, mesmo que a tabela seja mais larga do que o cartão */
+.tabela-rolagem .tabela tbody td.acoes, .tabela-rolagem .tabela thead th:last-child:empty { position: sticky; right: 0; background: var(--superficie); }
+.tabela-rolagem .tabela tbody td.acoes { box-shadow: -10px 0 10px -10px rgba(15, 23, 42, .22); }
+
+/* ---------- v2.3.0: botões só com ícone nas tabelas ---------- */
+.so-leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tabela .acoes.compactas { white-space: nowrap; min-width: 0; width: 1%; }
+.tabela .acoes.compactas > * { margin: 0 0 0 2px; }
+.tabela .acoes.compactas form { display: inline; }
+a.icone-botao { text-decoration: none; }
+.icone-botao.verde { color: var(--verde); }
+.icone-botao.verde:hover { background: var(--verde-claro); color: var(--verde); }
+.tabela-rolagem .tabela tbody td.acoes.compactas { position: static; box-shadow: none; }
+.tabela.densa th, .tabela.densa td { padding: 8px 8px; font-size: .88rem; }
+.icone-botao { position: relative; }
+
+/* tabelas densas: cabeçalhos podem quebrar a linha para a tabela caber no cartão */
+.tabela.densa thead th { white-space: normal; font-size: .72rem; line-height: 1.25; vertical-align: bottom; }
+.tabela.densa td .entidade-linha { overflow-wrap: anywhere; }
+.tabela.densa .etiqueta { white-space: normal; }
+.tabela.densa td.col-desc { min-width: 150px; }
+.tabela-rolagem .tabela tbody td.acoes.compactas { background: transparent; }

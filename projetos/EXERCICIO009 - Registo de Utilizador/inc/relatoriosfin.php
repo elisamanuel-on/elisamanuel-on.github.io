@@ -42,9 +42,9 @@ function folhaResumo(Xlsx $x, array $r): void
 
 function folhaPropinas(Xlsx $x): void
 {
-    $linhas = [cabecalhoCelulas([t('aluno'), t('turma'), t('numero_abrev'), t('mes'), t('valor'), t('vencimento'), t('estado'), t('pago_em'), t('metodo')])];
+    $linhas = [cabecalhoCelulas([t('aluno'), t('turma'), t('numero_abrev'), t('mes'), t('valor'), t('vencimento'), t('estado'), t('pago_em'), t('metodo'), t('encarregado_paga'), t('nif')])];
     $st = bd()->query(
-        'SELECT u.nome, t.nome AS turma, a.numero, p.mes, p.valor_cents, p.vencimento, p.pago_em, p.metodo
+        'SELECT u.nome, t.nome AS turma, a.numero, p.mes, p.valor_cents, p.vencimento, p.pago_em, p.metodo, a.encarregado, a.nif
            FROM propinas p JOIN utilizadores u ON u.id = p.aluno_id JOIN alunos a ON a.utilizador_id = u.id JOIN turmas t ON t.id = a.turma_id
           ORDER BY p.mes, t.ano, t.nome, a.numero'
     );
@@ -55,7 +55,7 @@ function folhaPropinas(Xlsx $x): void
         $totalEmitido += (int) $p['valor_cents'];
         $totalPago += $p['pago_em'] ? (int) $p['valor_cents'] : 0;
         $linhas[] = [$p['nome'], $p['turma'], (int) $p['numero'], nomeMes($p['mes']), dinheiroCelula((int) $p['valor_cents']), dataFmt($p['vencimento']),
-            t('estado_' . $estado), $p['pago_em'] ? dataFmt($p['pago_em']) : '', $p['metodo'] ? t('metodo_' . $p['metodo']) : ''];
+            t('estado_' . $estado), $p['pago_em'] ? dataFmt($p['pago_em']) : '', $p['metodo'] ? t('metodo_' . $p['metodo']) : '', $p['encarregado'], $p['nif']];
     }
     $linhas[] = [];
     $linhas[] = [[t('total_emitido'), Xlsx::NEGRITO], '', '', '', dinheiroCelula($totalEmitido, true)];
@@ -66,9 +66,9 @@ function folhaPropinas(Xlsx $x): void
 
 function folhaSalarios(Xlsx $x): void
 {
-    $linhas = [cabecalhoCelulas([t('mes'), t('nome'), t('cargo'), t('bruto'), t('irs_retido'), t('ss_trabalhador'), t('liquido'), t('ss_entidade'), t('custo_total'), t('estado'), t('pago_em')])];
+    $linhas = [cabecalhoCelulas([t('mes'), t('nome'), t('cargo'), t('bruto'), t('irs_retido'), t('ss_trabalhador'), t('liquido'), t('ss_entidade'), t('custo_total'), t('estado'), t('pago_em'), t('metodo'), t('nif'), t('niss')])];
     $st = bd()->query(
-        'SELECT s.*, u.nome, COALESCE(NULLIF(c.cargo, \'\'), f.cargo, u.perfil) AS cargo
+        'SELECT s.*, u.nome, c.nif, c.niss, COALESCE(NULLIF(c.cargo, \'\'), f.cargo, u.perfil) AS cargo
            FROM salarios s JOIN utilizadores u ON u.id = s.utilizador_id LEFT JOIN contratos c ON c.utilizador_id = s.utilizador_id
            LEFT JOIN funcionarios f ON f.utilizador_id = s.utilizador_id
           ORDER BY s.mes, u.nome'
@@ -82,7 +82,7 @@ function folhaSalarios(Xlsx $x): void
         $tot['se'] += (int) $s['ss_ent_cents'];
         $linhas[] = [nomeMes($s['mes']), $s['nome'], $s['cargo'], dinheiroCelula((int) $s['bruto_cents']), dinheiroCelula((int) $s['irs_cents']), dinheiroCelula((int) $s['ss_trab_cents']),
             dinheiroCelula((int) $s['liquido_cents']), dinheiroCelula((int) $s['ss_ent_cents']), dinheiroCelula((int) $s['bruto_cents'] + (int) $s['ss_ent_cents']),
-            $s['pago_em'] ? t('pago') : t('por_pagar'), $s['pago_em'] ? dataFmt($s['pago_em']) : ''];
+            $s['pago_em'] ? t('pago') : t('por_pagar'), $s['pago_em'] ? dataFmt($s['pago_em']) : '', !empty($s['metodo']) ? t('metodo_' . $s['metodo']) : '', (string) $s['nif'], (string) $s['niss']];
     }
     $linhas[] = [];
     $linhas[] = [[t('total'), Xlsx::NEGRITO], '', '', dinheiroCelula($tot['b'], true), dinheiroCelula($tot['i'], true), dinheiroCelula($tot['st'], true), dinheiroCelula($tot['l'], true), dinheiroCelula($tot['se'], true), dinheiroCelula($tot['b'] + $tot['se'], true)];
@@ -129,18 +129,18 @@ function folhaSeguranca(Xlsx $x, array $r): void
 
 function folhaLancamentos(Xlsx $x): void
 {
-    $linhas = [cabecalhoCelulas([t('data'), t('tipo'), t('categoria'), t('descricao'), t('valor_sem_iva'), t('taxa_iva'), t('iva'), t('total')])];
+    $linhas = [cabecalhoCelulas([t('data'), t('tipo'), t('categoria'), t('descricao'), t('entidade_empresa'), t('nif'), t('documento_n'), t('valor_sem_iva'), t('taxa_iva'), t('iva'), t('total')])];
     $tot = ['receita' => [0, 0, 0], 'despesa' => [0, 0, 0]];
     foreach (bd()->query('SELECT * FROM lancamentos ORDER BY data, id')->fetchAll() as $l) {
         $tot[$l['tipo']][0] += (int) $l['base_cents'];
         $tot[$l['tipo']][1] += (int) $l['iva_cents'];
         $tot[$l['tipo']][2] += (int) $l['total_cents'];
-        $linhas[] = [dataFmt($l['data']), t('tipo_' . $l['tipo']), nomeCategoria($l['categoria']), $l['descricao'], dinheiroCelula((int) $l['base_cents']),
+        $linhas[] = [dataFmt($l['data']), t('tipo_' . $l['tipo']), nomeCategoria($l['categoria']), $l['descricao'], $l['entidade'], $l['nif'], $l['documento'], dinheiroCelula((int) $l['base_cents']),
             [(int) $l['iva_taxa'] / 100, Xlsx::PERCENT], dinheiroCelula((int) $l['iva_cents']), dinheiroCelula((int) $l['total_cents'])];
     }
     $linhas[] = [];
     foreach (['receita' => 'total_receitas', 'despesa' => 'total_despesas'] as $tipo => $chave) {
-        $linhas[] = [[t($chave), Xlsx::NEGRITO], '', '', '', dinheiroCelula($tot[$tipo][0], true), '', dinheiroCelula($tot[$tipo][1], true), dinheiroCelula($tot[$tipo][2], true)];
+        $linhas[] = [[t($chave), Xlsx::NEGRITO], '', '', '', '', '', '', dinheiroCelula($tot[$tipo][0], true), '', dinheiroCelula($tot[$tipo][1], true), dinheiroCelula($tot[$tipo][2], true)];
     }
     $x->folha(t('menu_lancamentos'), $linhas);
 }

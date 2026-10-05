@@ -58,6 +58,8 @@ function pdfReciboPropina(array $p): string
     $linhas = [
         [t('aluno'), $p['nome']],
         [t('turma'), $p['turma']],
+        ...(($p['encarregado'] ?? '') !== '' ? [[t('encarregado_paga'), $p['encarregado']]] : []),
+        ...(($p['nif'] ?? '') !== '' ? [[t('nif'), $p['nif']]] : []),
         [t('mes'), nomeMes($p['mes'])],
         [t('vencimento'), dataFmt($p['vencimento'])],
         [t('pago_em'), dataFmt($p['pago_em'])],
@@ -88,7 +90,15 @@ function pdfReciboVencimento(array $s): string
     $pdf->texto($m, $y + 14, $s['nome'], 11.5, true);
     $pdf->texto($m + 260, $y, mb_strtoupper(t('cargo')), 7.5, true, 'e', 0, [0.42, 0.45, 0.5]);
     $pdf->texto($m + 260, $y + 14, $s['cargo'], 11.5);
-    $y += 52;
+    $y += 42;
+    if (($s['nif'] ?? '') !== '' || ($s['niss'] ?? '') !== '') {
+        $pdf->texto($m, $y, mb_strtoupper(t('nif')), 7.5, true, 'e', 0, [0.42, 0.45, 0.5]);
+        $pdf->texto($m, $y + 14, ($s['nif'] ?? '') !== '' ? $s['nif'] : '—', 11);
+        $pdf->texto($m + 260, $y, mb_strtoupper(t('niss')), 7.5, true, 'e', 0, [0.42, 0.45, 0.5]);
+        $pdf->texto($m + 260, $y + 14, ($s['niss'] ?? '') !== '' ? $s['niss'] : '—', 11);
+        $y += 42;
+    }
+    $y += 10;
 
     $pdf->texto($m, $y, mb_strtoupper(t('remuneracoes')), 8, true, 'e', 0, [0.114, 0.255, 0.6]);
     $y += 20;
@@ -111,7 +121,7 @@ function pdfReciboVencimento(array $s): string
     $y += 26;
     pdfLinhaValor($pdf, $y, t('custo_total'), euro((int) $s['bruto_cents'] + (int) $s['ss_ent_cents']), true);
     $y += 40;
-    $pdf->texto($m, $y, $s['pago_em'] ? t('pago_em') . ': ' . dataFmt($s['pago_em']) : t('por_pagar'), 10, true);
+    $pdf->texto($m, $y, $s['pago_em'] ? t('pago_em') . ': ' . dataFmt($s['pago_em']) . (!empty($s['metodo']) ? ' · ' . t('metodo_' . $s['metodo']) : '') : t('por_pagar'), 10, true);
     $pdf->texto($m, $y + 18, t('nota_salarios'), 8.5, false, 'e', 0, [0.42, 0.45, 0.5]);
     $pdf->texto($m, $y + 34, t('doc_exemplo'), 9, false, 'e', 0, [0.78, 0.13, 0.13]);
     $pdf->texto($m, $pdf->altura - 40, t('gerado_em', dataFmt(hojeISO())), 8.5, false, 'e', 0, [0.42, 0.45, 0.5]);

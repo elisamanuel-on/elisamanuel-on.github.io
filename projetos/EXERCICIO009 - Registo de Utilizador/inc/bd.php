@@ -95,7 +95,9 @@ CREATE TABLE alunos (
     utilizador_id INTEGER PRIMARY KEY REFERENCES utilizadores (id) ON DELETE CASCADE,
     turma_id      INTEGER NOT NULL REFERENCES turmas (id),
     numero        INTEGER NOT NULL,
-    nascimento    TEXT
+    nascimento    TEXT,
+    encarregado   TEXT NOT NULL DEFAULT '',   -- nome do encarregado de educação (para o recibo da propina), opcional
+    nif           TEXT NOT NULL DEFAULT ''    -- NIF de quem paga a propina (9 dígitos, validado), opcional
 );
 CREATE TABLE lecionacao (
     turma_id      INTEGER NOT NULL REFERENCES turmas (id) ON DELETE CASCADE,
@@ -180,7 +182,9 @@ CREATE TABLE contratos (
     utilizador_id INTEGER PRIMARY KEY REFERENCES utilizadores (id) ON DELETE CASCADE,
     cargo         TEXT NOT NULL DEFAULT '',
     bruto_cents   INTEGER NOT NULL CHECK (bruto_cents >= 0),
-    irs_taxa      REAL NOT NULL CHECK (irs_taxa BETWEEN 0 AND 60)   -- retenção na fonte (%), valor ilustrativo
+    irs_taxa      REAL NOT NULL CHECK (irs_taxa BETWEEN 0 AND 60),  -- retenção na fonte (%), valor ilustrativo
+    nif           TEXT NOT NULL DEFAULT '',                          -- NIF do trabalhador (validado), opcional
+    niss          TEXT NOT NULL DEFAULT ''                           -- n.º da Segurança Social (11 dígitos), opcional
 );
 CREATE TABLE salarios (
     id            INTEGER PRIMARY KEY,
@@ -192,6 +196,7 @@ CREATE TABLE salarios (
     ss_ent_cents  INTEGER NOT NULL,
     liquido_cents INTEGER NOT NULL,
     pago_em       TEXT,
+    metodo        TEXT,                        -- transferencia, numerario ou cheque (quando está pago)
     UNIQUE (utilizador_id, mes)
 );
 CREATE TABLE lancamentos (
@@ -205,7 +210,10 @@ CREATE TABLE lancamentos (
     iva_cents   INTEGER NOT NULL,
     total_cents INTEGER NOT NULL,
     criado_por  INTEGER NOT NULL REFERENCES utilizadores (id),
-    criado_em   TEXT NOT NULL
+    criado_em   TEXT NOT NULL,
+    entidade    TEXT NOT NULL DEFAULT '',     -- fornecedor ou cliente (nome da empresa)
+    nif         TEXT NOT NULL DEFAULT '',     -- NIF da entidade (9 dígitos, validado), opcional
+    documento   TEXT NOT NULL DEFAULT ''      -- n.º da fatura ou recibo, opcional
 );
 -- Registo de alterações financeiras: quem mudou ou apagou o quê, quando e porquê (o motivo é obrigatório ao apagar)
 CREATE TABLE auditoria (
@@ -240,6 +248,9 @@ CREATE TABLE visitas (
     visitante     TEXT NOT NULL,
     motivo        TEXT NOT NULL,
     destino       TEXT NOT NULL DEFAULT '',
+    empresa       TEXT NOT NULL DEFAULT '',   -- empresa ou entidade que o visitante representa (opcional)
+    nif           TEXT NOT NULL DEFAULT '',   -- NIF da empresa (9 dígitos, validado), opcional
+    contacto      TEXT NOT NULL DEFAULT '',   -- telefone (opcional)
     entrada       TEXT NOT NULL,
     saida         TEXT,
     registado_por INTEGER NOT NULL REFERENCES utilizadores (id)
@@ -461,19 +472,25 @@ function semearPessoal(PDO $bd, int $portaria): array
 /** Algumas visitas dos últimos dias (todas já saíram). */
 function semearVisitas(PDO $bd, int $portaria, array $professorDe): void
 {
-    $st = $bd->prepare('INSERT INTO visitas (visitante, motivo, destino, entrada, saida, registado_por) VALUES (?, ?, ?, ?, ?, ?)');
+    $st = $bd->prepare('INSERT INTO visitas (visitante, motivo, destino, empresa, nif, contacto, entrada, saida, registado_por) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $lista = [
-        ['Paula Mendes (encarregada de educação)', 'reuniao',    'Diretor de turma do 7.ºA', '2026-09-28 09:05:00', '2026-09-28 09:50:00'],
-        ['Transportes Lusitânia',                 'fornecedor', 'Cantina',                  '2026-09-29 08:10:00', '2026-09-29 08:30:00'],
-        ['Jorge Almeida (encarregado de educação)','documentos', 'Secretaria',               '2026-09-30 10:20:00', '2026-09-30 10:45:00'],
-        ['Eletricidade Norte, Lda.',              'manutencao', 'Pavilhão desportivo',      '2026-10-01 14:00:00', '2026-10-01 16:40:00'],
-        ['Marta Correia (encarregada de educação)','recolha',    'Secretaria',               '2026-10-01 12:25:00', '2026-10-01 12:35:00'],
-        ['Rui Tavares (encarregado de educação)', 'reuniao',    'Direção',                  '2026-10-02 11:00:00', '2026-10-02 11:50:00'],
-        ['Papelaria Central',                     'fornecedor', 'Secretaria',               '2026-10-02 15:10:00', '2026-10-02 15:25:00'],
+        ['Paula Mendes (encarregada de educação)', 'reuniao',    'Diretor de turma do 7.ºA', '', '', '912 300 101', '2026-09-28 09:05:00', '2026-09-28 09:50:00'],
+        ['Hélder Cunha',                          'fornecedor', 'Cantina',                  'Transportes Lusitânia, Lda.', 'transportes', '253 600 120', '2026-09-29 08:10:00', '2026-09-29 08:30:00'],
+        ['Jorge Almeida (encarregado de educação)','documentos', 'Secretaria',               '', '', '', '2026-09-30 10:20:00', '2026-09-30 10:45:00'],
+        ['Nuno Ferraz',                           'manutencao', 'Pavilhão desportivo',      'Eletricidade Norte, Lda.', 'eletricidade', '253 600 455', '2026-10-01 14:00:00', '2026-10-01 16:40:00'],
+        ['Marta Correia (encarregada de educação)','recolha',    'Secretaria',               '', '', '', '2026-10-01 12:25:00', '2026-10-01 12:35:00'],
+        ['Rui Tavares (encarregado de educação)', 'reuniao',    'Direção',                  '', '', '', '2026-10-02 11:00:00', '2026-10-02 11:50:00'],
+        ['Sónia Machado',                         'fornecedor', 'Secretaria',               'Papelaria Central, Lda.', 'papelaria', '253 600 780', '2026-10-02 15:10:00', '2026-10-02 15:25:00'],
     ];
-    foreach ($lista as [$nome, $motivo, $destino, $entrada, $saida]) {
-        $st->execute([$nome, $motivo, $destino, $entrada, $saida, $portaria]);
+    foreach ($lista as [$nome, $motivo, $destino, $empresa, $semente, $contacto, $entrada, $saida]) {
+        $st->execute([$nome, $motivo, $destino, $empresa, $semente !== '' ? nifDeExemplo($semente) : '', $contacto, $entrada, $saida, $portaria]);
     }
+}
+
+/** NIF fictício mas válido (com o dígito de controlo certo), sempre o mesmo para a mesma palavra. */
+function nifDeExemplo(string $semente, string $prefixo = '5'): string
+{
+    return nifComControlo($prefixo . str_pad((string) (crc32($semente) % 10000000), 7, '0', STR_PAD_LEFT));
 }
 
 /** Dados de exemplo das finanças: parâmetros, propinas de setembro e outubro, contratos, salários de setembro e lançamentos. */
@@ -522,26 +539,44 @@ function semearFinancas(PDO $bd, int $direcao, int $secretaria, int $contabilist
 
     // Salários de setembro, já pagos a 30 de setembro
     processarSalarios($bd, '2026-09', '2026-09-30');
+    $bd->exec("UPDATE salarios SET metodo = 'transferencia' WHERE pago_em IS NOT NULL");
+
+    // NIF e NISS de exemplo (fictícios mas válidos) em todos os contratos
+    $fiscais = $bd->prepare('UPDATE contratos SET nif = ?, niss = ? WHERE utilizador_id = ?');
+    foreach ($bd->query('SELECT utilizador_id FROM contratos')->fetchAll(PDO::FETCH_COLUMN) as $idContrato) {
+        $fiscais->execute([nifDeExemplo('t' . $idContrato, '2'), '1' . str_pad((string) (crc32('s' . $idContrato) % 10000000000), 10, '0', STR_PAD_LEFT), $idContrato]);
+    }
+
+    // Encarregado de educação e NIF de quem paga, em cerca de dois terços dos alunos
+    $encarregados = ['Paulo', 'Ana', 'Rui', 'Marta', 'Jorge', 'Sónia'];
+    $fatura = $bd->prepare('UPDATE alunos SET encarregado = ?, nif = ? WHERE utilizador_id = ?');
+    foreach ($bd->query('SELECT a.utilizador_id AS id, u.nome FROM alunos a JOIN utilizadores u ON u.id = a.utilizador_id ORDER BY a.utilizador_id')->fetchAll() as $k => $al) {
+        if ($k % 3 !== 2) {
+            $partes = explode(' ', trim($al['nome']));
+            $fatura->execute([$encarregados[$k % 6] . ' ' . end($partes), nifDeExemplo('p' . $al['id'], '2'), (int) $al['id']]);
+        }
+    }
 
     // Despesas e receitas de setembro e outubro
-    $lanc = $bd->prepare('INSERT INTO lancamentos (tipo, categoria, descricao, data, base_cents, iva_taxa, iva_cents, total_cents, criado_por, criado_em) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $lanc = $bd->prepare('INSERT INTO lancamentos (tipo, categoria, descricao, data, base_cents, iva_taxa, iva_cents, total_cents, criado_por, criado_em, entidade, nif, documento) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $itens = [
-        ['despesa', 'material',   'Material escolar e papelaria',          '2026-09-05', 184000, 23],
-        ['despesa', 'energia',    'Eletricidade (setembro)',               '2026-09-28', 142000, 23],
-        ['despesa', 'energia',    'Água e saneamento (setembro)',          '2026-09-28',  38500, 6],
-        ['despesa', 'limpeza',    'Serviço de limpeza (setembro)',         '2026-09-30', 120000, 23],
-        ['despesa', 'software',   'Licenças de software de gestão',        '2026-09-12',  64000, 23],
-        ['despesa', 'seguros',    'Seguro escolar e do edifício',          '2026-09-10',  95000, 0],
-        ['despesa', 'taxas',      'Taxa municipal de ocupação',            '2026-09-15',  21000, 0],
-        ['despesa', 'manutencao', 'Reparação do aquecimento do pavilhão',  '2026-10-02',  76000, 23],
-        ['receita', 'cantina',    'Refeições da cantina (setembro)',       '2026-09-30', 168000, 13],
-        ['receita', 'aluguer',    'Aluguer do pavilhão ao clube local',    '2026-09-20',  60000, 23],
-        ['receita', 'loja',       'Venda de uniformes e material',         '2026-09-18',  92000, 23],
-        ['receita', 'donativos',  'Donativo da associação de pais',        '2026-10-01',  50000, 0],
+        ['despesa', 'material',   'Material escolar e papelaria',          '2026-09-05', 184000, 23, 'Papelaria Central, Lda.', 'FT 2026/118'],
+        ['despesa', 'energia',    'Eletricidade (setembro)',               '2026-09-28', 142000, 23, 'Energia do Norte, S.A.', 'FT 9/4471'],
+        ['despesa', 'energia',    'Água e saneamento (setembro)',          '2026-09-28',  38500, 6, 'Águas do Município, E.M.', 'FT 2026/3302'],
+        ['despesa', 'limpeza',    'Serviço de limpeza (setembro)',         '2026-09-30', 120000, 23, 'Limpezas Brilho, Lda.', 'FT 2026/57'],
+        ['despesa', 'software',   'Licenças de software de gestão',        '2026-09-12',  64000, 23, 'Gestão Escolar Software, Lda.', 'FT 2026/902'],
+        ['despesa', 'seguros',    'Seguro escolar e do edifício',          '2026-09-10',  95000, 0, 'Seguradora Atlântica, S.A.', 'AP 2026/6610'],
+        ['despesa', 'taxas',      'Taxa municipal de ocupação',            '2026-09-15',  21000, 0, 'Câmara Municipal', 'GU 2026/88'],
+        ['despesa', 'manutencao', 'Reparação do aquecimento do pavilhão',  '2026-10-02',  76000, 23, 'Aquecimentos Silva e Filhos, Lda.', 'FT 2026/241'],
+        ['receita', 'cantina',    'Refeições da cantina (setembro)',       '2026-09-30', 168000, 13, '', 'FS 2026/09'],
+        ['receita', 'aluguer',    'Aluguer do pavilhão ao clube local',    '2026-09-20',  60000, 23, 'Clube Desportivo Local', 'FR 2026/12'],
+        ['receita', 'loja',       'Venda de uniformes e material',         '2026-09-18',  92000, 23, '', 'FS 2026/10'],
+        ['receita', 'donativos',  'Donativo da associação de pais',        '2026-10-01',  50000, 0, 'Associação de Pais e Encarregados de Educação', 'RC 2026/4'],
     ];
-    foreach ($itens as [$tipo, $categoria, $descricao, $data, $base, $taxa]) {
+    foreach ($itens as [$tipo, $categoria, $descricao, $data, $base, $taxa, $entidade, $documento]) {
         [$iva, $total] = calcularIva($base, $taxa);
-        $lanc->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $contabilista, $data . ' 10:00:00']);
+        $nif = in_array($entidade, ['', 'Câmara Municipal'], true) ? ($entidade === '' ? '' : nifComControlo('60001234')) : nifDeExemplo($entidade);
+        $lanc->execute([$tipo, $categoria, $descricao, $data, $base, $taxa, $iva, $total, $contabilista, $data . ' 10:00:00', $entidade, $nif, $documento]);
     }
 
     // Dois exemplos no registo de alterações (o motivo é sempre obrigatório ao apagar)
