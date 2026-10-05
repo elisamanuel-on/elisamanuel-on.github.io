@@ -9,7 +9,7 @@
     <meta property="og:title" content="Elisama Manuel | Portfólio Dev">
     <meta property="og:description" content="Desenvolvedora em formação: Python, RPA, Análise de Dados e Desenvolvimento Web.">
     <meta property="og:image" content="imagens/WhatsApp%20Image%202026-07-23%20at%2017.38.49.jpeg">
-    <link rel="stylesheet" href="style.css?v=2026.10.04-17">
+    <link rel="stylesheet" href="style.css?v=2026.10.04-18">
     <link rel="icon" href="imagens/Ativo 30@2x.png">
 </head>
 <body data-pagina="index">
@@ -54,39 +54,49 @@
         <!-- SECÇÃO PERFIL -->
         <section class="perfil hero">
             <div class="hero-glow" aria-hidden="true"></div>
-            <div class="row">
-                <div class="col imagem-col">
-                    <div class="imagem-wrapper">
+
+            <div class="terminal-janela">
+                <div class="terminal-barra">
+                    <span class="ponto ponto-vermelho"></span><span class="ponto ponto-amarelo"></span><span class="ponto ponto-verde"></span>
+                    <span class="terminal-titulo">elisama@portfolio:~</span>
+                </div>
+
+                <div class="terminal-corpo">
+                    <div class="term-foto">
                         <img src="imagens/WhatsApp Image 2026-07-23 at 17.38.49.jpeg" alt="Elisama Manuel" class="imagem-perfil">
                         <div class="imagem-badge" data-i18n="hero_badge">Dev Web Júnior</div>
                     </div>
+
+                    <div class="term-texto">
+                        <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">whoami</span></div>
+                        <h1>Elisama Manuel</h1>
+                        <h2><span data-i18n="hero_subtitulo">Desenvolvedora Web Júnior (Full-Stack)</span><span class="cursor" aria-hidden="true"></span></h2>
+
+                        <div class="disponivel"><span class="disp-ponto" aria-hidden="true"></span><span data-i18n="hero_disp">Disponível para estágio (FCT) a partir de novembro de 2026 · aberta a projetos freelancer</span></div>
+
+                        <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">cat sobre.txt</span></div>
+                        <p data-i18n="hero_p1">Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.</p>
+                        <p data-i18n="hero_p2">Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.</p>
+
+                        <div class="hero-cta">
+                            <a href="cv/Elisama-Manuel-CV.pdf" class="btn btn-primario" download><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="hero_btn_cv">Descarregar CV</span></a>
+                            <a href="portfolio.html" class="btn btn-secundario" data-i18n="hero_btn_projetos">Ver Projetos</a>
+                            <a href="contacto.html" class="btn btn-secundario" data-i18n="nav_contacto">Contacto</a>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat"><span class="stat-num" id="numeroProjetos">18</span><span class="stat-label" data-i18n="stat_projetos">Projetos</span></div>
+                            <div class="stat"><span class="stat-num" id="numeroTech">+6</span><span class="stat-label" data-i18n="stat_tecnologias">Tecnologias</span></div>
+                            <div class="stat"><span class="stat-num" id="numeroExperiencias">7</span><span class="stat-label" data-i18n="stat_experiencias">Experiências</span></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="col conteudo-col">
-                    <h1>Elisama Manuel</h1>
-                    <h2 data-i18n="hero_subtitulo">Desenvolvedora Web Júnior (Full-Stack)</h2>
-
-                    <p data-i18n="hero_p1">Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.</p>
-
-                    <p data-i18n="hero_p2">Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.</p>
-
-                    <div class="hero-cta">
-                        <a href="cv/Elisama-Manuel-CV.pdf" class="btn btn-primario" download><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> <span data-i18n="hero_btn_cv">Descarregar CV</span></a>
-                        <a href="portfolio.html" class="btn btn-secundario" data-i18n="hero_btn_projetos">Ver Projetos</a>
+                <div class="term-skills">
+                    <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">ls</span> <span class="arg" data-i18n="stat_tecnologias">Tecnologias</span><span class="arg">/</span></div>
+                    <div class="tags" id="tagsContainer">
+                        <!-- Tags geradas pelo JavaScript -->
                     </div>
-
-                    <div class="stats-row">
-                        <div class="stat"><span class="stat-num" id="numeroProjetos">18</span><span class="stat-label" data-i18n="stat_projetos">Projetos</span></div>
-                        <div class="stat"><span class="stat-num" id="numeroTech">+6</span><span class="stat-label" data-i18n="stat_tecnologias">Tecnologias</span></div>
-                        <div class="stat"><span class="stat-num" id="numeroExperiencias">7</span><span class="stat-label" data-i18n="stat_experiencias">Experiências</span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="skills-bloco">
-                <h3 class="skills-titulo" data-i18n="stat_tecnologias">Tecnologias</h3>
-                <div class="tags" id="tagsContainer">
-                    <!-- Tags geradas pelo JavaScript -->
                 </div>
             </div>
         </section>
@@ -125,9 +135,9 @@
         <p>Elisama Manuel — <span data-i18n="footer_tagline">Tecnologias e Programação de Sistemas de Informação</span></p>
     </footer>
 
-    <script src="i18n.js?v=2026.10.04-17"></script>
-    <script src="terminal-core.js?v=2026.10.04-17"></script>
-    <script src="script.js?v=2026.10.04-17"></script>
+    <script src="i18n.js?v=2026.10.04-18"></script>
+    <script src="terminal-core.js?v=2026.10.04-18"></script>
+    <script src="script.js?v=2026.10.04-18"></script>
 
     <!-- Analítica GoatCounter (privada, sem cookies) · troca MEUCODIGO pelo teu código depois de criares a conta em goatcounter.com -->
     <script data-goatcounter="https://elisama-manuel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
