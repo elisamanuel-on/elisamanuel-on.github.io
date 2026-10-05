@@ -1404,3 +1404,46 @@ footer p {
 .projeto-card:hover .chip-tec {
     border-color: var(--cor-primaria);
 }
+
+/* ===== HERO COMPACTO: tecnologias em bloco por baixo ===== */
+.hero .row {
+    min-height: 0;
+    margin: 1rem 0 1.5rem;
+}
+
+.skills-bloco {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.skills-titulo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--cor-texto);
+    margin-bottom: 1rem;
+}
+
+.skills-bloco #tagsContainer {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem 2.2rem;
+    margin-top: 0;
+}
+
+.skills-bloco .skills-grupo,
+.skills-bloco .skills-grupo:first-child {
+    border-top: 0;
+    padding: 0.6rem 0 0.8rem;
+}
+
+@media (max-width: 900px) {
+    .skills-bloco #tagsContainer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+    .skills-bloco #tagsContainer { grid-template-columns: 1fr; }
+    .skills-titulo { text-align: center; }
+}
