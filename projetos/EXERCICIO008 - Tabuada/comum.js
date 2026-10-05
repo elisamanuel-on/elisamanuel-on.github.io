@@ -4,7 +4,7 @@
 
     var T = window.Tabuada = window.Tabuada || {};
 
-    T.VERSAO = '2.0.0';
+    T.VERSAO = '2.0.1';
     T.semMovimento = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
     // ---------- utilitários ----------

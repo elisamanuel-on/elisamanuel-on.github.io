@@ -852,6 +852,7 @@ a {
     position: relative;
     display: grid;
     grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--n), minmax(0, 1fr));
     width: min(100%, 560px);
     aspect-ratio: 1;
     border: 5px solid var(--tinta);
@@ -870,8 +871,16 @@ a {
     justify-content: center;
 }
 
-.c.pn { border-top: 4px solid var(--tinta); }
-.c.pw { border-left: 4px solid var(--tinta); }
+/* as paredes são desenhadas por cima da linha entre células e não mexem no tamanho delas (todas as células ficam iguais) */
+.c.pn::before, .c.pw::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    background: var(--tinta);
+    pointer-events: none;
+}
+.c.pn::before { left: -2px; right: -2px; top: -2px; height: 4px; }
+.c.pw::after { top: -2px; bottom: -2px; left: -2px; width: 4px; }
 .c svg {
     width: 70%;
     height: 70%;
