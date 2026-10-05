@@ -9,7 +9,7 @@
     <meta property="og:title" content="Elisama Manuel | Portfólio Dev">
     <meta property="og:description" content="Desenvolvedora em formação: Python, RPA, Análise de Dados e Desenvolvimento Web.">
     <meta property="og:image" content="imagens/WhatsApp%20Image%202026-07-23%20at%2017.38.49.jpeg">
-    <link rel="stylesheet" href="style.css?v=2026.10.04-18">
+    <link rel="stylesheet" href="style.css?v=2026.10.04-19">
     <link rel="icon" href="imagens/Ativo 30@2x.png">
 </head>
 <body data-pagina="index">
@@ -24,44 +24,29 @@
         <button id="bootSaltar" class="boot-saltar">saltar intro</button>
     </div>
 
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <nav>
-                    <a href="index.html" class="active" data-i18n="nav_perfil">Perfil</a>
-                    <a href="portfolio.html" data-i18n="nav_portfolio">Portfólio</a>
-                    <a href="terminal.html" data-i18n="nav_terminal">Terminal</a>
-                    <a href="contacto.html" data-i18n="nav_contacto">Contacto</a>
-                </nav>
-                <div class="controlos-topo">
-                    <div class="lang-switcher" role="group" aria-label="Idioma / Language">
-                        <button class="lang-btn" data-lang="pt">PT</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="es">ES</button>
-                        <button class="lang-btn" data-lang="fr">FR</button>
-                    </div>
-                    <!-- Toggle Dark/Light Mode -->
-                    <button id="toggleTheme" class="btn-theme" aria-label="Alternar tema">
-                        <span class="theme-icon"> </span>
-                        <span class="theme-text">Dark</span>
-                    </button>
+    <div class="janela">
+        <header class="barra">
+            <nav class="pontos" aria-label="Navegação">
+                <a class="pt pt-vermelho on" href="index.html" aria-current="page"><i></i><em data-i18n="nav_perfil">Perfil</em></a>
+                <a class="pt pt-ambar" href="portfolio.html"><i></i><em data-i18n="nav_portfolio">Portfólio</em></a>
+                <a class="pt pt-verde" href="contacto.html"><i></i><em data-i18n="nav_contacto">Contacto</em></a>
+            </nav>
+            <span class="caminho"><b>elisama@portfolio</b>:~/perfil</span>
+            <div class="controlos">
+                <div class="idiomas" role="group" aria-label="Idioma / Language">
+                    <button class="lang-btn" data-lang="pt">PT</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="es">ES</button>
+                    <button class="lang-btn" data-lang="fr">FR</button>
                 </div>
+                <button id="toggleTheme" class="tema-btn" aria-label="Alternar tema / Toggle theme"></button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="container">
-        <!-- SECÇÃO PERFIL -->
-        <section class="perfil hero">
-            <div class="hero-glow" aria-hidden="true"></div>
-
-            <div class="terminal-janela">
-                <div class="terminal-barra">
-                    <span class="ponto ponto-vermelho"></span><span class="ponto ponto-amarelo"></span><span class="ponto ponto-verde"></span>
-                    <span class="terminal-titulo">elisama@portfolio:~</span>
-                </div>
-
-                <div class="terminal-corpo">
+        <main>
+            <!-- PERFIL -->
+            <section class="perfil hero">
+                <div class="corpo">
                     <div class="term-foto">
                         <img src="imagens/WhatsApp Image 2026-07-23 at 17.38.49.jpeg" alt="Elisama Manuel" class="imagem-perfil">
                         <div class="imagem-badge" data-i18n="hero_badge">Dev Web Júnior</div>
@@ -72,8 +57,6 @@
                         <h1>Elisama Manuel</h1>
                         <h2><span data-i18n="hero_subtitulo">Desenvolvedora Web Júnior (Full-Stack)</span><span class="cursor" aria-hidden="true"></span></h2>
 
-                        <div class="disponivel"><span class="disp-ponto" aria-hidden="true"></span><span data-i18n="hero_disp">Disponível para estágio (FCT) a partir de novembro de 2026 · aberta a projetos freelancer</span></div>
-
                         <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">cat sobre.txt</span></div>
                         <p data-i18n="hero_p1">Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.</p>
                         <p data-i18n="hero_p2">Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.</p>
@@ -83,61 +66,71 @@
                             <a href="portfolio.html" class="btn btn-secundario" data-i18n="hero_btn_projetos">Ver Projetos</a>
                             <a href="contacto.html" class="btn btn-secundario" data-i18n="nav_contacto">Contacto</a>
                         </div>
+                    </div>
 
-                        <div class="stats-row">
-                            <div class="stat"><span class="stat-num" id="numeroProjetos">18</span><span class="stat-label" data-i18n="stat_projetos">Projetos</span></div>
-                            <div class="stat"><span class="stat-num" id="numeroTech">+6</span><span class="stat-label" data-i18n="stat_tecnologias">Tecnologias</span></div>
-                            <div class="stat"><span class="stat-num" id="numeroExperiencias">7</span><span class="stat-label" data-i18n="stat_experiencias">Experiências</span></div>
-                        </div>
+                    <div class="stats-row">
+                        <div class="stat"><span class="stat-num" id="numeroProjetos">18</span><span class="stat-label" data-i18n="stat_projetos">Projetos</span></div>
+                        <div class="stat"><span class="stat-num" id="numeroTech">21</span><span class="stat-label" data-i18n="stat_tecnologias">Tecnologias</span></div>
+                        <div class="stat"><span class="stat-num" id="numeroExperiencias">7</span><span class="stat-label" data-i18n="stat_experiencias">Experiências</span></div>
                     </div>
                 </div>
+            </section>
 
-                <div class="term-skills">
-                    <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">ls</span> <span class="arg" data-i18n="stat_tecnologias">Tecnologias</span><span class="arg">/</span></div>
-                    <div class="tags" id="tagsContainer">
-                        <!-- Tags geradas pelo JavaScript -->
-                    </div>
+            <!-- TECNOLOGIAS -->
+            <section class="bloco fundo term-skills">
+                <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">ls</span> <span class="arg" data-i18n="stat_tecnologias">Tecnologias</span><span class="arg">/</span></div>
+                <div class="tags" id="tagsContainer">
+                    <!-- Tags geradas pelo JavaScript -->
                 </div>
+            </section>
+
+            <!-- EXPERIÊNCIA -->
+            <section class="bloco experiencia">
+                <h2 class="titulo-seccao"><span class="pr">$</span> <span data-i18n="titulo_experiencia">Experiência Profissional</span></h2>
+                <div class="experiencia-grid" id="experienciaContainer">
+                    <!-- Gerado pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- FORMAÇÃO -->
+            <section class="bloco formacao">
+                <h2 class="titulo-seccao"><span class="pr">$</span> <span data-i18n="titulo_formacao">Formação Académica</span></h2>
+                <div class="formacao-grid" id="formacaoContainer">
+                    <!-- Gerado pelo JavaScript -->
+                </div>
+            </section>
+
+            <!-- BASE DE DADOS (antigo terminal) -->
+            <section class="bloco fundo" id="base-de-dados">
+                <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">sqlite3</span> <span class="arg">portfolio.db</span></div>
+                <h2 class="titulo-seccao sem-linha" data-i18n="db_titulo">Base de dados</h2>
+                <p class="db-sub" data-i18n="db_sub">Consulta as tabelas do site ou escreve um comando (.help)</p>
+                <div id="consola"></div>
+            </section>
+
+            <!-- REDES SOCIAIS -->
+            <div class="social-links">
+                <a href="https://github.com/elisamanuel-on" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.21.66.8.55A10.51 10.51 0 0 0 23.5 12c0-6.27-5.23-11.5-11.5-11.5z"/></svg> GitHub</a>
+                <a href="https://www.linkedin.com/in/elisama-manuel-49025117a/" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.15 1.45-2.15 2.94v5.66H9.34V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg> LinkedIn</a>
+                <a href="https://www.instagram.com/elisama__manuel/" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg> Instagram</a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=elisamanueljob@gmail.com" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg> Email</a>
             </div>
-        </section>
 
-        <!-- SECÇÃO EXPERIÊNCIA -->
-        <section class="experiencia">
-            <h2 class="titulo-seccao" data-i18n="titulo_experiencia">Experiência Profissional</h2>
-            <div class="experiencia-grid" id="experienciaContainer">
-                <!-- Gerado pelo JavaScript -->
-            </div>
-        </section>
+            <p class="contacto">
+                <span class="inline-icone"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +351 913 516 395</span>
+                <span class="inline-icone"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Vila Nova de Famalicão, Portugal</span>
+            </p>
+        </main>
 
-        <!-- SECÇÃO FORMAÇÃO -->
-        <section class="formacao">
-            <h2 class="titulo-seccao" data-i18n="titulo_formacao">Formação Académica</h2>
-            <div class="formacao-grid" id="formacaoContainer">
-                <!-- Gerado pelo JavaScript -->
-            </div>
-        </section>
-
-        <!-- REDES SOCIAIS -->
-        <div class="social-links">
-            <a href="https://github.com/elisamanuel-on" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.7-1.28-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.59.24 2.76.12 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.21.66.8.55A10.51 10.51 0 0 0 23.5 12c0-6.27-5.23-11.5-11.5-11.5z"/></svg> GitHub</a>
-            <a href="https://www.linkedin.com/in/elisama-manuel-49025117a/" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.15 1.45-2.15 2.94v5.66H9.34V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg> LinkedIn</a>
-            <a href="https://www.instagram.com/elisama__manuel/" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg> Instagram</a>
-            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=elisamanueljob@gmail.com" target="_blank" rel="noopener"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/></svg> Email</a>
-        </div>
-
-        <p class="contacto">
-            <span class="inline-icone"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg> +351 913 516 395</span>
-            <span class="inline-icone"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Vila Nova de Famalicão, Portugal</span>
-        </p>
-    </main>
-
-    <footer>
+        <footer>
         <p>Elisama Manuel — <span data-i18n="footer_tagline">Tecnologias e Programação de Sistemas de Informação</span></p>
     </footer>
+    </div>
 
-    <script src="i18n.js?v=2026.10.04-18"></script>
-    <script src="terminal-core.js?v=2026.10.04-18"></script>
-    <script src="script.js?v=2026.10.04-18"></script>
+    <script src="i18n.js?v=2026.10.04-19"></script>
+    <script src="terminal-core.js?v=2026.10.04-19"></script>
+    <script src="script.js?v=2026.10.04-19"></script>
+    <script src="consola.js?v=2026.10.04-19"></script>
 
     <!-- Analítica GoatCounter (privada, sem cookies) · troca MEUCODIGO pelo teu código depois de criares a conta em goatcounter.com -->
     <script data-goatcounter="https://elisama-manuel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

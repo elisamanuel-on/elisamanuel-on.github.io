@@ -7,39 +7,37 @@
     <meta name="description" content="Entre em contacto com Elisama Manuel para oportunidades profissionais em desenvolvimento web, Python e automação.">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Contacto | Elisama Manuel">
-    <link rel="stylesheet" href="style.css?v=2026.10.04-18">
+    <link rel="stylesheet" href="style.css?v=2026.10.04-19">
     <link rel="icon" href="imagens/Ativo 30@2x.png">
 </head>
 <body data-pagina="contacto">
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <nav>
-                    <a href="index.html" data-i18n="nav_perfil">Perfil</a>
-                    <a href="portfolio.html" data-i18n="nav_portfolio">Portfólio</a>
-                    <a href="terminal.html" data-i18n="nav_terminal">Terminal</a>
-                    <a href="contacto.html" class="active" data-i18n="nav_contacto">Contacto</a>
-                </nav>
-                <div class="controlos-topo">
-                    <div class="lang-switcher" role="group" aria-label="Idioma / Language">
-                        <button class="lang-btn" data-lang="pt">PT</button>
-                        <button class="lang-btn" data-lang="en">EN</button>
-                        <button class="lang-btn" data-lang="es">ES</button>
-                        <button class="lang-btn" data-lang="fr">FR</button>
-                    </div>
-                    <button id="toggleTheme" class="btn-theme" aria-label="Alternar tema">
-                        <span class="theme-icon"> </span>
-                        <span class="theme-text">Dark</span>
-                    </button>
+    <div class="janela">
+        <header class="barra">
+            <nav class="pontos" aria-label="Navegação">
+                <a class="pt pt-vermelho" href="index.html"><i></i><em data-i18n="nav_perfil">Perfil</em></a>
+                <a class="pt pt-ambar" href="portfolio.html"><i></i><em data-i18n="nav_portfolio">Portfólio</em></a>
+                <a class="pt pt-verde on" href="contacto.html" aria-current="page"><i></i><em data-i18n="nav_contacto">Contacto</em></a>
+            </nav>
+            <span class="caminho"><b>elisama@portfolio</b>:~/contacto</span>
+            <div class="controlos">
+                <div class="idiomas" role="group" aria-label="Idioma / Language">
+                    <button class="lang-btn" data-lang="pt">PT</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="es">ES</button>
+                    <button class="lang-btn" data-lang="fr">FR</button>
                 </div>
+                <button id="toggleTheme" class="tema-btn" aria-label="Alternar tema / Toggle theme"></button>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <main class="container">
+        <main>
         <section class="contacto-section">
-            <h1 data-i18n="contacto_titulo">CONTACTO</h1>
-            <p class="subtitle" data-i18n="contacto_subtitulo">Entre em contacto para oportunidades profissionais</p>
+            <div class="cab">
+                <div class="term-prompt"><span class="pr">elisama@portfolio:~$</span> <span class="cmd">./contactar.sh</span></div>
+                <h1 data-i18n="contacto_titulo">CONTACTO</h1>
+                <p class="subtitle" data-i18n="contacto_subtitulo">Entre em contacto para oportunidades profissionais</p>
+            </div>
+            <div class="contacto-grelha">
 
             <form id="contactoForm" class="contacto-form" action="#" method="POST">
                 <div class="campo">
@@ -134,18 +132,20 @@
                     <span class="contacto-seta" aria-hidden="true"></span>
                 </a>
             </div>
+            </div>
         </section>
-    </main>
+        </main>
 
-    <footer>
+        <footer>
         <p>Elisama Manuel — <span data-i18n="footer_tagline">Tecnologias e Programação de Sistemas de Informação</span></p>
         <div class="voltar">
             <a href="index.html" class="btn btn-secundario" data-i18n="voltar_inicio">Voltar ao Início</a>
         </div>
     </footer>
+    </div>
 
-    <script src="i18n.js?v=2026.10.04-18"></script>
-    <script src="script.js?v=2026.10.04-18"></script>
+    <script src="i18n.js?v=2026.10.04-19"></script>
+    <script src="script.js?v=2026.10.04-19"></script>
 
     <!-- Analítica GoatCounter (privada, sem cookies) · troca MEUCODIGO pelo teu código depois de criares a conta em goatcounter.com -->
     <script data-goatcounter="https://elisama-manuel.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

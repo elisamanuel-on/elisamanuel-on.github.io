@@ -9,14 +9,19 @@ const TRADUCOES = {
     pt: {
         nav_perfil: 'Perfil',
         nav_portfolio: 'Portfólio',
-        nav_terminal: 'Terminal',
         nav_contacto: 'Contacto',
 
         theme_dark: 'Escuro',
         theme_light: 'Claro',
 
         hero_badge: 'Dev Web Júnior',
-        hero_disp: 'Disponível para estágio (FCT) a partir de novembro de 2026 · aberta a projetos freelancer',
+        db_titulo: 'Base de dados',
+        db_sub: 'Consulta as tabelas do site ou escreve um comando (.help)',
+        db_help: 'Comandos: .tables · .schema <tabela> · select * from <tabela>; · select count(*) from <tabela>; · select * from projetos where grupo=\'python\'; · clear',
+        db_unk: 'Erro: comando não reconhecido. Escreve .help',
+        db_notab: 'Erro: a tabela não existe. Usa .tables',
+        db_dica: 'Dica: clica num separador ou escreve uma consulta e carrega em Enter',
+        db_linhas: 'linhas',
         hero_subtitulo: 'Desenvolvedora Web Júnior (Full-Stack)',
         hero_p1: 'Com uma base sólida em <strong>Finanças e Contabilidade</strong> e uma transição estratégica para a área tecnológica, atualmente sou Técnica Especialista em <strong>Tecnologias e Programação de Sistemas de Informação</strong> no IEFP.',
         hero_p2: 'Especializo-me em <strong>Python, Automação de Processos (RPA), Análise de Dados e Desenvolvimento Web</strong>. A minha missão é aliar a experiência em gestão e negócios com competências técnicas para criar soluções inovadoras.',
@@ -64,21 +69,23 @@ const TRADUCOES = {
         card_ver_perfil: 'Ver Perfil',
         card_ver_repositorios: 'Ver Repositórios',
 
-        term_hint_prefixo: 'experimenta:',
-        term_help_titulo: 'Comandos disponíveis:',
-        term_help_perfis: 'abrir perfis'
     },
     en: {
         nav_perfil: 'Profile',
         nav_portfolio: 'Portfolio',
-        nav_terminal: 'Terminal',
         nav_contacto: 'Contact',
 
         theme_dark: 'Dark',
         theme_light: 'Light',
 
         hero_badge: 'Junior Web Dev',
-        hero_disp: 'Available for an internship (FCT) from November 2026 · open to freelance projects',
+        db_titulo: 'Database',
+        db_sub: 'Query the site tables, or type a command (.help)',
+        db_help: 'Commands: .tables · .schema <table> · select * from <table>; · select count(*) from <table>; · select * from projetos where grupo=\'python\'; · clear',
+        db_unk: 'Error: unknown command. Type .help',
+        db_notab: 'Error: no such table. Use .tables',
+        db_dica: 'Tip: click a tab or type a query and press Enter',
+        db_linhas: 'rows',
         hero_subtitulo: 'Junior Full-Stack Web Developer',
         hero_p1: 'With a solid background in <strong>Finance and Accounting</strong> and a strategic move into tech, I am currently a Specialist Technician in <strong>Information Systems Technology and Programming</strong> at IEFP (Portuguese Institute for Employment and Vocational Training).',
         hero_p2: 'I specialize in <strong>Python, Process Automation (RPA), Data Analysis and Web Development</strong>. My mission is to combine management and business experience with technical skills to build innovative solutions.',
@@ -126,21 +133,23 @@ const TRADUCOES = {
         card_ver_perfil: 'View Profile',
         card_ver_repositorios: 'View Repositories',
 
-        term_hint_prefixo: 'try:',
-        term_help_titulo: 'Available commands:',
-        term_help_perfis: 'open profiles'
     },
     es: {
         nav_perfil: 'Perfil',
         nav_portfolio: 'Portafolio',
-        nav_terminal: 'Terminal',
         nav_contacto: 'Contacto',
 
         theme_dark: 'Oscuro',
         theme_light: 'Claro',
 
         hero_badge: 'Dev Web Júnior',
-        hero_disp: 'Disponible para prácticas (FCT) desde noviembre de 2026 · abierta a proyectos freelance',
+        db_titulo: 'Base de datos',
+        db_sub: 'Consulta las tablas del sitio o escribe un comando (.help)',
+        db_help: 'Comandos: .tables · .schema <tabla> · select * from <tabla>; · select count(*) from <tabla>; · select * from projetos where grupo=\'python\'; · clear',
+        db_unk: 'Error: comando no reconocido. Escribe .help',
+        db_notab: 'Error: la tabla no existe. Usa .tables',
+        db_dica: 'Consejo: haz clic en una pestaña o escribe una consulta y pulsa Enter',
+        db_linhas: 'filas',
         hero_subtitulo: 'Desarrolladora Web Júnior (Full-Stack)',
         hero_p1: 'Con una base sólida en <strong>Finanzas y Contabilidad</strong> y una transición estratégica hacia el área tecnológica, actualmente soy Técnica Especialista en <strong>Tecnologías y Programación de Sistemas de Información</strong> en el IEFP (Instituto portugués de Empleo y Formación Profesional).',
         hero_p2: 'Me especializo en <strong>Python, Automatización de Procesos (RPA), Análisis de Datos y Desarrollo Web</strong>. Mi misión es combinar la experiencia en gestión y negocios con competencias técnicas para crear soluciones innovadoras.',
@@ -188,21 +197,23 @@ const TRADUCOES = {
         card_ver_perfil: 'Ver Perfil',
         card_ver_repositorios: 'Ver Repositorios',
 
-        term_hint_prefixo: 'prueba:',
-        term_help_titulo: 'Comandos disponibles:',
-        term_help_perfis: 'abrir perfiles'
     },
     fr: {
         nav_perfil: 'Profil',
         nav_portfolio: 'Portfolio',
-        nav_terminal: 'Terminal',
         nav_contacto: 'Contact',
 
         theme_dark: 'Sombre',
         theme_light: 'Clair',
 
         hero_badge: 'Dev Web Junior',
-        hero_disp: 'Disponible pour un stage (FCT) à partir de novembre 2026 · ouverte aux projets freelance',
+        db_titulo: 'Base de données',
+        db_sub: 'Interrogez les tables du site ou saisissez une commande (.help)',
+        db_help: 'Commandes : .tables · .schema <table> · select * from <table>; · select count(*) from <table>; · select * from projetos where grupo=\'python\'; · clear',
+        db_unk: 'Erreur : commande inconnue. Tapez .help',
+        db_notab: 'Erreur : la table n\'existe pas. Utilisez .tables',
+        db_dica: 'Astuce : cliquez sur un onglet ou saisissez une requête puis Entrée',
+        db_linhas: 'lignes',
         hero_subtitulo: 'Développeuse Web Junior (Full-Stack)',
         hero_p1: 'Avec une solide base en <strong>Finance et Comptabilité</strong> et une transition stratégique vers le domaine technologique, je suis actuellement Technicienne Spécialiste en <strong>Technologies et Programmation des Systèmes d\'Information</strong> à l\'IEFP (Institut portugais de l\'Emploi et de la Formation Professionnelle).',
         hero_p2: 'Je me spécialise en <strong>Python, Automatisation des Processus (RPA), Analyse de Données et Développement Web</strong>. Ma mission est d\'allier l\'expérience en gestion et en affaires à des compétences techniques pour créer des solutions innovantes.',
@@ -250,9 +261,6 @@ const TRADUCOES = {
         card_ver_perfil: 'Voir le Profil',
         card_ver_repositorios: 'Voir les Dépôts',
 
-        term_hint_prefixo: 'essaie :',
-        term_help_titulo: 'Commandes disponibles :',
-        term_help_perfis: 'ouvrir les profils'
     }
 };
 
@@ -298,20 +306,6 @@ const PAGINAS = {
             en: 'Get in touch with Elisama Manuel about professional opportunities in web development, Python and automation.',
             es: 'Ponte en contacto con Elisama Manuel para oportunidades profesionales en desarrollo web, Python y automatización.',
             fr: "Contactez Elisama Manuel pour des opportunités professionnelles en développement web, Python et automatisation."
-        }
-    },
-    terminal: {
-        titulo: {
-            pt: 'Elisama | Terminal',
-            en: 'Elisama | Terminal',
-            es: 'Elisama | Terminal',
-            fr: 'Elisama | Terminal'
-        },
-        descricao: {
-            pt: "Terminal interativo do portfólio de Elisama Manuel. Escreve 'help' para explorar.",
-            en: "Interactive terminal from Elisama Manuel's portfolio. Type 'help' to explore.",
-            es: "Terminal interactivo del portafolio de Elisama Manuel. Escribe 'help' para explorar.",
-            fr: "Terminal interactif du portfolio d'Elisama Manuel. Tapez 'help' pour explorer."
         }
     }
 };

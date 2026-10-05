@@ -1,6 +1,6 @@
 # Portfólio | Elisama Manuel
 
-Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal interativo, boot animado), **18 projetos** organizados em 4 grupos e um formulário de contacto ligado diretamente ao Gmail. Disponível em português, inglês, espanhol e francês.
+Portfólio pessoal de desenvolvedora, com identidade de programadora (site dentro de uma janela de terminal, boot animado, base de dados interativa), **18 projetos** organizados em 4 grupos e um formulário de contacto ligado diretamente ao Gmail. Disponível em português, inglês, espanhol e francês.
 
 **Site ao vivo:** https://elisamanuel-on.github.io/
 **LinkedIn:** https://www.linkedin.com/in/elisama-manuel-49025117a/
@@ -9,8 +9,9 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal i
 ## Stack técnica do site
 
 - **Frontend:** HTML + CSS + JavaScript puro (sem frameworks), com temas escuro e claro via CSS custom properties.
-- **Internacionalização:** sistema de tradução próprio (`i18n.js`), com deteção automática do idioma do navegador. Textos, projetos e comandos do terminal estão nos 4 idiomas.
-- **Terminal interativo:** motor próprio (`terminal-core.js`), com animação de arranque na página inicial e uma consola funcional (`terminal.html`) com comandos reais (`help`, `sobre`, `skills`, `experiencia`, `projetos`, `contacto`, `cv`, `github`, `linkedin`, entre outros).
+- **Internacionalização:** sistema de tradução próprio (`i18n.js`), com deteção automática do idioma do navegador. Textos, projetos e a base de dados interativa estão nos 4 idiomas.
+- **Janela de terminal:** o site inteiro vive dentro de uma janela, com barra de título fixa; os três pontos (vermelho, âmbar, verde) são os botões de Perfil, Portfólio e Contacto. Animação de arranque na página inicial (`terminal-core.js`).
+- **Base de dados interativa:** no Perfil, uma consola ao estilo sqlite (`consola.js`) com separadores (projetos, tecnologias, experiência, formação) e comandos como `.help`, `.tables` e `select ... from ...;`, construída a partir dos dados do próprio site.
 - **Formulário de contacto:** envia diretamente para o Gmail via Google Apps Script (`MailApp.sendEmail`), sem serviços de terceiros.
 - **Analítica:** [GoatCounter](https://www.goatcounter.com/), estatísticas de visitas simples e sem cookies.
 - **Alojamento:** GitHub Pages para o site e para os projetos em JavaScript; Render (Docker com PHP 8.3 + Apache, ver `Dockerfile` e `render.yaml`) para os projetos em PHP, que precisam de servidor.
@@ -22,11 +23,12 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal i
 ├── index.html          → perfil (apresentação, competências, experiência, formação)
 ├── portfolio.html      → os 18 projetos, por grupos
 ├── contacto.html       → formulário de contacto
-├── terminal.html       → terminal interativo
+├── consola.js          → consola "base de dados" do Perfil
+├── terminal.html       → redireciona para index.html#base-de-dados
 ├── style.css           → tema visual (verde e âmbar, inspirado num terminal clássico)
 ├── script.js           → dados (competências, experiência, formação, projetos) e interface
 ├── i18n.js             → traduções e deteção de idioma
-├── terminal-core.js    → motor do boot e do terminal
+├── terminal-core.js    → animação de arranque (boot)
 ├── Dockerfile          → servidor PHP + Apache para os projetos em PHP (Render)
 ├── render.yaml         → configuração do serviço no Render
 ├── cv/                 → PDF do currículo
@@ -36,7 +38,7 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (terminal i
 
 ## Projetos
 
-Cada cartão do portfólio mostra a captura, uma descrição e as tecnologias usadas. Os números (projetos, tecnologias e experiências no topo do perfil, e no terminal) saem das listas em `script.js`, por isso nunca ficam desatualizados.
+Cada cartão do portfólio mostra a captura, uma descrição e as tecnologias usadas. Os números (projetos, tecnologias e experiências no topo do perfil, ) saem das listas em `script.js`, por isso nunca ficam desatualizados.
 
 ### Aplicações completas em Python (6)
 
@@ -103,7 +105,7 @@ php -S localhost:8000
 2. Em `script.js`, acrescenta um item à lista `projetos` com `grupo` (`python`, `web`, `templates` ou `base`), o título e a descrição nos 4 idiomas e a lista `tecnologias`.
 3. Sobe o `?v=` nos `.html` para o navegador buscar os ficheiros novos.
 
-Os números do site e do terminal atualizam-se sozinhos.
+Os números do site atualizam-se sozinhos.
 
 ---
 Desenvolvido por Elisama Manuel, Técnica Especialista em Tecnologias e Programação de Sistemas de Informação (IEFP), em transição de Finanças e Contabilidade para Tecnologia.

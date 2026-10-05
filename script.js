@@ -24,8 +24,10 @@ function initTheme() {
     function aplicar(tema) {
         const claro = tema === 'light';
         document.body.classList.toggle('light-mode', claro);
-        const textoTema = claro ? t('theme_light') : t('theme_dark');
-        toggleBtn.innerHTML = `<span class="theme-icon">${claro ? ICONES.sol : ICONES.lua}</span><span class="theme-text">${textoTema}</span>`;
+        // Botão minimalista: só o ícone da ação (no escuro mostra o sol, no claro a lua); o texto fica no title
+        const textoAcao = claro ? t('theme_dark') : t('theme_light');
+        toggleBtn.innerHTML = `<span class="theme-icon">${claro ? ICONES.lua : ICONES.sol}</span>`;
+        toggleBtn.title = textoAcao;
     }
 
     // guarda a função para o texto poder ser atualizado quando o idioma muda
