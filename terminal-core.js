@@ -27,6 +27,13 @@ function pausa(ms) {
 /* Locale para a data/hora consoante o idioma */
 const LOCALES = { pt: 'pt-PT', en: 'en-US', es: 'es-ES', fr: 'fr-FR' };
 
+// Os números dos textos saem das listas do site (script.js), para nunca ficarem desatualizados
+function numeros(texto) {
+    const nProjetos = typeof projetos !== 'undefined' ? projetos.length : 18;
+    const nExperiencias = typeof experiencias !== 'undefined' ? experiencias.length : 7;
+    return String(texto).replace('{projetos}', nProjetos).replace('{experiencias}', nExperiencias);
+}
+
 /* ============================================
    BOOT SEQUENCE (index.html), traduzida
    ============================================ */
@@ -52,10 +59,10 @@ const BOOT_DADOS = [
     {
         comando: { pt: 'ls projetos/', en: 'ls projects/', es: 'ls proyectos/', fr: 'ls projets/' },
         saida: {
-            pt: ['12 projetos encontrados. A carregar portfólio...'],
-            en: ['12 projects found. Loading portfolio...'],
-            es: ['12 proyectos encontrados. Cargando portafolio...'],
-            fr: ['12 projets trouvés. Chargement du portfolio...']
+            pt: ['{projetos} projetos encontrados. A carregar portfólio...'],
+            en: ['{projetos} projects found. Loading portfolio...'],
+            es: ['{projetos} proyectos encontrados. Cargando portafolio...'],
+            fr: ['{projetos} projets trouvés. Chargement du portfolio...']
         }
     },
     {
@@ -97,7 +104,7 @@ async function correrBoot() {
         await escreverLinha(spanComando, L(linha.comando), 28);
         await pausa(150);
 
-        for (const saida of L(linha.saida)) {
+        for (const saida of L(linha.saida).map(numeros)) {
             const linhaSaida = document.createElement('div');
             linhaSaida.className = 'boot-saida';
             linhaSaida.textContent = saida;
@@ -161,22 +168,22 @@ const TEXTOS_TERMINAL = {
         fr: ['Elisama Manuel: Développeuse Web Junior (Full-Stack).', 'Transition de la Finance &amp; Comptabilité vers la Technologie.', 'Axée sur Python, Automatisation (RPA), Analyse de Données et Web.']
     },
     skills: {
-        pt: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning'],
-        en: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning'],
-        es: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning'],
-        fr: ['Python · RPA · Pandas · FastAPI · Flask · Dash', 'SQLite · MongoDB · Git · HTML/CSS · JavaScript · Machine Learning']
+        pt: ['Linguagens: Python · JavaScript · PHP · Java · HTML/CSS', 'Frameworks: FastAPI · Flask · Dash', 'Dados e automação: Pandas · RPA · Machine Learning', 'Bases de dados: MySQL · PostgreSQL · SQL Server · SQLite · MongoDB', 'Ferramentas: Git · Linux · Ubuntu · Proxmox · VS Code', 'Gestão: Excel Avançado · SAP (ERP) · Canva · Gestão de Projetos · Atendimento ao Cliente'],
+        en: ['Languages: Python · JavaScript · PHP · Java · HTML/CSS', 'Frameworks: FastAPI · Flask · Dash', 'Data and automation: Pandas · RPA · Machine Learning', 'Databases: MySQL · PostgreSQL · SQL Server · SQLite · MongoDB', 'Tools: Git · Linux · Ubuntu · Proxmox · VS Code', 'Business: Advanced Excel · SAP (ERP) · Canva · Project Management · Customer Service'],
+        es: ['Lenguajes: Python · JavaScript · PHP · Java · HTML/CSS', 'Frameworks: FastAPI · Flask · Dash', 'Datos y automatización: Pandas · RPA · Machine Learning', 'Bases de datos: MySQL · PostgreSQL · SQL Server · SQLite · MongoDB', 'Herramientas: Git · Linux · Ubuntu · Proxmox · VS Code', 'Gestión: Excel Avanzado · SAP (ERP) · Canva · Gestión de Proyectos · Atención al Cliente'],
+        fr: ['Langages : Python · JavaScript · PHP · Java · HTML/CSS', 'Frameworks : FastAPI · Flask · Dash', 'Données et automatisation : Pandas · RPA · Machine Learning', 'Bases de données : MySQL · PostgreSQL · SQL Server · SQLite · MongoDB', 'Outils : Git · Linux · Ubuntu · Proxmox · VS Code', 'Gestion : Excel Avancé · SAP (ERP) · Canva · Gestion de Projets · Service Client']
     },
     experiencia: {
-        pt: '7 experiências profissionais, ver perfil completo em',
-        en: '7 professional roles, see full profile at',
-        es: '7 experiencias profesionales, ver perfil completo en',
-        fr: '7 expériences professionnelles, voir le profil complet sur'
+        pt: '{experiencias} experiências profissionais, ver perfil completo em',
+        en: '{experiencias} professional roles, see full profile at',
+        es: '{experiencias} experiencias profesionales, ver perfil completo en',
+        fr: '{experiencias} expériences professionnelles, voir le profil complet sur'
     },
     projetos: {
-        pt: '12 projetos disponíveis',
-        en: '12 projects available',
-        es: '12 proyectos disponibles',
-        fr: '12 projets disponibles'
+        pt: '{projetos} projetos disponíveis',
+        en: '{projetos} projects available',
+        es: '{projetos} proyectos disponibles',
+        fr: '{projetos} projets disponibles'
     },
     contacto: {
         pt: ['email: elisamanueljob@gmail.com', 'tel:&nbsp;&nbsp;&nbsp;+351 913 516 395'],
@@ -293,11 +300,11 @@ function iniciarTerminalInterativo() {
         sobre: () => L(TEXTOS_TERMINAL.sobre).forEach(l => imprimir(l)),
         skills: () => L(TEXTOS_TERMINAL.skills).forEach(l => imprimir(l)),
         experiencia: () => {
-            imprimir(L(TEXTOS_TERMINAL.experiencia));
+            imprimir(numeros(L(TEXTOS_TERMINAL.experiencia)));
             imprimir('<a href="index.html#experiencia">index.html#experiencia</a>');
         },
         projetos: () => {
-            imprimir(`${L(TEXTOS_TERMINAL.projetos)} <a href="portfolio.html">portfolio.html</a>`);
+            imprimir(`${numeros(L(TEXTOS_TERMINAL.projetos))} <a href="portfolio.html">portfolio.html</a>`);
         },
         contacto: () => {
             L(TEXTOS_TERMINAL.contacto).forEach(l => imprimir(l));

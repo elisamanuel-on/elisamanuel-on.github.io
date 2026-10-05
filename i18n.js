@@ -33,9 +33,10 @@ const TRADUCOES = {
         voltar_inicio: 'Voltar ao Início',
 
         portfolio_titulo: 'MEUS PROJETOS',
-        portfolio_subtitulo: 'Clique num projeto para ver o código-fonte e demonstração',
-        portfolio_footer: 'Todos os projetos foram desenvolvidos durante a formação em <strong>Programação Web (Client-Side)</strong> e por iniciativa própria',
+        portfolio_subtitulo: 'Clique num projeto para abrir a demonstração. Cada cartão mostra as tecnologias usadas',
+        portfolio_footer: 'Os exercícios de base nasceram na formação em <strong>Programação Web (Client-Side)</strong>; os restantes projetos fiz por iniciativa própria',
         projeto_ver: 'Ver Projeto',
+        projeto_tecnologias: 'Tecnologias usadas',
 
         contacto_titulo: 'CONTACTO',
         contacto_subtitulo: 'Entre em contacto para oportunidades profissionais',
@@ -93,9 +94,10 @@ const TRADUCOES = {
         voltar_inicio: 'Back to Home',
 
         portfolio_titulo: 'MY PROJECTS',
-        portfolio_subtitulo: 'Click a project to see the source code and live demo',
-        portfolio_footer: 'All projects were built during <strong>Web Programming (Client-Side)</strong> training, and on my own initiative',
+        portfolio_subtitulo: 'Click a project to open the live demo. Each card shows the technologies used',
+        portfolio_footer: 'The foundation exercises came out of the <strong>Web Programming (Client-Side)</strong> training; I built the other projects on my own initiative',
         projeto_ver: 'View Project',
+        projeto_tecnologias: 'Technologies used',
 
         contacto_titulo: 'CONTACT',
         contacto_subtitulo: 'Get in touch about professional opportunities',
@@ -153,9 +155,10 @@ const TRADUCOES = {
         voltar_inicio: 'Volver al Inicio',
 
         portfolio_titulo: 'MIS PROYECTOS',
-        portfolio_subtitulo: 'Haz clic en un proyecto para ver el código fuente y la demo',
-        portfolio_footer: 'Todos los proyectos fueron desarrollados durante la formación en <strong>Programación Web (Client-Side)</strong> y por iniciativa propia',
+        portfolio_subtitulo: 'Haz clic en un proyecto para abrir la demo. Cada tarjeta muestra las tecnologías usadas',
+        portfolio_footer: 'Los ejercicios de base nacieron en la formación de <strong>Programación Web (Client-Side)</strong>; los demás proyectos los hice por iniciativa propia',
         projeto_ver: 'Ver Proyecto',
+        projeto_tecnologias: 'Tecnologías usadas',
 
         contacto_titulo: 'CONTACTO',
         contacto_subtitulo: 'Ponte en contacto para oportunidades profesionales',
@@ -213,9 +216,10 @@ const TRADUCOES = {
         voltar_inicio: "Retour à l'Accueil",
 
         portfolio_titulo: 'MES PROJETS',
-        portfolio_subtitulo: 'Cliquez sur un projet pour voir le code source et la démo',
-        portfolio_footer: 'Tous les projets ont été développés pendant la formation en <strong>Programmation Web (Client-Side)</strong> et de ma propre initiative',
+        portfolio_subtitulo: 'Cliquez sur un projet pour ouvrir la démo. Chaque carte montre les technologies utilisées',
+        portfolio_footer: 'Les exercices de base sont nés de la formation en <strong>Programmation Web (Client-Side)</strong> ; j\'ai réalisé les autres projets de ma propre initiative',
         projeto_ver: 'Voir le Projet',
+        projeto_tecnologias: 'Technologies utilisées',
 
         contacto_titulo: 'CONTACT',
         contacto_subtitulo: 'Contactez-moi pour des opportunités professionnelles',
@@ -272,10 +276,10 @@ const PAGINAS = {
             fr: 'Elisama | Portfolio'
         },
         descricao: {
-            pt: 'Projetos práticos de Elisama Manuel em JavaScript, HTML e CSS, desenvolvidos durante a formação em Programação Web.',
-            en: 'Hands-on projects by Elisama Manuel in JavaScript, HTML and CSS, built during Web Programming training.',
-            es: 'Proyectos prácticos de Elisama Manuel en JavaScript, HTML y CSS, desarrollados durante la formación en Programación Web.',
-            fr: "Projets pratiques d'Elisama Manuel en JavaScript, HTML et CSS, développés pendant la formation en Programmation Web."
+            pt: 'Projetos de Elisama Manuel: aplicações completas em Python (FastAPI, Dash), sistemas e jogos web em PHP e JavaScript, templates para negócios e exercícios de base.',
+            en: 'Projects by Elisama Manuel: complete Python applications (FastAPI, Dash), web systems and games in PHP and JavaScript, business templates and foundation exercises.',
+            es: 'Proyectos de Elisama Manuel: aplicaciones completas en Python (FastAPI, Dash), sistemas y juegos web en PHP y JavaScript, plantillas para negocios y ejercicios de base.',
+            fr: "Projets d'Elisama Manuel : applications complètes en Python (FastAPI, Dash), systèmes et jeux web en PHP et JavaScript, modèles pour entreprises et exercices de base."
         }
     },
     contacto: {

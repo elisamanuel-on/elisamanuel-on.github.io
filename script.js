@@ -284,242 +284,8 @@ const formacao = [
 // ============================================
 const projetos = [
     {
-        id: '008',
-        titulo: { pt: 'Tabuada em Jogos', en: 'Times Tables Games', es: 'Tablas de Multiplicar en Juegos', fr: 'Tables de Multiplication en Jeux' },
-        descricao: { pt: 'Jogos para crianças: labirinto, quiz com tempo, caça aos múltiplos e memória', en: 'Games for kids: maze, timed quiz, multiples hunt and memory', es: 'Juegos para niños: laberinto, quiz con tiempo, caza de múltiplos y memoria', fr: 'Jeux pour enfants : labyrinthe, quiz chronométré, chasse aux multiples et mémoire' },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO008 - Tabuada/',
-        imagem: 'imagens/projetos/008-tabuada.jpg'
-    },
-    {
-        id: '009',
-        titulo: { pt: 'Sistema de Gestão Escolar', en: 'School Management System', es: 'Sistema de Gestión Escolar', fr: 'Système de Gestion Scolaire' },
-        descricao: {
-            pt: 'Colégio com 7 perfis (aluno, professor, secretaria, direção, Conselho Geral, contabilidade e portaria): notas, pautas, boletins, faltas, horários, painel com gráficos e a parte financeira — propinas, salários, impostos e despesas, com cálculos automáticos, adicionar, editar e pagar propinas e salários (também para todos de uma vez), NIF e dados de empresa, apagar com justificação (fica tudo no registo de alterações) e relatórios em Excel e PDF. Inclui equipa não docente e registo de visitas. PHP + SQLite, em 4 idiomas',
-            en: 'A school with 7 profiles (student, teacher, office, principal, Governing Board, accounting and front desk): grades, grade sheets, report cards, absences, timetables, a chart dashboard and the finance side — tuition, salaries, taxes and expenses, with automatic calculations, adding, editing and paying tuition and salaries (also for everyone at once), tax numbers and company details, delete with a reason (all kept in a change log) and Excel and PDF reports. Includes non-teaching staff and a visitor log. PHP + SQLite, in 4 languages',
-            es: 'Un colegio con 7 perfiles (alumno, profesor, secretaría, dirección, Consejo General, contabilidad y portería): notas, actas, boletines, faltas, horarios, panel con gráficos y la parte financiera — matrículas, salarios, impuestos y gastos, con cálculos automáticos, añadir, editar y pagar matrículas y salarios (también para todos a la vez), NIF y datos de empresa, borrar con justificación (todo queda en un registro de cambios) e informes en Excel y PDF. Incluye personal no docente y registro de visitas. PHP + SQLite, en 4 idiomas',
-            fr: 'Un collège avec 7 profils (élève, professeur, secrétariat, direction, Conseil général, comptabilité et accueil) : notes, relevés, bulletins, absences, emplois du temps, tableau de bord graphique et la partie financière — scolarité, salaires, impôts et dépenses, avec calculs automatiques, ajout, modification et paiement des scolarités et salaires (aussi pour tous à la fois), NIF et données d\'entreprise, suppression avec justification (tout est conservé dans un journal) et rapports Excel et PDF. Inclut le personnel non enseignant et un registre des visiteurs. PHP + SQLite, en 4 langues'
-        },
-        tag: 'PHP',
-        php: true,
-        caminho: 'projetos/EXERCICIO009 - Registo de Utilizador/',
-        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO009%20-%20Registo%20de%20Utilizador/',
-        imagem: 'imagens/projetos/009-sistema-gestao-escolar.jpg'
-    },
-    {
-        id: '011',
-        titulo: { pt: 'Curiosidades do Mundo', en: 'Curiosities of the World', es: 'Curiosidades del Mundo', fr: 'Curiosités du Monde' },
-        descricao: {
-            pt: 'Curiosidades reais da Wikipédia por áreas (ciência, natureza, história, artes, teologia…), com mais dados escondidos para revelar ao clicar. Dados de uma API, em 4 idiomas',
-            en: 'Real Wikipedia curiosities by area (science, nature, history, arts, theology…), with more hidden facts to reveal on click. Data from an API, in 4 languages',
-            es: 'Curiosidades reales de Wikipedia por áreas (ciencia, naturaleza, historia, artes, teología…), con más datos escondidos para revelar al hacer clic. Datos de una API, en 4 idiomas',
-            fr: 'Curiosités réelles de Wikipédia par domaine (science, nature, histoire, arts, théologie…), avec plus de données cachées à révéler d\'un clic. Données d\'une API, en 4 langues'
-        },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO011 - Curiosidades Escondidas/',
-        imagem: 'imagens/projetos/011-curiosidades-do-mundo.jpg'
-    },
-    {
-        id: '012',
-        titulo: { pt: 'Imagem Escondida', en: 'Hidden Image', es: 'Imagen Escondida', fr: 'Image Cachée' },
-        descricao: {
-            pt: 'Jogo de geografia em 3 níveis com cronómetro e vidas: continentes, países e bandeiras, capitais e curiosidades da Wikipédia. Mapa clicável com os nomes na língua do jogo, ficha de cada país com o seu nome verdadeiro, jogadores com recordes e ranking, em 4 idiomas',
-            en: 'Three-level geography game with a timer and lives: continents, countries and flags, capitals and Wikipedia curiosities. Clickable map with names in the game language, a profile for each country with its real name, players with records and ranking, in 4 languages',
-            es: 'Juego de geografía de 3 niveles con cronómetro y vidas: continentes, países y banderas, capitales y curiosidades de Wikipedia. Mapa en el que se hace clic con los nombres en el idioma del juego, ficha de cada país con su nombre verdadero, jugadores con récords y ranking, en 4 idiomas',
-            fr: 'Jeu de géographie en 3 niveaux avec chronomètre et vies : continents, pays et drapeaux, capitales et curiosités de Wikipédia. Carte cliquable avec les noms dans la langue du jeu, fiche de chaque pays avec son vrai nom, joueurs avec records et classement, en 4 langues'
-        },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO012 - Imagem Escondida/',
-        imagem: 'imagens/projetos/012-imagem-escondida.jpg'
-    },
-    {
-        id: '013',
-        titulo: { pt: 'Calculadora Científica', en: 'Scientific Calculator', es: 'Calculadora Científica', fr: 'Calculatrice Scientifique' },
-        descricao: {
-            pt: 'Seis operações, modo científico, Desafio com níveis e Manual: raiz, trigonometria, logaritmos, histórico e memória. Calculada no servidor em PHP, sem eval(), em 4 idiomas',
-            en: 'Six operations, scientific mode, a levelled Challenge and a Manual: roots, trigonometry, logarithms, history and memory. Computed server-side in PHP, without eval(), in 4 languages',
-            es: 'Seis operaciones, modo científico, Desafío con niveles y Manual: raíz, trigonometría, logaritmos, historial y memoria. Calculada en el servidor con PHP, sin eval(), en 4 idiomas',
-            fr: 'Six opérations, mode scientifique, Défi par niveaux et Manuel: racines, trigonométrie, logarithmes, historique et mémoire. Calculée côté serveur en PHP, sans eval(), en 4 langues'
-        },
-        tag: 'PHP',
-        caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
-        php: true,
-        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO013%20-%20Calculadora%20com%204%20Opera%C3%A7%C3%B5es/',
-        imagem: 'imagens/projetos/013-calculadora-cientifica.jpg'
-    },
-    {
-        id: '014',
-        titulo: { pt: 'Jogo da Adivinha', en: 'Guessing Game', es: 'Juego de Adivinanza', fr: 'Jeu de Devinette' },
-        descricao: { pt: 'Adivinhe o número entre 1 e 50', en: 'Guess the number between 1 and 50', es: 'Adivina el número entre 1 y 50', fr: 'Devinez le nombre entre 1 et 50' },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO014 - Jogo da Adivinha/',
-        imagem: 'imagens/projetos/014-jogo-adivinha.jpg'
-    },
-    {
-        id: '017',
-        titulo: { pt: 'Números Primos', en: 'Prime Numbers', es: 'Números Primos', fr: 'Nombres Premiers' },
-        descricao: { pt: 'Encontra todos os primos até N', en: 'Finds all primes up to N', es: 'Encuentra todos los primos hasta N', fr: 'Trouve tous les nombres premiers jusqu\'à N' },
-        tag: 'JavaScript',
-        caminho: 'projetos/EXERCICIO017 - Números Primos/',
-        imagem: 'imagens/projetos/017-numeros-primos.jpg'
-    },
-    {
-        id: '018',
-        titulo: { pt: 'Jogo da Adivinha com Toggle', en: 'Guessing Game with Toggle', es: 'Juego de Adivinanza con Toggle', fr: 'Jeu de Devinette avec Bascule' },
-        descricao: { pt: 'Dark/Light Mode no jogo', en: 'Dark/Light Mode in the game', es: 'Modo Oscuro/Claro en el juego', fr: 'Mode Sombre/Clair dans le jeu' },
-        tag: 'CSS',
-        caminho: 'projetos/EXERCICIO018 - Jogo da Adivinha com Toggle/',
-        imagem: 'imagens/projetos/018-jogo-adivinha-toggle.jpg'
-    },
-    {
-        id: '019',
-        titulo: { pt: 'Breakpoints', en: 'Breakpoints', es: 'Breakpoints', fr: 'Breakpoints' },
-        descricao: { pt: 'Layout responsivo com Media Queries', en: 'Responsive layout with Media Queries', es: 'Diseño responsivo con Media Queries', fr: 'Mise en page responsive avec Media Queries' },
-        tag: 'CSS',
-        caminho: 'projetos/EXERCICIO019 - Breakpoints/',
-        imagem: 'imagens/projetos/019-breakpoints.jpg'
-    },
-    {
-        id: '020',
-        titulo: { pt: 'Controlo de Gastos', en: 'Expense Tracker', es: 'Control de Gastos', fr: 'Suivi des Dépenses' },
-        descricao: {
-            pt: 'App full-stack com API FastAPI, PostgreSQL, categorias personalizáveis, gráficos e testes automáticos com deployment contínuo',
-            en: 'Full-stack app with a FastAPI backend, PostgreSQL, custom categories, charts and automated tests with continuous deployment',
-            es: 'App full-stack con API FastAPI, PostgreSQL, categorías personalizables, gráficos y pruebas automáticas con deployment continuo',
-            fr: 'Application full-stack avec API FastAPI, PostgreSQL, catégories personnalisables, graphiques et tests automatisés avec déploiement continu'
-        },
-        tag: 'FastAPI',
-        url: 'https://controlo-de-gastos.onrender.com',
-        imagem: 'imagens/020-controlo-gastos.jpg'
-    },
-    {
-        id: '021',
-        titulo: {
-            pt: 'Delivery Orientado a Eventos',
-            en: 'Event-Driven Delivery',
-            es: 'Delivery Orientado a Eventos',
-            fr: 'Livraison Orientée Événements'
-        },
-        descricao: {
-            pt: 'Simulação de delivery com arquitetura orientada a eventos, WebSocket em tempo real e testes automáticos',
-            en: 'Delivery simulation with event-driven architecture, real-time WebSocket updates and automated tests',
-            es: 'Simulación de delivery con arquitectura orientada a eventos, WebSocket en tiempo real y pruebas automáticas',
-            fr: 'Simulation de livraison avec architecture événementielle, WebSocket en temps réel et tests automatisés'
-        },
-        tag: 'FastAPI',
-        url: 'https://delivery-eventos.onrender.com',
-        imagem: 'imagens/021-delivery-eventos.jpg'
-    },
-    {
-        id: '022',
-        titulo: {
-            pt: 'Monitor de Vagas & Notícias',
-            en: 'Job & News Monitor',
-            es: 'Monitor de Vacantes y Noticias',
-            fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
-        },
-        descricao: {
-            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows, tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
-            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app, all stored in MongoDB with automated robots via GitHub Actions',
-            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows, todo guardado en MongoDB con robots automáticos vía GitHub Actions',
-            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows, le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
-        },
-        tag: 'FastAPI',
-        url: 'https://monitor-vagas-noticias.onrender.com',
-        imagem: 'imagens/022-monitor-vagas.jpg'
-    },
-    {
-        id: '023',
-        titulo: {
-            pt: 'Análise de Preços de Habitação em Portugal',
-            en: 'Portugal Housing Price Analysis',
-            es: 'Análisis de Precios de Vivienda en Portugal',
-            fr: 'Analyse des Prix du Logement au Portugal'
-        },
-        descricao: {
-            pt: 'Dashboard interativo com dados reais do INE: mapa de preços por concelho, pesquisa, comparação de regiões, evolução do índice nacional desde 2009 e exportação em CSV/Excel',
-            en: 'Interactive dashboard with real INE data: a price map by municipality, search, regional comparison, the national index\'s evolution since 2009 and CSV/Excel export',
-            es: 'Dashboard interactivo con datos reales del INE: mapa de precios por municipio, búsqueda, comparación de regiones, evolución del índice nacional desde 2009 y exportación en CSV/Excel',
-            fr: 'Tableau de bord interactif avec des données réelles de l\'INE : carte des prix par municipalité, recherche, comparaison régionale, évolution de l\'indice national depuis 2009 et export CSV/Excel'
-        },
-        tag: 'Dash',
-        url: 'https://analise-precos-habitacao.onrender.com',
-        imagem: 'imagens/023-precos-habitacao.jpg'
-    },
-    {
-        id: '024',
-        titulo: {
-            pt: 'Portal de Automação Interna',
-            en: 'Internal Automation Portal',
-            es: 'Portal de Automatización Interna',
-            fr: 'Portail d\'Automatisation Interne'
-        },
-        descricao: {
-            pt: 'Portal web para automatizar tarefas internas de escritório: organização de ficheiros, geração de relatórios e backups, com histórico de execuções e agendamento automático via cron',
-            en: 'Web portal to automate internal office tasks: file organization, report generation and backups, with an execution history and automatic scheduling via cron',
-            es: 'Portal web para automatizar tareas internas de oficina: organización de archivos, generación de informes y copias de seguridad, con historial de ejecuciones y programación automática vía cron',
-            fr: 'Portail web pour automatiser des tâches internes de bureau: organisation de fichiers, génération de rapports et sauvegardes, avec historique d\'exécutions et planification automatique via cron'
-        },
-        tag: 'FastAPI',
-        url: 'https://portal-automacao-interna.onrender.com',
-        imagem: 'imagens/024-portal-automacao.png'
-    },
-    {
-        id: '025',
-        titulo: {
-            pt: 'Template Interativo para Negócios: Aro Alto',
-            en: 'Interactive Business Template: Aro Alto',
-            es: 'Plantilla Interactiva para Negocios: Aro Alto',
-            fr: 'Modèle Interactif pour Entreprises: Aro Alto'
-        },
-        descricao: {
-            pt: 'Template reutilizável para negócios de serviços, com catálogo interativo, calculadora de orçamento automática, marcação de horários e formulário de contacto, aqui reskinado como o site de uma academia de basquetebol fictícia',
-            en: 'Reusable template for service businesses, with an interactive catalog, automatic budget calculator, appointment booking and a contact form, reskinned here as the site of a fictional basketball academy',
-            es: 'Plantilla reutilizable para negocios de servicios, con catálogo interactivo, calculadora de presupuesto automática, reserva de horarios y formulario de contacto, aquí adaptada como el sitio de una academia de baloncesto ficticia',
-            fr: 'Modèle réutilisable pour entreprises de services, avec catalogue interactif, calculateur de devis automatique, prise de rendez-vous et formulaire de contact, ici décliné comme le site d\'une académie de basketball fictive'
-        },
-        tag: 'Template',
-        url: 'https://template-interativo.onrender.com',
-        imagem: 'imagens/025-aro-alto.jpg'
-    },
-    {
-        id: '026',
-        titulo: {
-            pt: 'Template Vitrine para Negócios: Sole House',
-            en: 'Business Showcase Template: Sole House',
-            es: 'Plantilla Vitrina para Negocios: Sole House',
-            fr: 'Modèle Vitrine pour Entreprises: Sole House'
-        },
-        descricao: {
-            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio, aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
-            en: 'One-page institutional template, ready to adapt to any business, reskinned here as the store of a fictional sneaker and streetwear brand',
-            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio, aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
-            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise, ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
-        },
-        tag: 'Template',
-        url: 'https://sole-house.onrender.com',
-        imagem: 'imagens/026-sole-house.jpg'
-    },
-    {
-        id: '027',
-        titulo: {
-            pt: 'Quiosques Interativos: Museu Aurora & Mesa Lume',
-            en: 'Interactive Kiosks: Museu Aurora & Mesa Lume',
-            es: 'Quioscos Interactivos: Museu Aurora y Mesa Lume',
-            fr: 'Bornes Interactives: Museu Aurora et Mesa Lume'
-        },
-        descricao: {
-            pt: 'Duas demonstrações de interface para ecrãs táteis e totens: um guia de museu e um menu de restaurante, com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
-            en: 'Two touchscreen interface demos: a museum guide and a restaurant menu, with touch navigation, an ordering system and a call-server button, all in PT/EN',
-            es: 'Dos demostraciones de interfaz táctil: una guía de museo y un menú de restaurante, con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
-            fr: 'Deux démonstrations d\'interface tactile: un guide de musée et un menu de restaurant, avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
-        },
-        tag: 'Template',
-        url: 'https://demo-wingsys.onrender.com',
-        imagem: 'imagens/027-demo-wingsys.jpg'
-    },
-    {
         id: '028',
+        grupo: 'python',
         titulo: {
             pt: 'Sistema de Gestão de Utentes e Cuidados de Saúde',
             en: 'Patient and Healthcare Management System',
@@ -533,10 +299,400 @@ const projetos = [
             fr: 'Système complet de soins continus (UCC/ERPI/SAD) et ambulatoire clinique/hospitalier, avec évaluation du risque par machine learning (diabète, cardiovasculaire et chute), accès par profil (Infirmier, Médecin, Réception, Admin) et rapports exportables en PDF/Excel'
         },
         tag: 'Dash',
+        tecnologias: ['Python', 'Dash', 'Machine Learning', 'PDF', 'Excel'],
         url: 'https://sistema-gestao-saude.onrender.com',
         imagem: 'imagens/028-sistema-gestao-saude.png'
+    },
+    {
+        id: '020',
+        grupo: 'python',
+        titulo: {
+            pt: 'Controlo de Gastos',
+            en: 'Expense Tracker',
+            es: 'Control de Gastos',
+            fr: 'Suivi des Dépenses'
+        },
+        descricao: {
+            pt: 'App full-stack com API FastAPI, PostgreSQL, categorias personalizáveis, gráficos e testes automáticos com deployment contínuo',
+            en: 'Full-stack app with a FastAPI backend, PostgreSQL, custom categories, charts and automated tests with continuous deployment',
+            es: 'App full-stack con API FastAPI, PostgreSQL, categorías personalizables, gráficos y pruebas automáticas con deployment continuo',
+            fr: 'Application full-stack avec API FastAPI, PostgreSQL, catégories personnalisables, graphiques et tests automatisés avec déploiement continu'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'PostgreSQL', 'SQLite', 'SQLAlchemy', 'JWT', 'pytest', 'CI/CD'],
+        url: 'https://controlo-de-gastos.onrender.com',
+        imagem: 'imagens/020-controlo-gastos.jpg'
+    },
+    {
+        id: '021',
+        grupo: 'python',
+        titulo: {
+            pt: 'Delivery Orientado a Eventos',
+            en: 'Event-Driven Delivery',
+            es: 'Delivery Orientado a Eventos',
+            fr: 'Livraison Orientée Événements'
+        },
+        descricao: {
+            pt: 'Simulação de delivery com arquitetura orientada a eventos, WebSocket em tempo real e testes automáticos',
+            en: 'Delivery simulation with event-driven architecture, real-time WebSocket updates and automated tests',
+            es: 'Simulación de delivery con arquitectura orientada a eventos, WebSocket en tiempo real y pruebas automáticas',
+            fr: 'Simulation de livraison avec architecture événementielle, WebSocket en temps réel et tests automatisés'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'WebSocket', 'asyncio', 'pytest'],
+        url: 'https://delivery-eventos.onrender.com',
+        imagem: 'imagens/021-delivery-eventos.jpg'
+    },
+    {
+        id: '022',
+        grupo: 'python',
+        titulo: {
+            pt: 'Monitor de Vagas & Notícias',
+            en: 'Job & News Monitor',
+            es: 'Monitor de Vacantes y Noticias',
+            fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
+        },
+        descricao: {
+            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows, tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
+            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app, all stored in MongoDB with automated robots via GitHub Actions',
+            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows, todo guardado en MongoDB con robots automáticos vía GitHub Actions',
+            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows, le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'MongoDB', 'API ITJobs', 'GitHub Actions', 'Windows (.exe)'],
+        url: 'https://monitor-vagas-noticias.onrender.com',
+        imagem: 'imagens/022-monitor-vagas.jpg'
+    },
+    {
+        id: '023',
+        grupo: 'python',
+        titulo: {
+            pt: 'Análise de Preços de Habitação em Portugal',
+            en: 'Portugal Housing Price Analysis',
+            es: 'Análisis de Precios de Vivienda en Portugal',
+            fr: 'Analyse des Prix du Logement au Portugal'
+        },
+        descricao: {
+            pt: 'Dashboard interativo com dados reais do INE: mapa de preços por concelho, pesquisa, comparação de regiões, evolução do índice nacional desde 2009 e exportação em CSV/Excel',
+            en: 'Interactive dashboard with real INE data: a price map by municipality, search, regional comparison, the national index\'s evolution since 2009 and CSV/Excel export',
+            es: 'Dashboard interactivo con datos reales del INE: mapa de precios por municipio, búsqueda, comparación de regiones, evolución del índice nacional desde 2009 y exportación en CSV/Excel',
+            fr: 'Tableau de bord interactif avec des données réelles de l\'INE : carte des prix par municipalité, recherche, comparaison régionale, évolution de l\'indice national depuis 2009 et export CSV/Excel'
+        },
+        tag: 'Dash',
+        tecnologias: ['Python', 'Dash', 'Pandas', 'INE'],
+        url: 'https://analise-precos-habitacao.onrender.com',
+        imagem: 'imagens/023-precos-habitacao.jpg'
+    },
+    {
+        id: '024',
+        grupo: 'python',
+        titulo: {
+            pt: 'Portal de Automação Interna',
+            en: 'Internal Automation Portal',
+            es: 'Portal de Automatización Interna',
+            fr: 'Portail d\'Automatisation Interne'
+        },
+        descricao: {
+            pt: 'Portal web para automatizar tarefas internas de escritório: organização de ficheiros, geração de relatórios e backups, com histórico de execuções e agendamento automático via cron',
+            en: 'Web portal to automate internal office tasks: file organization, report generation and backups, with an execution history and automatic scheduling via cron',
+            es: 'Portal web para automatizar tareas internas de oficina: organización de archivos, generación de informes y copias de seguridad, con historial de ejecuciones y programación automática vía cron',
+            fr: 'Portail web pour automatiser des tâches internes de bureau: organisation de fichiers, génération de rapports et sauvegardes, avec historique d\'exécutions et planification automatique via cron'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'cron', 'RPA'],
+        url: 'https://portal-automacao-interna.onrender.com',
+        imagem: 'imagens/024-portal-automacao.png'
+    },
+    {
+        id: '009',
+        grupo: 'web',
+        titulo: {
+            pt: 'Sistema de Gestão Escolar',
+            en: 'School Management System',
+            es: 'Sistema de Gestión Escolar',
+            fr: 'Système de Gestion Scolaire'
+        },
+        descricao: {
+            pt: 'Colégio com 7 perfis (aluno, professor, secretaria, direção, Conselho Geral, contabilidade e portaria): notas, pautas, boletins, faltas, horários, painel com gráficos e a parte financeira — propinas, salários, impostos e despesas, com cálculos automáticos, adicionar, editar e pagar propinas e salários (também para todos de uma vez), NIF e dados de empresa, apagar com justificação (fica tudo no registo de alterações) e relatórios em Excel e PDF. Inclui equipa não docente e registo de visitas. PHP + SQLite, em 4 idiomas',
+            en: 'A school with 7 profiles (student, teacher, office, principal, Governing Board, accounting and front desk): grades, grade sheets, report cards, absences, timetables, a chart dashboard and the finance side — tuition, salaries, taxes and expenses, with automatic calculations, adding, editing and paying tuition and salaries (also for everyone at once), tax numbers and company details, delete with a reason (all kept in a change log) and Excel and PDF reports. Includes non-teaching staff and a visitor log. PHP + SQLite, in 4 languages',
+            es: 'Un colegio con 7 perfiles (alumno, profesor, secretaría, dirección, Consejo General, contabilidad y portería): notas, actas, boletines, faltas, horarios, panel con gráficos y la parte financiera — matrículas, salarios, impuestos y gastos, con cálculos automáticos, añadir, editar y pagar matrículas y salarios (también para todos a la vez), NIF y datos de empresa, borrar con justificación (todo queda en un registro de cambios) e informes en Excel y PDF. Incluye personal no docente y registro de visitas. PHP + SQLite, en 4 idiomas',
+            fr: 'Un collège avec 7 profils (élève, professeur, secrétariat, direction, Conseil général, comptabilité et accueil) : notes, relevés, bulletins, absences, emplois du temps, tableau de bord graphique et la partie financière — scolarité, salaires, impôts et dépenses, avec calculs automatiques, ajout, modification et paiement des scolarités et salaires (aussi pour tous à la fois), NIF et données d\'entreprise, suppression avec justification (tout est conservé dans un journal) et rapports Excel et PDF. Inclut le personnel non enseignant et un registre des visiteurs. PHP + SQLite, en 4 langues'
+        },
+        tag: 'PHP',
+        tecnologias: ['PHP', 'SQLite', 'PDO', 'JavaScript', 'CSS', 'XLSX', 'PDF'],
+        php: true,
+        caminho: 'projetos/EXERCICIO009 - Registo de Utilizador/',
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO009%20-%20Registo%20de%20Utilizador/',
+        imagem: 'imagens/projetos/009-sistema-gestao-escolar.jpg'
+    },
+    {
+        id: '013',
+        grupo: 'web',
+        titulo: {
+            pt: 'Calculadora Científica',
+            en: 'Scientific Calculator',
+            es: 'Calculadora Científica',
+            fr: 'Calculatrice Scientifique'
+        },
+        descricao: {
+            pt: 'Seis operações, modo científico, Desafio com níveis e Manual: raiz, trigonometria, logaritmos, histórico e memória. Calculada no servidor em PHP, sem eval(), em 4 idiomas',
+            en: 'Six operations, scientific mode, a levelled Challenge and a Manual: roots, trigonometry, logarithms, history and memory. Computed server-side in PHP, without eval(), in 4 languages',
+            es: 'Seis operaciones, modo científico, Desafío con niveles y Manual: raíz, trigonometría, logaritmos, historial y memoria. Calculada en el servidor con PHP, sin eval(), en 4 idiomas',
+            fr: 'Six opérations, mode scientifique, Défi par niveaux et Manuel: racines, trigonométrie, logarithmes, historique et mémoire. Calculée côté serveur en PHP, sans eval(), en 4 langues'
+        },
+        tag: 'PHP',
+        tecnologias: ['PHP', 'HTML', 'CSS', 'JavaScript'],
+        php: true,
+        caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO013%20-%20Calculadora%20com%204%20Opera%C3%A7%C3%B5es/',
+        imagem: 'imagens/projetos/013-calculadora-cientifica.jpg'
+    },
+    {
+        id: '012',
+        grupo: 'web',
+        titulo: {
+            pt: 'Imagem Escondida',
+            en: 'Hidden Image',
+            es: 'Imagen Escondida',
+            fr: 'Image Cachée'
+        },
+        descricao: {
+            pt: 'Jogo de geografia em 3 níveis com cronómetro e vidas: continentes, países e bandeiras, capitais e curiosidades da Wikipédia. Mapa clicável com os nomes na língua do jogo, ficha de cada país com o seu nome verdadeiro, jogadores com recordes e ranking, em 4 idiomas',
+            en: 'Three-level geography game with a timer and lives: continents, countries and flags, capitals and Wikipedia curiosities. Clickable map with names in the game language, a profile for each country with its real name, players with records and ranking, in 4 languages',
+            es: 'Juego de geografía de 3 niveles con cronómetro y vidas: continentes, países y banderas, capitales y curiosidades de Wikipedia. Mapa en el que se hace clic con los nombres en el idioma del juego, ficha de cada país con su nombre verdadero, jugadores con récords y ranking, en 4 idiomas',
+            fr: 'Jeu de géographie en 3 niveaux avec chronomètre et vies : continents, pays et drapeaux, capitales et curiosités de Wikipédia. Carte cliquable avec les noms dans la langue du jeu, fiche de chaque pays avec son vrai nom, joueurs avec records et classement, en 4 langues'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'Leaflet', 'TopoJSON', 'OpenStreetMap', 'Wikipedia API'],
+        caminho: 'projetos/EXERCICIO012 - Imagem Escondida/',
+        imagem: 'imagens/projetos/012-imagem-escondida.jpg'
+    },
+    {
+        id: '008',
+        grupo: 'web',
+        titulo: {
+            pt: 'Tabuada em Jogos',
+            en: 'Times Tables Games',
+            es: 'Tablas de Multiplicar en Juegos',
+            fr: 'Tables de Multiplication en Jeux'
+        },
+        descricao: {
+            pt: 'Jogos para crianças: labirinto, quiz com tempo, caça aos múltiplos e memória',
+            en: 'Games for kids: maze, timed quiz, multiples hunt and memory',
+            es: 'Juegos para niños: laberinto, quiz con tiempo, caza de múltiplos y memoria',
+            fr: 'Jeux pour enfants : labyrinthe, quiz chronométré, chasse aux multiples et mémoire'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'SVG', 'Web Audio'],
+        caminho: 'projetos/EXERCICIO008 - Tabuada/',
+        imagem: 'imagens/projetos/008-tabuada.jpg'
+    },
+    {
+        id: '011',
+        grupo: 'web',
+        titulo: {
+            pt: 'Curiosidades do Mundo',
+            en: 'Curiosities of the World',
+            es: 'Curiosidades del Mundo',
+            fr: 'Curiosités du Monde'
+        },
+        descricao: {
+            pt: 'Curiosidades reais da Wikipédia por áreas (ciência, natureza, história, artes, teologia…), com mais dados escondidos para revelar ao clicar. Dados de uma API, em 4 idiomas',
+            en: 'Real Wikipedia curiosities by area (science, nature, history, arts, theology…), with more hidden facts to reveal on click. Data from an API, in 4 languages',
+            es: 'Curiosidades reales de Wikipedia por áreas (ciencia, naturaleza, historia, artes, teología…), con más datos escondidos para revelar al hacer clic. Datos de una API, en 4 idiomas',
+            fr: 'Curiosités réelles de Wikipédia par domaine (science, nature, histoire, arts, théologie…), avec plus de données cachées à révéler d\'un clic. Données d\'une API, en 4 langues'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'Wikipedia API'],
+        caminho: 'projetos/EXERCICIO011 - Curiosidades Escondidas/',
+        imagem: 'imagens/projetos/011-curiosidades-do-mundo.jpg'
+    },
+    {
+        id: '025',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Template Interativo para Negócios: Aro Alto',
+            en: 'Interactive Business Template: Aro Alto',
+            es: 'Plantilla Interactiva para Negocios: Aro Alto',
+            fr: 'Modèle Interactif pour Entreprises: Aro Alto'
+        },
+        descricao: {
+            pt: 'Template reutilizável para negócios de serviços, com catálogo interativo, calculadora de orçamento automática, marcação de horários e formulário de contacto, aqui reskinado como o site de uma academia de basquetebol fictícia',
+            en: 'Reusable template for service businesses, with an interactive catalog, automatic budget calculator, appointment booking and a contact form, reskinned here as the site of a fictional basketball academy',
+            es: 'Plantilla reutilizable para negocios de servicios, con catálogo interactivo, calculadora de presupuesto automática, reserva de horarios y formulario de contacto, aquí adaptada como el sitio de una academia de baloncesto ficticia',
+            fr: 'Modèle réutilisable pour entreprises de services, avec catalogue interactif, calculateur de devis automatique, prise de rendez-vous et formulaire de contact, ici décliné comme le site d\'une académie de basketball fictive'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://template-interativo.onrender.com',
+        imagem: 'imagens/025-aro-alto.jpg'
+    },
+    {
+        id: '026',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Template Vitrine para Negócios: Sole House',
+            en: 'Business Showcase Template: Sole House',
+            es: 'Plantilla Vitrina para Negocios: Sole House',
+            fr: 'Modèle Vitrine pour Entreprises: Sole House'
+        },
+        descricao: {
+            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio, aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
+            en: 'One-page institutional template, ready to adapt to any business, reskinned here as the store of a fictional sneaker and streetwear brand',
+            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio, aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
+            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise, ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://sole-house.onrender.com',
+        imagem: 'imagens/026-sole-house.jpg'
+    },
+    {
+        id: '027',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Quiosques Interativos: Museu Aurora & Mesa Lume',
+            en: 'Interactive Kiosks: Museu Aurora & Mesa Lume',
+            es: 'Quioscos Interactivos: Museu Aurora y Mesa Lume',
+            fr: 'Bornes Interactives: Museu Aurora et Mesa Lume'
+        },
+        descricao: {
+            pt: 'Duas demonstrações de interface para ecrãs táteis e totens: um guia de museu e um menu de restaurante, com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
+            en: 'Two touchscreen interface demos: a museum guide and a restaurant menu, with touch navigation, an ordering system and a call-server button, all in PT/EN',
+            es: 'Dos demostraciones de interfaz táctil: una guía de museo y un menú de restaurante, con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
+            fr: 'Deux démonstrations d\'interface tactile: un guide de musée et un menu de restaurant, avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://demo-wingsys.onrender.com',
+        imagem: 'imagens/027-demo-wingsys.jpg'
+    },
+    {
+        id: '014',
+        grupo: 'base',
+        titulo: {
+            pt: 'Jogo da Adivinha',
+            en: 'Guessing Game',
+            es: 'Juego de Adivinanza',
+            fr: 'Jeu de Devinette'
+        },
+        descricao: {
+            pt: 'Adivinha o número secreto entre 1 e 50: o jogo dá dicas, conta as tentativas e mostra a lista dos palpites',
+            en: 'Guess the secret number between 1 and 50: the game gives hints, counts the attempts and lists your guesses',
+            es: 'Adivina el número secreto entre 1 y 50: el juego da pistas, cuenta los intentos y muestra la lista de tus intentos',
+            fr: 'Devine le nombre secret entre 1 et 50 : le jeu donne des indices, compte les essais et affiche la liste des propositions'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS'],
+        caminho: 'projetos/EXERCICIO014 - Jogo da Adivinha/',
+        imagem: 'imagens/projetos/014-jogo-adivinha.jpg'
+    },
+    {
+        id: '018',
+        grupo: 'base',
+        titulo: {
+            pt: 'Jogo da Adivinha com Toggle',
+            en: 'Guessing Game with Toggle',
+            es: 'Juego de Adivinanza con Toggle',
+            fr: 'Jeu de Devinette avec Bascule'
+        },
+        descricao: {
+            pt: 'O mesmo jogo da adivinha, agora com modo escuro e modo claro, que se alterna com um botão',
+            en: 'The same guessing game, now with dark and light modes you switch with a button',
+            es: 'El mismo juego de adivinar, ahora con modo oscuro y modo claro que se alterna con un botón',
+            fr: 'Le même jeu de devinettes, avec un mode sombre et un mode clair qu\'on change d\'un bouton'
+        },
+        tag: 'CSS',
+        tecnologias: ['JavaScript', 'HTML', 'CSS'],
+        caminho: 'projetos/EXERCICIO018 - Jogo da Adivinha com Toggle/',
+        imagem: 'imagens/projetos/018-jogo-adivinha-toggle.jpg'
+    },
+    {
+        id: '017',
+        grupo: 'base',
+        titulo: {
+            pt: 'Números Primos',
+            en: 'Prime Numbers',
+            es: 'Números Primos',
+            fr: 'Nombres Premiers'
+        },
+        descricao: {
+            pt: 'Escreve um número e vê se é primo, com a lista de todos os primos até ele e um resumo',
+            en: 'Type a number to see whether it is prime, with the list of all primes up to it and a summary',
+            es: 'Escribe un número y mira si es primo, con la lista de todos los primos hasta él y un resumen',
+            fr: 'Saisis un nombre pour savoir s\'il est premier, avec la liste de tous les premiers jusqu\'à lui et un résumé'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS'],
+        caminho: 'projetos/EXERCICIO017 - Números Primos/',
+        imagem: 'imagens/projetos/017-numeros-primos.jpg'
+    },
+    {
+        id: '019',
+        grupo: 'base',
+        titulo: {
+            pt: 'Breakpoints',
+            en: 'Breakpoints',
+            es: 'Breakpoints',
+            fr: 'Breakpoints'
+        },
+        descricao: {
+            pt: 'Página responsiva com menu e cartões que se adaptam por media queries ao telemóvel, tablet e computador, com indicador do breakpoint atual',
+            en: 'Responsive page with a menu and cards that adapt through media queries to phone, tablet and desktop, with a current-breakpoint indicator',
+            es: 'Página responsiva con menú y tarjetas que se adaptan con media queries a móvil, tableta y ordenador, con indicador del breakpoint actual',
+            fr: 'Page responsive avec menu et cartes qui s\'adaptent par media queries au téléphone, à la tablette et à l\'ordinateur, avec indicateur du breakpoint actuel'
+        },
+        tag: 'CSS',
+        tecnologias: ['CSS', 'Media Queries', 'HTML', 'JavaScript'],
+        caminho: 'projetos/EXERCICIO019 - Breakpoints/',
+        imagem: 'imagens/projetos/019-breakpoints.jpg'
     }
 ];
+
+// Grupos em que os projetos aparecem no portfólio (a ordem aqui é a ordem na página)
+const gruposProjetos = [
+    {
+        id: 'python',
+        titulo: { pt: 'Aplicações completas em Python', en: 'Complete Python applications', es: 'Aplicaciones completas en Python', fr: 'Applications complètes en Python' },
+        descricao: {
+            pt: 'APIs, painéis de dados, automação e machine learning, publicados online',
+            en: 'APIs, data dashboards, automation and machine learning, published online',
+            es: 'APIs, paneles de datos, automatización y machine learning, publicados en línea',
+            fr: 'APIs, tableaux de bord de données, automatisation et machine learning, publiés en ligne'
+        }
+    },
+    {
+        id: 'web',
+        titulo: { pt: 'Sistemas e jogos web', en: 'Web systems and games', es: 'Sistemas y juegos web', fr: 'Systèmes et jeux web' },
+        descricao: {
+            pt: 'PHP e JavaScript: gestão escolar, calculadora, jogos de geografia e de tabuada e curiosidades',
+            en: 'PHP and JavaScript: school management, calculator, geography and times-table games and curiosities',
+            es: 'PHP y JavaScript: gestión escolar, calculadora, juegos de geografía y de tablas de multiplicar y curiosidades',
+            fr: 'PHP et JavaScript : gestion scolaire, calculatrice, jeux de géographie et de tables de multiplication et curiosités'
+        }
+    },
+    {
+        id: 'templates',
+        titulo: { pt: 'Templates e quiosques', en: 'Templates and kiosks', es: 'Plantillas y quioscos', fr: 'Modèles et bornes' },
+        descricao: {
+            pt: 'Interfaces prontas a adaptar a um negócio, em HTML, CSS e JavaScript',
+            en: 'Interfaces ready to adapt to a business, in HTML, CSS and JavaScript',
+            es: 'Interfaces listas para adaptar a un negocio, en HTML, CSS y JavaScript',
+            fr: 'Interfaces prêtes à adapter à une entreprise, en HTML, CSS et JavaScript'
+        }
+    },
+    {
+        id: 'base',
+        titulo: { pt: 'Exercícios de base', en: 'Foundation exercises', es: 'Ejercicios de base', fr: 'Exercices de base' },
+        descricao: {
+            pt: 'Os primeiros passos em JavaScript, HTML e CSS, durante a formação',
+            en: 'The first steps in JavaScript, HTML and CSS, during training',
+            es: 'Los primeros pasos en JavaScript, HTML y CSS, durante la formación',
+            fr: 'Les premiers pas en JavaScript, HTML et CSS, pendant la formation'
+        }
+    }
+];
+
 
 // ============================================
 // 5. FUNÇÕES PARA CARREGAR DADOS
@@ -640,24 +796,54 @@ function carregarProjetos() {
     const versaoImagens = versaoCache ? '?v=' + encodeURIComponent(versaoCache) : '';
 
     container.innerHTML = '';
-    projetos.forEach(proj => {
-        const div = document.createElement('a');
-        div.className = 'projeto-card reveal';
-        div.href = proj.url || (proj.caminho + (proj.php ? '' : 'index.html'));
-        div.target = '_blank';
-        div.innerHTML = `
-            <div class="projeto-thumb">
-                <img src="${proj.imagem}${versaoImagens}" alt="Captura do projeto ${L(proj.titulo)}" loading="lazy">
-                <span class="projeto-thumb-tag">${proj.tag}</span>
-            </div>
-            <div class="projeto-body">
-                <div class="projeto-numero">#${proj.id}</div>
-                <h3>${L(proj.titulo)}</h3>
-                <p>${L(proj.descricao)}</p>
-                <span class="projeto-link">${t('projeto_ver')}</span>
+    gruposProjetos.forEach(grupo => {
+        const doGrupo = projetos.filter(p => p.grupo === grupo.id);
+        if (!doGrupo.length) return;
+
+        const secao = document.createElement('section');
+        secao.className = 'projetos-grupo';
+        secao.innerHTML = `
+            <div class="grupo-cabecalho">
+                <h2 class="grupo-titulo">${L(grupo.titulo)} <span class="grupo-contagem">${doGrupo.length}</span></h2>
+                <p class="grupo-descricao">${L(grupo.descricao)}</p>
             </div>
         `;
-        container.appendChild(div);
+        const grelha = document.createElement('div');
+        grelha.className = 'projetos-grid';
+
+        doGrupo.forEach(proj => {
+            const div = document.createElement('a');
+            div.className = 'projeto-card reveal';
+            div.href = proj.url || (proj.caminho + (proj.php ? '' : 'index.html'));
+            div.target = '_blank';
+            div.rel = 'noopener';
+            const chips = (proj.tecnologias || []).map(nome => `<span class="chip-tec">${nome}</span>`).join('');
+            div.innerHTML = `
+                <div class="projeto-thumb">
+                    <img src="${proj.imagem}${versaoImagens}" alt="Captura do projeto ${L(proj.titulo)}" loading="lazy">
+                    <span class="projeto-thumb-tag">${proj.tag}</span>
+                </div>
+                <div class="projeto-body">
+                    <h3>${L(proj.titulo)}</h3>
+                    <p>${L(proj.descricao)}</p>
+                    <div class="projeto-tecnologias" aria-label="${t('projeto_tecnologias')}">${chips}</div>
+                    <span class="projeto-link">${t('projeto_ver')}</span>
+                </div>
+            `;
+            grelha.appendChild(div);
+        });
+
+        secao.appendChild(grelha);
+        container.appendChild(secao);
+    });
+}
+
+// Números do topo (projetos, tecnologias, experiências): saem das listas, nunca à mão
+function atualizarEstatisticas() {
+    const alvos = { numeroProjetos: projetos.length, numeroTech: competencias.length, numeroExperiencias: experiencias.length };
+    Object.keys(alvos).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(alvos[id]);
     });
 }
 
@@ -754,6 +940,7 @@ function recarregarConteudoDinamico() {
     carregarExperiencias();
     carregarFormacao();
     carregarProjetos();
+    atualizarEstatisticas();
     atualizarTextoTema();
     iniciarScrollReveal(); // reobserva os novos elementos gerados (experiência/formação/projetos)
 
@@ -772,6 +959,7 @@ document.addEventListener('DOMContentLoaded', function() {
     carregarExperiencias();
     carregarFormacao();
     carregarProjetos();
+    atualizarEstatisticas();
     configurarFormulario();
 
     // marca as secções estáticas para a animação de scroll também
