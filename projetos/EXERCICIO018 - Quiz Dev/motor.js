@@ -154,6 +154,22 @@ function ganho() { const e = document.createElement('div'); e.className = 'xpf';
 const lin = rows => rows.map((r, i) => '<div class="ln"><span class="n">' + (i + 1) + '</span><span class="t">' + r + '</span></div>').join('');
 const quebra = (txt, max) => { const out = []; let l = ''; txt.split(' ').forEach(w => { if ((l + ' ' + w).trim().length > max) { out.push(l); l = w; } else l = (l + ' ' + w).trim(); }); if (l) out.push(l); return out; };
 
+function proximoTopico() {
+  for (const t of D) for (const p of t.topicos) if (nFeitos(tk(t.id, p.id)) < 4) return { t, p, n: nFeitos(tk(t.id, p.id)) };
+  return null;
+}
+function blocoInicio() {
+  const px = proximoTopico();
+  const cont = px
+    ? '<button class="cont" data-ir="mapa|' + tk(px.t.id, px.p.id) + '" style="--cor:' + px.t.cor + '"><span class="ct">' + (totalFeitos() ? 'Continuar' : 'Começar') + '</span><b>' + esc(px.p.nome) + '</b><span class="cs">' + esc(px.t.nome) + ' · nível ' + (px.n + 1) + ' de 4 →</span></button>'
+    : '<div class="cont fim"><span class="ct">Tudo concluído</span><b>Fizeste os 48 níveis</b><span class="cs">Usa a revisão para treinar as erradas.</span></div>';
+  const st = '<div class="stat"><b>' + ST.xp + '</b><span>XP</span></div><div class="stat"><b>' + totalFeitos() + '/' + totalNiveis() + '</b><span>níveis</span></div><div class="stat"><b>' + streak() + '</b><span>dias seguidos</span></div><div class="stat"><b>' + Object.keys(ST.dias).length + '</b><span>dias de estudo</span></div>';
+  const como = [['1', 'Lê a ficha', 'O que é, pontos-chave e um exemplo.'], ['2', 'Joga 4 níveis', 'Reconhecer, compreender, aplicar e escrever.'], ['3', 'Podes errar 1', 'Tens 2 vidas por nível.'], ['4', 'Ganha XP', '+25 XP por nível e medalhas por tópico.']]
+    .map(c => '<div class="pas"><i>' + c[0] + '</i><b>' + c[1] + '</b><span>' + c[2] + '</span></div>').join('');
+  return '<div class="ini">' + cont + '<div class="stats">' + st + '</div></div><div class="sec">// COMO FUNCIONA</div><div class="como">' + como + '</div>' +
+    '<div class="sec">// ATALHOS</div><div class="atl"><span><kbd>A</kbd><kbd>B</kbd><kbd>C</kbd><kbd>D</kbd> ou <kbd>1</kbd>–<kbd>4</kbd> responder</span><span><kbd>Enter</kbd> verificar / continuar</span></div>';
+}
+
 function vistaBem() {
   const cards = D.map(t => {
     const tot = t.topicos.length * 4, f = t.topicos.reduce((n, p) => n + nFeitos(tk(t.id, p.id)), 0), pc = Math.round(f / tot * 100);
@@ -162,6 +178,7 @@ function vistaBem() {
   const nErr = Object.keys(ST.erradas).filter(i => INDICE[i]).length;
   return '<div class="bem"><h1><span>Quiz Dev</span></h1><div class="c">// Estuda programação por temas. Lê a ficha, joga os 4 níveis de cada tópico,<br>// ganha XP e medalhas. O progresso fica guardado neste navegador.</div><div class="cards">' + cards + '</div>' +
     '<button class="acao" id="irRev" ' + (nErr ? '' : 'disabled style="opacity:.4;cursor:default"') + '>↻ Rever erradas (' + nErr + ')</button>' +
+    blocoInicio() +
     '<div class="c" style="margin:6px 0 0">// ' + totalFeitos() + ' de ' + totalNiveis() + ' níveis concluídos · ' + Object.keys(INDICE).length + ' perguntas</div></div>';
 }
 function vistaMapa(t, p) {
@@ -263,6 +280,7 @@ function editor() {
   });
   const q = s => ed.querySelector(s);
   if (q('#irRev')) q('#irRev').onclick = () => abrir('rev');
+  document.querySelectorAll('[data-ir]').forEach(b => b.onclick = () => abrir(b.dataset.ir));
   if (q('#irBem')) q('#irBem').onclick = () => abrir('bem');
   if (q('#irRev2')) q('#irRev2').onclick = () => { iniciarRev(); render(); };
   if (at.startsWith('mapa|')) {
