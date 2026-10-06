@@ -1,6 +1,6 @@
 # Portfólio | Elisama Manuel
 
-Portfólio pessoal de desenvolvedora, com identidade de programadora (site dentro de uma janela de terminal, boot animado, base de dados interativa), **18 projetos** organizados em 4 grupos e um formulário de contacto ligado diretamente ao Gmail. Disponível em português, inglês, espanhol e francês.
+Portfólio pessoal de desenvolvedora, com identidade de programadora (site dentro de uma janela de terminal, boot animado, base de dados interativa), **17 projetos** organizados em 4 grupos e um formulário de contacto ligado diretamente ao Gmail. Disponível em português, inglês, espanhol e francês.
 
 **Site ao vivo:** https://elisamanuel-on.github.io/
 **LinkedIn:** https://www.linkedin.com/in/elisama-manuel-49025117a/
@@ -21,7 +21,7 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (site dentr
 
 ```
 ├── index.html          → perfil (apresentação, competências, experiência, formação)
-├── portfolio.html      → os 18 projetos, por grupos
+├── portfolio.html      → os 17 projetos, por grupos
 ├── contacto.html       → formulário de contacto
 ├── consola.js          → consola "base de dados" do Perfil
 ├── terminal.html       → redireciona para index.html#base-de-dados
@@ -38,7 +38,7 @@ Portfólio pessoal de desenvolvedora, com identidade de programadora (site dentr
 
 ## Projetos
 
-Cada cartão do portfólio mostra a captura, uma descrição e as tecnologias usadas. Os números (projetos, tecnologias e experiências no topo do perfil, ) saem das listas em `script.js`, por isso nunca ficam desatualizados.
+Cada cartão do portfólio mostra a captura, uma descrição e as tecnologias usadas. Os números (projetos, tecnologias e experiências no topo do perfil) saem das listas em `script.js`, por isso nunca ficam desatualizados.
 
 ### Aplicações completas em Python (6)
 
@@ -49,8 +49,9 @@ Cada cartão do portfólio mostra a captura, uma descrição e as tecnologias us
 - **[Análise de Preços de Habitação em Portugal](https://analise-precos-habitacao.onrender.com)** — dashboard com dados reais do INE: mapa de preços por concelho, pesquisa, comparação de regiões, evolução do índice desde 2009 e exportação em CSV e Excel. *Python, Dash, Pandas.*
 - **[Portal de Automação Interna](https://portal-automacao-interna.onrender.com)** — portal para automatizar tarefas de escritório (organizar ficheiros, gerar relatórios, fazer backups), com histórico de execuções e agendamento. *Python, FastAPI, cron, RPA.*
 
-### Sistemas e jogos web em PHP e JavaScript (5)
+### Sistemas e jogos web em PHP e JavaScript (6)
 
+- **[Quiz Dev](projetos/EXERCICIO018%20-%20Quiz%20Dev/index.html)** — quiz de estudo em formato de editor de código: ficha de estudo e 4 níveis por tópico (reconhecer, compreender, aplicar e escrever de memória), vidas, XP, medalhas e progresso guardado no navegador. Fundamentos, JavaScript, Git e perguntas sobre o meu próprio código; o conteúdo vive em `dados.js`. *JavaScript, HTML, CSS, localStorage.*
 - **[Sistema de Gestão Escolar](https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO009%20-%20Registo%20de%20Utilizador/)** — colégio com 7 perfis (aluno, professor, secretaria, direção, Conselho Geral, contabilidade e portaria): notas, pautas, faltas, horários e a parte financeira (propinas, salários, impostos, despesas e receitas), com cálculos automáticos, registo de alterações e relatórios em Excel e PDF feitos em PHP puro, em 4 idiomas. *PHP, SQLite, PDO, JavaScript, CSS.*
 - **[Calculadora Científica](https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO013%20-%20Calculadora%20com%204%20Opera%C3%A7%C3%B5es/)** — seis operações, modo científico, desafios por níveis e manual; as contas são feitas no servidor, sem `eval()`. *PHP, HTML, CSS, JavaScript.*
 - **[Imagem Escondida](projetos/EXERCICIO012%20-%20Imagem%20Escondida/index.html)** — jogo de geografia em 3 níveis com cronómetro e vidas (continentes, bandeiras, capitais e curiosidades), mapa clicável com os nomes na língua do jogo, ficha de cada país com o seu nome verdadeiro, jogadores e ranking. *JavaScript, Leaflet, TopoJSON, OpenStreetMap, API da Wikipédia.*
@@ -65,12 +66,10 @@ Interfaces prontas a adaptar a um negócio. *HTML, CSS, JavaScript.*
 - **[Sole House](https://sole-house.onrender.com)** — template institucional de uma página, aqui como loja de sneakers fictícia.
 - **[Quiosques Interativos: Museu Aurora e Mesa Lume](https://demo-wingsys.onrender.com)** — duas demonstrações para ecrãs táteis: guia de museu e menu de restaurante com pedidos e botão para chamar o empregado, em PT e EN.
 
-### Exercícios de base (4)
+### Exercícios de base (2)
 
 Os primeiros passos em JavaScript, HTML e CSS, durante a formação em Programação Web (Client-Side).
 
-- **[Jogo da Adivinha](projetos/EXERCICIO014%20-%20Jogo%20da%20Adivinha/index.html)** — adivinhar um número entre 1 e 50, com dicas e contagem de tentativas.
-- **[Jogo da Adivinha com Toggle](projetos/EXERCICIO018%20-%20Jogo%20da%20Adivinha%20com%20Toggle/index.html)** — o mesmo jogo, com modo escuro e modo claro.
 - **[Números Primos](projetos/EXERCICIO017%20-%20N%C3%BAmeros%20Primos/index.html)** — verifica se um número é primo e lista todos os primos até ele.
 - **[Breakpoints](projetos/EXERCICIO019%20-%20Breakpoints/index.html)** — página responsiva com media queries e indicador do breakpoint atual.
 

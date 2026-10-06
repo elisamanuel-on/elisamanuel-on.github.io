@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Dev | Elisama Manuel</title>
+<meta name="description" content="Quiz Dev: estuda programação por temas, com fichas de estudo, 4 níveis, XP e medalhas. Git, JavaScript, fundamentos e o código dos meus próprios projetos.">
+<meta property="og:title" content="Quiz Dev | Elisama Manuel">
+<meta property="og:description" content="Fichas de estudo e quiz de programação com níveis, XP e medalhas, em formato de editor de código.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<div class="ide" id="ide">
+  <div class="titulo">
+    <div class="pts"><i></i><i></i><i></i></div>
+    <button id="burger" aria-label="Abrir explorador">☰</button>
+    <a class="marca" href="index.html"><img src="logo.svg" alt="" width="22" height="22"><span>QUIZ·DEV</span></a>
+    <span class="nome" id="nome">quiz-dev</span>
+    <span class="hud"><span class="ch f" title="Dias seguidos a estudar">🔥 <b id="fg">0</b></span><span class="ch x" title="Pontos de experiência">⚡ <b id="xp">0</b></span><span class="ch h" id="hp" title="Vidas do nível">❤ ❤</span></span>
+    <a class="pf" href="../../portfolio.html">← Portfólio</a>
+  </div>
+  <div class="meio">
+    <aside id="aside" aria-label="Explorador"></aside>
+    <div class="fundo-aside" id="fundoAside"></div>
+    <div class="main">
+      <div class="abas" id="abas"></div>
+      <div class="ed" id="ed" tabindex="0"></div>
+    </div>
+  </div>
+  <div class="painel" id="painel"><div class="pt" id="pt"></div><div class="pb" id="pb"></div></div>
+  <div class="estado" id="estado"></div>
+</div>
+<script src="dados.js?v=1"></script>
+<script src="motor.js?v=1"></script>
+</body>
+</html>

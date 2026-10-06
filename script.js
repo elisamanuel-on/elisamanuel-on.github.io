@@ -406,6 +406,26 @@ const projetos = [
         imagem: 'imagens/024-portal-automacao.png'
     },
     {
+        id: '018',
+        grupo: 'web',
+        titulo: {
+            pt: 'Quiz Dev',
+            en: 'Quiz Dev',
+            es: 'Quiz Dev',
+            fr: 'Quiz Dev'
+        },
+        descricao: {
+            pt: 'Quiz de estudo em formato de editor de código: fichas e 4 níveis por tópico, vidas, XP, medalhas e progresso guardado. Fundamentos, JavaScript, Git e perguntas sobre o meu próprio código (em português)',
+            en: 'Study quiz styled as a code editor: study sheets and 4 levels per topic, lives, XP, badges and saved progress. Fundamentals, JavaScript, Git and questions about my own code (in Portuguese)',
+            es: 'Quiz de estudio con aspecto de editor de código: fichas y 4 niveles por tema, vidas, XP, medallas y progreso guardado. Fundamentos, JavaScript, Git y preguntas sobre mi propio código (en portugués)',
+            fr: 'Quiz d\'étude façon éditeur de code : fiches et 4 niveaux par sujet, vies, XP, médailles et progression sauvegardée. Bases, JavaScript, Git et questions sur mon propre code (en portugais)'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'localStorage'],
+        caminho: 'projetos/EXERCICIO018 - Quiz Dev/',
+        imagem: 'imagens/projetos/018-quiz-dev.jpg'
+    },
+    {
         id: '009',
         grupo: 'web',
         titulo: {
@@ -570,46 +590,6 @@ const projetos = [
         imagem: 'imagens/027-demo-wingsys.jpg'
     },
     {
-        id: '014',
-        grupo: 'base',
-        titulo: {
-            pt: 'Jogo da Adivinha',
-            en: 'Guessing Game',
-            es: 'Juego de Adivinanza',
-            fr: 'Jeu de Devinette'
-        },
-        descricao: {
-            pt: 'Adivinha o número secreto entre 1 e 50: o jogo dá dicas, conta as tentativas e mostra a lista dos palpites',
-            en: 'Guess the secret number between 1 and 50: the game gives hints, counts the attempts and lists your guesses',
-            es: 'Adivina el número secreto entre 1 y 50: el juego da pistas, cuenta los intentos y muestra la lista de tus intentos',
-            fr: 'Devine le nombre secret entre 1 et 50 : le jeu donne des indices, compte les essais et affiche la liste des propositions'
-        },
-        tag: 'JavaScript',
-        tecnologias: ['JavaScript', 'HTML', 'CSS'],
-        caminho: 'projetos/EXERCICIO014 - Jogo da Adivinha/',
-        imagem: 'imagens/projetos/014-jogo-adivinha.jpg'
-    },
-    {
-        id: '018',
-        grupo: 'base',
-        titulo: {
-            pt: 'Jogo da Adivinha com Toggle',
-            en: 'Guessing Game with Toggle',
-            es: 'Juego de Adivinanza con Toggle',
-            fr: 'Jeu de Devinette avec Bascule'
-        },
-        descricao: {
-            pt: 'O mesmo jogo da adivinha, agora com modo escuro e modo claro, que se alterna com um botão',
-            en: 'The same guessing game, now with dark and light modes you switch with a button',
-            es: 'El mismo juego de adivinar, ahora con modo oscuro y modo claro que se alterna con un botón',
-            fr: 'Le même jeu de devinettes, avec un mode sombre et un mode clair qu\'on change d\'un bouton'
-        },
-        tag: 'CSS',
-        tecnologias: ['JavaScript', 'HTML', 'CSS'],
-        caminho: 'projetos/EXERCICIO018 - Jogo da Adivinha com Toggle/',
-        imagem: 'imagens/projetos/018-jogo-adivinha-toggle.jpg'
-    },
-    {
         id: '017',
         grupo: 'base',
         titulo: {
@@ -667,10 +647,10 @@ const gruposProjetos = [
         id: 'web',
         titulo: { pt: 'Sistemas e jogos web', en: 'Web systems and games', es: 'Sistemas y juegos web', fr: 'Systèmes et jeux web' },
         descricao: {
-            pt: 'PHP e JavaScript: gestão escolar, calculadora, jogos de geografia e de tabuada e curiosidades',
-            en: 'PHP and JavaScript: school management, calculator, geography and times-table games and curiosities',
-            es: 'PHP y JavaScript: gestión escolar, calculadora, juegos de geografía y de tablas de multiplicar y curiosidades',
-            fr: 'PHP et JavaScript : gestion scolaire, calculatrice, jeux de géographie et de tables de multiplication et curiosités'
+            pt: 'PHP e JavaScript: quiz de programação, gestão escolar, calculadora, jogos de geografia e de tabuada e curiosidades',
+            en: 'PHP and JavaScript: programming quiz, school management, calculator, geography and times-table games and curiosities',
+            es: 'PHP y JavaScript: quiz de programación, gestión escolar, calculadora, juegos de geografía y de tablas de multiplicar y curiosidades',
+            fr: 'PHP et JavaScript : quiz de programmation, gestion scolaire, calculatrice, jeux de géographie et de tables de multiplication et curiosités'
         }
     },
     {
