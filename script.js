@@ -406,6 +406,26 @@ const projetos = [
         imagem: 'imagens/024-portal-automacao.png'
     },
     {
+        id: '029',
+        grupo: 'dados',
+        titulo: {
+            pt: 'CPGF Pipeline: Gastos com Cartões do Governo Federal',
+            en: 'CPGF Pipeline: Federal Government Card Spending',
+            es: 'CPGF Pipeline: Gastos con Tarjetas del Gobierno Federal',
+            fr: 'CPGF Pipeline : Dépenses par Cartes du Gouvernement Fédéral'
+        },
+        descricao: {
+            pt: 'Pipeline de dados que descarrega do Portal da Transparência do Brasil os gastos com cartões do Governo Federal (2022), trata 136 mil registos com pandas, importa em lotes para MySQL/MariaDB sem duplicar e responde com SQL a perguntas sobre os gastos. Um só comando corre tudo em cerca de 46 segundos, com testes automáticos. A análise mostra que quase metade do valor (90,3 milhões de reais) está sob sigilo',
+            en: 'Data pipeline that downloads Brazil\'s Federal Government card spending (2022) from the Transparency Portal, cleans 136 thousand records with pandas, loads them in batches into MySQL/MariaDB without duplicates and answers questions about the spending with SQL. A single command runs everything in about 46 seconds, with automated tests. The analysis shows that almost half of the amount (90.3 million reais) is classified as secret',
+            es: 'Pipeline de datos que descarga del Portal de la Transparencia de Brasil los gastos con tarjetas del Gobierno Federal (2022), trata 136 mil registros con pandas, los importa por lotes a MySQL/MariaDB sin duplicar y responde con SQL a preguntas sobre los gastos. Un solo comando lo ejecuta todo en unos 46 segundos, con pruebas automáticas. El análisis muestra que casi la mitad del valor (90,3 millones de reales) está bajo secreto',
+            fr: 'Pipeline de données qui télécharge du Portail de la Transparence du Brésil les dépenses par cartes du Gouvernement Fédéral (2022), nettoie 136 mille enregistrements avec pandas, les charge par lots dans MySQL/MariaDB sans doublons et répond en SQL à des questions sur les dépenses. Une seule commande exécute tout en environ 46 secondes, avec des tests automatisés. L\'analyse montre que près de la moitié du montant (90,3 millions de reais) est classée secrète'
+        },
+        tag: 'Python',
+        tecnologias: ['Python', 'pandas', 'MySQL', 'MariaDB', 'SQL', 'pytest', 'Git'],
+        url: 'https://github.com/elisamanuel-on/cpgf-pipeline',
+        imagem: 'imagens/029-cpgf-pipeline.png'
+    },
+    {
         id: '018',
         grupo: 'web',
         titulo: {
@@ -644,6 +664,16 @@ const gruposProjetos = [
         }
     },
     {
+        id: 'dados',
+        titulo: { pt: 'Dados e automação', en: 'Data and automation', es: 'Datos y automatización', fr: 'Données et automatisation' },
+        descricao: {
+            pt: 'Pipelines de dados reais, bases de dados e análise com SQL, com o código no GitHub',
+            en: 'Real-data pipelines, databases and SQL analysis, with the code on GitHub',
+            es: 'Pipelines de datos reales, bases de datos y análisis con SQL, con el código en GitHub',
+            fr: 'Pipelines de données réelles, bases de données et analyse SQL, avec le code sur GitHub'
+        }
+    },
+    {
         id: 'web',
         titulo: { pt: 'Sistemas e jogos web', en: 'Web systems and games', es: 'Sistemas y juegos web', fr: 'Systèmes et jeux web' },
         descricao: {
@@ -809,7 +839,7 @@ function carregarProjetos() {
                     <h3>${L(proj.titulo)}</h3>
                     <p>${L(proj.descricao)}</p>
                     <div class="projeto-tecnologias" aria-label="${t('projeto_tecnologias')}">${chips}</div>
-                    <span class="projeto-link">${t('projeto_ver')}</span>
+                    <span class="projeto-link">${(proj.url && proj.url.includes('github.com')) ? t('projeto_ver_codigo') : t('projeto_ver')}</span>
                 </div>
             `;
             grelha.appendChild(div);

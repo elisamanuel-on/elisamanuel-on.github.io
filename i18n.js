@@ -42,6 +42,7 @@ const TRADUCOES = {
         portfolio_subtitulo: 'Clique num projeto para abrir a demonstração. Cada cartão mostra as tecnologias usadas',
         portfolio_footer: 'Os exercícios de base nasceram na formação em <strong>Programação Web (Client-Side)</strong>; os restantes projetos fiz por iniciativa própria',
         projeto_ver: 'Ver Projeto',
+        projeto_ver_codigo: 'Ver no GitHub',
         projeto_tecnologias: 'Tecnologias usadas',
 
         contacto_titulo: 'CONTACTO',
@@ -106,6 +107,7 @@ const TRADUCOES = {
         portfolio_subtitulo: 'Click a project to open the live demo. Each card shows the technologies used',
         portfolio_footer: 'The foundation exercises came out of the <strong>Web Programming (Client-Side)</strong> training; I built the other projects on my own initiative',
         projeto_ver: 'View Project',
+        projeto_ver_codigo: 'View on GitHub',
         projeto_tecnologias: 'Technologies used',
 
         contacto_titulo: 'CONTACT',
@@ -170,6 +172,7 @@ const TRADUCOES = {
         portfolio_subtitulo: 'Haz clic en un proyecto para abrir la demo. Cada tarjeta muestra las tecnologías usadas',
         portfolio_footer: 'Los ejercicios de base nacieron en la formación de <strong>Programación Web (Client-Side)</strong>; los demás proyectos los hice por iniciativa propia',
         projeto_ver: 'Ver Proyecto',
+        projeto_ver_codigo: 'Ver en GitHub',
         projeto_tecnologias: 'Tecnologías usadas',
 
         contacto_titulo: 'CONTACTO',
@@ -234,6 +237,7 @@ const TRADUCOES = {
         portfolio_subtitulo: 'Cliquez sur un projet pour ouvrir la démo. Chaque carte montre les technologies utilisées',
         portfolio_footer: 'Les exercices de base sont nés de la formation en <strong>Programmation Web (Client-Side)</strong> ; j\'ai réalisé les autres projets de ma propre initiative',
         projeto_ver: 'Voir le Projet',
+        projeto_ver_codigo: 'Voir sur GitHub',
         projeto_tecnologias: 'Technologies utilisées',
 
         contacto_titulo: 'CONTACT',
