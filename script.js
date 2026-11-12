@@ -1,717 +1,1000 @@
 // ============================================
-// TEMPLATE "INTERATIVO" Academia de Basquetebol
-// ============================================
-// Catálogo de programas, simulador de mensalidade em tempo
-// real, marcação de aula experimental, e um formulário final
-// que junta tudo e envia a inscrição.
-//
-// Para ligar o envio de emails a sério, cria uma conta grátis em
-// https://formspree.io, cria um formulário e troca o valor de
-// FORMSPREE_URL aqui em baixo pelo endpoint que eles te derem.
-// Enquanto não trocares, o formulário usa "mailto" como alternativa
-// (abre o email do visitante já preenchido).
+// PORTFÓLIO CV - ELISAMA MANUEL
+// Dados dinâmicos com JavaScript
 // ============================================
 
-const FORMSPREE_URL = 'https://formspree.io/f/XXXXXXXX'; // <- troca aqui
-const EMAIL_NEGOCIO = 'geral@aroalto.pt'; // <- troca aqui (usado no fallback mailto)
+console.log('Portfólio CV carregado!');
 
-// ------------------------------------------------
-// Ícones (SVG reutilizáveis, sem emojis)
-// ------------------------------------------------
-const ICONES_SERVICO = {
-    bola: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2v20M4.5 4.5c3 3 3 12 0 15M19.5 4.5c-3 3-3 12 0 15"/></svg>',
-    apito: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8h8a4 4 0 0 1 0 8h-2l-2 3-2-3H8a4 4 0 0 1 0-8z"/><circle cx="16" cy="12" r="1.3"/></svg>',
-    camisola: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4 4 7l2 3 2-1v11h8V9l2 1 2-3-4-3-2 2h-2z"/></svg>',
-    cronometro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>'
+// ============================================
+// ÍCONES SVG (substituem emojis, cor herdada via currentColor)
+// ============================================
+const ICONES = {
+    sol: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>',
+    lua: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
 };
 
-// ------------------------------------------------
-// Catálogo de programas — dados de exemplo
-// ------------------------------------------------
-const catalogoServicos = [
+// ============================================
+// 0. THEME TOGGLE (DARK/LIGHT MODE)
+// ============================================
+
+function initTheme() {
+    const toggleBtn = document.getElementById('toggleTheme');
+    if (!toggleBtn) return;
+
+    function aplicar(tema) {
+        const claro = tema === 'light';
+        document.body.classList.toggle('light-mode', claro);
+        // Botão minimalista: só o ícone da ação (no escuro mostra o sol, no claro a lua); o texto fica no title
+        const textoAcao = claro ? t('theme_dark') : t('theme_light');
+        toggleBtn.innerHTML = `<span class="theme-icon">${claro ? ICONES.lua : ICONES.sol}</span>`;
+        toggleBtn.title = textoAcao;
+    }
+
+    // guarda a função para o texto poder ser atualizado quando o idioma muda
+    toggleBtn._aplicarTema = aplicar;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+        aplicar(savedTheme);
+    } else {
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        aplicar(prefersLight ? 'light' : 'dark');
+    }
+
+    toggleBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const isLight = document.body.classList.toggle('light-mode');
+        aplicar(isLight ? 'light' : 'dark');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    });
+}
+
+function atualizarTextoTema() {
+    const toggleBtn = document.getElementById('toggleTheme');
+    if (!toggleBtn || !toggleBtn._aplicarTema) return;
+    const claro = document.body.classList.contains('light-mode');
+    toggleBtn._aplicarTema(claro ? 'light' : 'dark');
+}
+
+// ============================================
+// 1. DADOS - COMPETÊNCIAS TÉCNICAS
+// ============================================
+const competencias = [
+    { pt: 'Python', en: 'Python', es: 'Python', fr: 'Python' },
+    { pt: 'RPA (Automação)', en: 'RPA (Automation)', es: 'RPA (Automatización)', fr: 'RPA (Automatisation)' },
+    { pt: 'Pandas', en: 'Pandas', es: 'Pandas', fr: 'Pandas' },
+    { pt: 'FastAPI', en: 'FastAPI', es: 'FastAPI', fr: 'FastAPI' },
+    { pt: 'Flask', en: 'Flask', es: 'Flask', fr: 'Flask' },
+    { pt: 'Dash', en: 'Dash', es: 'Dash', fr: 'Dash' },
+    { pt: 'HTML & CSS', en: 'HTML & CSS', es: 'HTML & CSS', fr: 'HTML & CSS' },
+    { pt: 'JavaScript', en: 'JavaScript', es: 'JavaScript', fr: 'JavaScript' },
+    { pt: 'PHP', en: 'PHP', es: 'PHP', fr: 'PHP' },
+    { pt: 'Java', en: 'Java', es: 'Java', fr: 'Java' },
+    { pt: 'MySQL', en: 'MySQL', es: 'MySQL', fr: 'MySQL' },
+    { pt: 'PostgreSQL', en: 'PostgreSQL', es: 'PostgreSQL', fr: 'PostgreSQL' },
+    { pt: 'SQL Server', en: 'SQL Server', es: 'SQL Server', fr: 'SQL Server' },
+    { pt: 'SQLite', en: 'SQLite', es: 'SQLite', fr: 'SQLite' },
+    { pt: 'MongoDB', en: 'MongoDB', es: 'MongoDB', fr: 'MongoDB' },
+    { pt: 'Git', en: 'Git', es: 'Git', fr: 'Git' },
+    { pt: 'Linux', en: 'Linux', es: 'Linux', fr: 'Linux' },
+    { pt: 'Ubuntu', en: 'Ubuntu', es: 'Ubuntu', fr: 'Ubuntu' },
+    { pt: 'Proxmox', en: 'Proxmox', es: 'Proxmox', fr: 'Proxmox' },
+    { pt: 'VS Code', en: 'VS Code', es: 'VS Code', fr: 'VS Code' },
+    { pt: 'Machine Learning', en: 'Machine Learning', es: 'Machine Learning', fr: 'Machine Learning' }
+];
+
+// Competências complementares (gestão/negócio), reforça a transição de carreira
+const competenciasComplementares = [
+    { pt: 'Excel Avançado', en: 'Advanced Excel', es: 'Excel Avanzado', fr: 'Excel Avancé' },
+    { pt: 'SAP (ERP)', en: 'SAP (ERP)', es: 'SAP (ERP)', fr: 'SAP (ERP)' },
+    { pt: 'Canva (Design)', en: 'Canva (Design)', es: 'Canva (Diseño)', fr: 'Canva (Design)' },
+    { pt: 'Gestão de Projetos', en: 'Project Management', es: 'Gestión de Proyectos', fr: 'Gestion de Projets' },
+    { pt: 'Atendimento ao Cliente', en: 'Customer Service', es: 'Atención al Cliente', fr: 'Service Client' }
+];
+
+// ============================================
+// 2. DADOS - EXPERIÊNCIA PROFISSIONAL (completo, do CV)
+// ============================================
+const experiencias = [
     {
-        id: 1, categoria: 'Formação Jovem', nome: 'Mini-Basket (6-9 anos)',
-        preco: 30, tipo: 'mensal', icone: 'bola',
-        descricao: 'Iniciação lúdica ao basquetebol — coordenação, regras básicas e muita diversão.'
+        titulo: {
+            pt: 'Estrategista Comercial & Consultora de Imagem Corporativa',
+            en: 'Commercial Strategist & Corporate Image Consultant',
+            es: 'Estratega Comercial y Consultora de Imagen Corporativa',
+            fr: 'Stratège Commerciale & Consultante en Image Corporative'
+        },
+        empresa: 'Perfil Azul, Prestadora de Serviços',
+        periodo: {
+            pt: 'Outubro 2025 a Dezembro 2025',
+            en: 'October 2025 to December 2025',
+            es: 'Octubre 2025 a Diciembre 2025',
+            fr: 'Octobre 2025 à Décembre 2025'
+        },
+        descricao: {
+            pt: 'Desenvolvimento de estratégias comerciais para fortalecer a presença e competitividade da marca. Consultoria em imagem corporativa e posicionamento de mercado.',
+            en: 'Developed commercial strategies to strengthen brand presence and competitiveness. Consulting on corporate image and market positioning.',
+            es: 'Desarrollo de estrategias comerciales para fortalecer la presencia y competitividad de la marca. Consultoría en imagen corporativa y posicionamiento de mercado.',
+            fr: 'Développement de stratégies commerciales pour renforcer la présence et la compétitivité de la marque. Conseil en image corporative et positionnement sur le marché.'
+        }
     },
     {
-        id: 2, categoria: 'Formação Jovem', nome: 'Sub-12 (10-12 anos)',
-        preco: 35, tipo: 'mensal', icone: 'apito',
-        descricao: 'Fundamentos técnicos e táticos, com primeiros jogos e torneios de formação.'
+        titulo: {
+            pt: 'Comercial / Call Center',
+            en: 'Sales / Call Center',
+            es: 'Comercial / Call Center',
+            fr: 'Commercial / Centre d\'Appels'
+        },
+        empresa: 'Fitness Up, Famalicão',
+        periodo: {
+            pt: 'Dezembro 2024 a Fevereiro 2025',
+            en: 'December 2024 to February 2025',
+            es: 'Diciembre 2024 a Febrero 2025',
+            fr: 'Décembre 2024 à Février 2025'
+        },
+        descricao: {
+            pt: 'Gestão e desenvolvimento do relacionamento com clientes. Atendimento direto, resolução de reclamações e apoio comercial.',
+            en: 'Managed and developed customer relationships. Direct customer support, complaint resolution and sales assistance.',
+            es: 'Gestión y desarrollo de la relación con los clientes. Atención directa, resolución de reclamaciones y apoyo comercial.',
+            fr: 'Gestion et développement de la relation client. Accueil direct, résolution des réclamations et soutien commercial.'
+        }
     },
     {
-        id: 3, categoria: 'Formação Jovem', nome: 'Sub-16 (13-16 anos)',
-        preco: 40, tipo: 'mensal', icone: 'camisola',
-        descricao: 'Treino de competição, preparação física e participação no campeonato distrital.'
+        titulo: {
+            pt: 'Administradora e Editora Adjunta',
+            en: 'Administrator & Deputy Editor',
+            es: 'Administradora y Editora Adjunta',
+            fr: 'Administratrice et Rédactrice Adjointe'
+        },
+        empresa: 'Di Cuore Eventos, Lda., Luanda',
+        periodo: {
+            pt: 'Dezembro 2022 a Julho 2024',
+            en: 'December 2022 to July 2024',
+            es: 'Diciembre 2022 a Julio 2024',
+            fr: 'Décembre 2022 à Juillet 2024'
+        },
+        descricao: {
+            pt: 'Suporte à gestão editorial e organização de conteúdos. Supervisão de equipa e coordenação de processos internos.',
+            en: 'Supported editorial management and content organization. Supervised the team and coordinated internal processes.',
+            es: 'Apoyo a la gestión editorial y organización de contenidos. Supervisión de equipo y coordinación de procesos internos.',
+            fr: 'Soutien à la gestion éditoriale et à l\'organisation des contenus. Supervision de l\'équipe et coordination des processus internes.'
+        }
     },
     {
-        id: 4, categoria: 'Adultos', nome: 'Sénior / Adultos',
-        preco: 35, tipo: 'mensal', icone: 'bola',
-        descricao: 'Treino livre para adultos de todos os níveis — condição física e jogo em equipa.'
+        titulo: {
+            pt: 'Directora do Departamento de Formação',
+            en: 'Head of Training Department',
+            es: 'Directora del Departamento de Formación',
+            fr: 'Directrice du Département de Formation'
+        },
+        empresa: 'CEDE, Centro de Desenvolvimento Empresarial, Luanda',
+        periodo: {
+            pt: 'Fevereiro 2022 a Novembro 2022',
+            en: 'February 2022 to November 2022',
+            es: 'Febrero 2022 a Noviembre 2022',
+            fr: 'Février 2022 à Novembre 2022'
+        },
+        descricao: {
+            pt: 'Supervisão de equipa, gestão de programas e implementação de ações de capacitação.',
+            en: 'Supervised the team, managed programs and implemented training initiatives.',
+            es: 'Supervisión de equipo, gestión de programas e implementación de acciones de capacitación.',
+            fr: 'Supervision de l\'équipe, gestion des programmes et mise en œuvre d\'actions de formation.'
+        }
     },
     {
-        id: 5, categoria: 'Adultos', nome: 'Veteranos 35+',
-        preco: 30, tipo: 'mensal', icone: 'apito',
-        descricao: 'Ritmo adaptado, foco em bem-estar, técnica e convívio dentro de campo.'
+        titulo: {
+            pt: 'Estágio de Contabilista Sénior',
+            en: 'Senior Accountant Internship',
+            es: 'Prácticas de Contable Sénior',
+            fr: 'Stage de Comptable Senior'
+        },
+        empresa: 'Infocontabil Consultoria SU LDA, Luanda',
+        periodo: {
+            pt: 'Novembro 2021 a Janeiro 2022',
+            en: 'November 2021 to January 2022',
+            es: 'Noviembre 2021 a Enero 2022',
+            fr: 'Novembre 2021 à Janvier 2022'
+        },
+        descricao: {
+            pt: 'Análises financeiras e preparação de demonstrativos contábeis. Apoio na tomada de decisões estratégicas.',
+            en: 'Conducted financial analyses and prepared accounting statements. Supported strategic decision-making.',
+            es: 'Análisis financieros y preparación de estados contables. Apoyo en la toma de decisiones estratégicas.',
+            fr: 'Analyses financières et préparation des états comptables. Soutien à la prise de décisions stratégiques.'
+        }
     },
     {
-        id: 6, categoria: 'Individual', nome: 'Treino Personalizado 1-a-1',
-        preco: 60, tipo: 'mensal', icone: 'cronometro',
-        descricao: 'Sessão individual com treinador dedicado — plano de progressão à medida.'
+        titulo: {
+            pt: 'Assistente Administrativa',
+            en: 'Administrative Assistant',
+            es: 'Asistente Administrativa',
+            fr: 'Assistante Administrative'
+        },
+        empresa: 'Miragos Empreendimentos LDA, Luanda',
+        periodo: {
+            pt: 'Junho 2018 a Novembro 2018',
+            en: 'June 2018 to November 2018',
+            es: 'Junio 2018 a Noviembre 2018',
+            fr: 'Juin 2018 à Novembre 2018'
+        },
+        descricao: {
+            pt: 'Atendimento ao cliente, vendas de serviços e gestão de comunicação. Apoio na organização de eventos e coordenação de stock.',
+            en: 'Customer service, service sales and communications management. Supported event organization and stock coordination.',
+            es: 'Atención al cliente, ventas de servicios y gestión de la comunicación. Apoyo en la organización de eventos y coordinación de stock.',
+            fr: 'Service client, vente de services et gestion de la communication. Soutien à l\'organisation d\'événements et à la coordination des stocks.'
+        }
     },
     {
-        id: 7, categoria: 'Equipamento', nome: 'Kit Completo Aro Alto',
-        preco: 45, tipo: 'unico', icone: 'camisola',
-        descricao: 'Camisola oficial + calções do clube, com nome e número personalizados.'
-    },
-    {
-        id: 8, categoria: 'Equipamento', nome: 'Camisola Avulso',
-        preco: 28, tipo: 'unico', icone: 'camisola',
-        descricao: 'Apenas a camisola oficial, para quem já tem equipamento de treino.'
+        titulo: {
+            pt: 'Assistente de Contabilidade',
+            en: 'Accounting Assistant',
+            es: 'Asistente de Contabilidad',
+            fr: 'Assistante Comptable'
+        },
+        empresa: 'Escritório de Contabilidade e Consultoria Dr. Rui Manuel, Luanda',
+        periodo: {
+            pt: 'Março 2017 a Abril 2018',
+            en: 'March 2017 to April 2018',
+            es: 'Marzo 2017 a Abril 2018',
+            fr: 'Mars 2017 à Avril 2018'
+        },
+        descricao: {
+            pt: 'Organização financeira, apoio administrativo e controlo de documentos.',
+            en: 'Handled financial organization, administrative support and document control.',
+            es: 'Organización financiera, apoyo administrativo y control de documentos.',
+            fr: 'Organisation financière, soutien administratif et contrôle des documents.'
+        }
     }
 ];
 
-const categorias = ['Todos', ...new Set(catalogoServicos.map(s => s.categoria))];
+// ============================================
+// 3. DADOS - FORMAÇÃO ACADÉMICA
+// ============================================
+const formacao = [
+    {
+        curso: {
+            pt: 'Técnico Especialista em Tecnologias e Programação de Sistemas de Informação',
+            en: 'Specialist Technician in Information Systems Technology and Programming',
+            es: 'Técnica Especialista en Tecnologías y Programación de Sistemas de Información',
+            fr: 'Technicienne Spécialiste en Technologies et Programmation des Systèmes d\'Information'
+        },
+        instituicao: 'IEFP, Instituto de Emprego e Formação Profissional',
+        periodo: '2025/2026'
+    },
+    {
+        curso: {
+            pt: 'Licenciatura em Finanças e Contabilidade',
+            en: 'Bachelor\'s Degree in Finance and Accounting',
+            es: 'Licenciatura en Finanzas y Contabilidad',
+            fr: 'Licence en Finance et Comptabilité'
+        },
+        instituicao: 'Universidade Independente de Angola',
+        periodo: '2018/2022'
+    },
+    {
+        curso: {
+            pt: 'Curso Técnico em Finanças',
+            en: 'Technical Course in Finance',
+            es: 'Curso Técnico en Finanzas',
+            fr: 'Cours Technique en Finance'
+        },
+        instituicao: 'Instituto Médio de Administração e Gestão, Luanda',
+        periodo: '2014/2017'
+    }
+];
 
-// ------------------------------------------------
-// Estado
-// ------------------------------------------------
-const estado = {
-    servicosSelecionados: new Set(),
-    categoriaAtiva: 'Todos',
-    dataEscolhida: null,
-    horaEscolhida: null,
-    inscricaoEnviada: false
-};
+// ============================================
+// 4. DADOS - PROJETOS (com miniatura real de cada um)
+// ============================================
+const projetos = [
+    {
+        id: '028',
+        grupo: 'python',
+        titulo: {
+            pt: 'Sistema de Gestão de Utentes e Cuidados de Saúde',
+            en: 'Patient and Healthcare Management System',
+            es: 'Sistema de Gestión de Usuarios y Cuidados de Salud',
+            fr: 'Système de Gestion des Usagers et des Soins de Santé'
+        },
+        descricao: {
+            pt: 'Sistema completo de cuidados continuados (UCC/ERPI/SAD) e ambulatório clínico/hospitalar, com avaliação de risco por machine learning (diabetes, cardiovascular e queda), acesso por perfil (Enfermeiro, Médico, Receção, Admin) e relatórios exportáveis em PDF/Excel',
+            en: 'Full long-term care (UCC/ERPI/SAD) and clinical/hospital outpatient system, with machine learning risk assessment (diabetes, cardiovascular and fall risk), role-based access (Nurse, Doctor, Reception, Admin) and exportable PDF/Excel reports',
+            es: 'Sistema completo de cuidados continuados (UCC/ERPI/SAD) y ambulatorio clínico/hospitalario, con evaluación de riesgo por machine learning (diabetes, cardiovascular y caídas), acceso por perfil (Enfermero, Médico, Recepción, Admin) e informes exportables en PDF/Excel',
+            fr: 'Système complet de soins continus (UCC/ERPI/SAD) et ambulatoire clinique/hospitalier, avec évaluation du risque par machine learning (diabète, cardiovasculaire et chute), accès par profil (Infirmier, Médecin, Réception, Admin) et rapports exportables en PDF/Excel'
+        },
+        tag: 'Dash',
+        tecnologias: ['Python', 'Dash', 'Machine Learning', 'PDF', 'Excel'],
+        url: 'https://sistema-gestao-saude.onrender.com',
+        imagem: 'imagens/028-sistema-gestao-saude.png'
+    },
+    {
+        id: '020',
+        grupo: 'python',
+        titulo: {
+            pt: 'Controlo de Gastos',
+            en: 'Expense Tracker',
+            es: 'Control de Gastos',
+            fr: 'Suivi des Dépenses'
+        },
+        descricao: {
+            pt: 'App full-stack com API FastAPI, PostgreSQL, categorias personalizáveis, gráficos e testes automáticos com deployment contínuo',
+            en: 'Full-stack app with a FastAPI backend, PostgreSQL, custom categories, charts and automated tests with continuous deployment',
+            es: 'App full-stack con API FastAPI, PostgreSQL, categorías personalizables, gráficos y pruebas automáticas con deployment continuo',
+            fr: 'Application full-stack avec API FastAPI, PostgreSQL, catégories personnalisables, graphiques et tests automatisés avec déploiement continu'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'PostgreSQL', 'SQLite', 'SQLAlchemy', 'JWT', 'pytest', 'CI/CD'],
+        url: 'https://controlo-de-gastos.onrender.com',
+        imagem: 'imagens/020-controlo-gastos.jpg'
+    },
+    {
+        id: '021',
+        grupo: 'python',
+        titulo: {
+            pt: 'Delivery Orientado a Eventos',
+            en: 'Event-Driven Delivery',
+            es: 'Delivery Orientado a Eventos',
+            fr: 'Livraison Orientée Événements'
+        },
+        descricao: {
+            pt: 'Simulação de delivery com arquitetura orientada a eventos, WebSocket em tempo real e testes automáticos',
+            en: 'Delivery simulation with event-driven architecture, real-time WebSocket updates and automated tests',
+            es: 'Simulación de delivery con arquitectura orientada a eventos, WebSocket en tiempo real y pruebas automáticas',
+            fr: 'Simulation de livraison avec architecture événementielle, WebSocket en temps réel et tests automatisés'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'WebSocket', 'asyncio', 'pytest'],
+        url: 'https://delivery-eventos.onrender.com',
+        imagem: 'imagens/021-delivery-eventos.jpg'
+    },
+    {
+        id: '022',
+        grupo: 'python',
+        titulo: {
+            pt: 'Monitor de Vagas & Notícias',
+            en: 'Job & News Monitor',
+            es: 'Monitor de Vacantes y Noticias',
+            fr: 'Moniteur d\'Offres d\'Emploi et Actualités'
+        },
+        descricao: {
+            pt: 'Painel diário com vagas reais da API da ITJobs e notícias do setor tecnológico, com identidade visual própria, estatísticas de evolução e resposta a candidaturas, e um executável nativo para Windows, tudo guardado em MongoDB com robôs automáticos via GitHub Actions',
+            en: 'Daily dashboard with real job listings from the ITJobs API and tech-sector news, with its own visual identity, application-tracking statistics and a native Windows app, all stored in MongoDB with automated robots via GitHub Actions',
+            es: 'Panel diario con vacantes reales de la API de ITJobs y noticias del sector tecnológico, con identidad visual propia, estadísticas de seguimiento de candidaturas y una app nativa para Windows, todo guardado en MongoDB con robots automáticos vía GitHub Actions',
+            fr: 'Tableau de bord quotidien avec de vraies offres d\'emploi de l\'API ITJobs et des actualités du secteur technologique, avec sa propre identité visuelle, des statistiques de suivi des candidatures et une application native pour Windows, le tout stocké dans MongoDB avec des robots automatisés via GitHub Actions'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'MongoDB', 'API ITJobs', 'GitHub Actions', 'Windows (.exe)'],
+        url: 'https://monitor-vagas-noticias.onrender.com',
+        imagem: 'imagens/022-monitor-vagas.jpg'
+    },
+    {
+        id: '023',
+        grupo: 'python',
+        titulo: {
+            pt: 'Análise de Preços de Habitação em Portugal',
+            en: 'Portugal Housing Price Analysis',
+            es: 'Análisis de Precios de Vivienda en Portugal',
+            fr: 'Analyse des Prix du Logement au Portugal'
+        },
+        descricao: {
+            pt: 'Dashboard interativo com dados reais do INE: mapa de preços por concelho, pesquisa, comparação de regiões, evolução do índice nacional desde 2009 e exportação em CSV/Excel',
+            en: 'Interactive dashboard with real INE data: a price map by municipality, search, regional comparison, the national index\'s evolution since 2009 and CSV/Excel export',
+            es: 'Dashboard interactivo con datos reales del INE: mapa de precios por municipio, búsqueda, comparación de regiones, evolución del índice nacional desde 2009 y exportación en CSV/Excel',
+            fr: 'Tableau de bord interactif avec des données réelles de l\'INE : carte des prix par municipalité, recherche, comparaison régionale, évolution de l\'indice national depuis 2009 et export CSV/Excel'
+        },
+        tag: 'Dash',
+        tecnologias: ['Python', 'Dash', 'Pandas', 'INE'],
+        url: 'https://analise-precos-habitacao.onrender.com',
+        imagem: 'imagens/023-precos-habitacao.jpg'
+    },
+    {
+        id: '024',
+        grupo: 'python',
+        titulo: {
+            pt: 'Portal de Automação Interna',
+            en: 'Internal Automation Portal',
+            es: 'Portal de Automatización Interna',
+            fr: 'Portail d\'Automatisation Interne'
+        },
+        descricao: {
+            pt: 'Portal web para automatizar tarefas internas de escritório: organização de ficheiros, geração de relatórios e backups, com histórico de execuções e agendamento automático via cron',
+            en: 'Web portal to automate internal office tasks: file organization, report generation and backups, with an execution history and automatic scheduling via cron',
+            es: 'Portal web para automatizar tareas internas de oficina: organización de archivos, generación de informes y copias de seguridad, con historial de ejecuciones y programación automática vía cron',
+            fr: 'Portail web pour automatiser des tâches internes de bureau: organisation de fichiers, génération de rapports et sauvegardes, avec historique d\'exécutions et planification automatique via cron'
+        },
+        tag: 'FastAPI',
+        tecnologias: ['Python', 'FastAPI', 'cron', 'RPA'],
+        url: 'https://portal-automacao-interna.onrender.com',
+        imagem: 'imagens/024-portal-automacao.png'
+    },
+    {
+        id: '029',
+        grupo: 'dados',
+        titulo: {
+            pt: 'CPGF Pipeline: Gastos com Cartões do Governo Federal',
+            en: 'CPGF Pipeline: Federal Government Card Spending',
+            es: 'CPGF Pipeline: Gastos con Tarjetas del Gobierno Federal',
+            fr: 'CPGF Pipeline : Dépenses par Cartes du Gouvernement Fédéral'
+        },
+        descricao: {
+            pt: 'Pipeline de dados que descarrega do Portal da Transparência do Brasil os gastos com cartões do Governo Federal (2022), trata 136 mil registos com pandas, importa em lotes para MySQL/MariaDB sem duplicar e responde com SQL a perguntas sobre os gastos. Um só comando corre tudo em cerca de 46 segundos, com testes automáticos. A análise mostra que quase metade do valor (90,3 milhões de reais) está sob sigilo',
+            en: 'Data pipeline that downloads Brazil\'s Federal Government card spending (2022) from the Transparency Portal, cleans 136 thousand records with pandas, loads them in batches into MySQL/MariaDB without duplicates and answers questions about the spending with SQL. A single command runs everything in about 46 seconds, with automated tests. The analysis shows that almost half of the amount (90.3 million reais) is classified as secret',
+            es: 'Pipeline de datos que descarga del Portal de la Transparencia de Brasil los gastos con tarjetas del Gobierno Federal (2022), trata 136 mil registros con pandas, los importa por lotes a MySQL/MariaDB sin duplicar y responde con SQL a preguntas sobre los gastos. Un solo comando lo ejecuta todo en unos 46 segundos, con pruebas automáticas. El análisis muestra que casi la mitad del valor (90,3 millones de reales) está bajo secreto',
+            fr: 'Pipeline de données qui télécharge du Portail de la Transparence du Brésil les dépenses par cartes du Gouvernement Fédéral (2022), nettoie 136 mille enregistrements avec pandas, les charge par lots dans MySQL/MariaDB sans doublons et répond en SQL à des questions sur les dépenses. Une seule commande exécute tout en environ 46 secondes, avec des tests automatisés. L\'analyse montre que près de la moitié du montant (90,3 millions de reais) est classée secrète'
+        },
+        tag: 'Python',
+        tecnologias: ['Python', 'pandas', 'MySQL', 'MariaDB', 'SQL', 'pytest', 'Git'],
+        url: 'https://github.com/elisamanuel-on/cpgf-pipeline',
+        imagem: 'imagens/029-cpgf-pipeline.png'
+    },
+    {
+        id: '018',
+        grupo: 'web',
+        titulo: {
+            pt: 'Quiz Dev',
+            en: 'Quiz Dev',
+            es: 'Quiz Dev',
+            fr: 'Quiz Dev'
+        },
+        descricao: {
+            pt: 'Quiz de estudo em formato de editor de código: fichas e 4 níveis por tópico, vidas, XP, medalhas e progresso guardado. Fundamentos, JavaScript, Git e perguntas sobre o meu próprio código (em português)',
+            en: 'Study quiz styled as a code editor: study sheets and 4 levels per topic, lives, XP, badges and saved progress. Fundamentals, JavaScript, Git and questions about my own code (in Portuguese)',
+            es: 'Quiz de estudio con aspecto de editor de código: fichas y 4 niveles por tema, vidas, XP, medallas y progreso guardado. Fundamentos, JavaScript, Git y preguntas sobre mi propio código (en portugués)',
+            fr: 'Quiz d\'étude façon éditeur de code : fiches et 4 niveaux par sujet, vies, XP, médailles et progression sauvegardée. Bases, JavaScript, Git et questions sur mon propre code (en portugais)'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'localStorage'],
+        caminho: 'projetos/EXERCICIO018 - Quiz Dev/',
+        imagem: 'imagens/projetos/018-quiz-dev.jpg'
+    },
+    {
+        id: '009',
+        grupo: 'web',
+        titulo: {
+            pt: 'Sistema de Gestão Escolar',
+            en: 'School Management System',
+            es: 'Sistema de Gestión Escolar',
+            fr: 'Système de Gestion Scolaire'
+        },
+        descricao: {
+            pt: 'Colégio com 7 perfis (aluno, professor, secretaria, direção, Conselho Geral, contabilidade e portaria): notas, pautas, boletins, faltas, horários, painel com gráficos e a parte financeira — propinas, salários, impostos e despesas, com cálculos automáticos, adicionar, editar e pagar propinas e salários (também para todos de uma vez), NIF e dados de empresa, apagar com justificação (fica tudo no registo de alterações) e relatórios em Excel e PDF. Inclui equipa não docente e registo de visitas. PHP + SQLite, em 4 idiomas',
+            en: 'A school with 7 profiles (student, teacher, office, principal, Governing Board, accounting and front desk): grades, grade sheets, report cards, absences, timetables, a chart dashboard and the finance side — tuition, salaries, taxes and expenses, with automatic calculations, adding, editing and paying tuition and salaries (also for everyone at once), tax numbers and company details, delete with a reason (all kept in a change log) and Excel and PDF reports. Includes non-teaching staff and a visitor log. PHP + SQLite, in 4 languages',
+            es: 'Un colegio con 7 perfiles (alumno, profesor, secretaría, dirección, Consejo General, contabilidad y portería): notas, actas, boletines, faltas, horarios, panel con gráficos y la parte financiera — matrículas, salarios, impuestos y gastos, con cálculos automáticos, añadir, editar y pagar matrículas y salarios (también para todos a la vez), NIF y datos de empresa, borrar con justificación (todo queda en un registro de cambios) e informes en Excel y PDF. Incluye personal no docente y registro de visitas. PHP + SQLite, en 4 idiomas',
+            fr: 'Un collège avec 7 profils (élève, professeur, secrétariat, direction, Conseil général, comptabilité et accueil) : notes, relevés, bulletins, absences, emplois du temps, tableau de bord graphique et la partie financière — scolarité, salaires, impôts et dépenses, avec calculs automatiques, ajout, modification et paiement des scolarités et salaires (aussi pour tous à la fois), NIF et données d\'entreprise, suppression avec justification (tout est conservé dans un journal) et rapports Excel et PDF. Inclut le personnel non enseignant et un registre des visiteurs. PHP + SQLite, en 4 langues'
+        },
+        tag: 'PHP',
+        tecnologias: ['PHP', 'SQLite', 'PDO', 'JavaScript', 'CSS', 'XLSX', 'PDF'],
+        php: true,
+        caminho: 'projetos/EXERCICIO009 - Registo de Utilizador/',
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO009%20-%20Registo%20de%20Utilizador/',
+        imagem: 'imagens/projetos/009-sistema-gestao-escolar.jpg'
+    },
+    {
+        id: '013',
+        grupo: 'web',
+        titulo: {
+            pt: 'Calculadora Científica',
+            en: 'Scientific Calculator',
+            es: 'Calculadora Científica',
+            fr: 'Calculatrice Scientifique'
+        },
+        descricao: {
+            pt: 'Seis operações, modo científico, Desafio com níveis e Manual: raiz, trigonometria, logaritmos, histórico e memória. Calculada no servidor em PHP, sem eval(), em 4 idiomas',
+            en: 'Six operations, scientific mode, a levelled Challenge and a Manual: roots, trigonometry, logarithms, history and memory. Computed server-side in PHP, without eval(), in 4 languages',
+            es: 'Seis operaciones, modo científico, Desafío con niveles y Manual: raíz, trigonometría, logaritmos, historial y memoria. Calculada en el servidor con PHP, sin eval(), en 4 idiomas',
+            fr: 'Six opérations, mode scientifique, Défi par niveaux et Manuel: racines, trigonométrie, logarithmes, historique et mémoire. Calculée côté serveur en PHP, sans eval(), en 4 langues'
+        },
+        tag: 'PHP',
+        tecnologias: ['PHP', 'HTML', 'CSS', 'JavaScript'],
+        php: true,
+        caminho: 'projetos/EXERCICIO013 - Calculadora com 4 Operações/',
+        url: 'https://portfolio-php-p3pd.onrender.com/projetos/EXERCICIO013%20-%20Calculadora%20com%204%20Opera%C3%A7%C3%B5es/',
+        imagem: 'imagens/projetos/013-calculadora-cientifica.jpg'
+    },
+    {
+        id: '012',
+        grupo: 'web',
+        titulo: {
+            pt: 'Imagem Escondida',
+            en: 'Hidden Image',
+            es: 'Imagen Escondida',
+            fr: 'Image Cachée'
+        },
+        descricao: {
+            pt: 'Jogo de geografia em 3 níveis com cronómetro e vidas: continentes, países e bandeiras, capitais e curiosidades da Wikipédia. Mapa clicável com os nomes na língua do jogo, ficha de cada país com o seu nome verdadeiro, jogadores com recordes e ranking, em 4 idiomas',
+            en: 'Three-level geography game with a timer and lives: continents, countries and flags, capitals and Wikipedia curiosities. Clickable map with names in the game language, a profile for each country with its real name, players with records and ranking, in 4 languages',
+            es: 'Juego de geografía de 3 niveles con cronómetro y vidas: continentes, países y banderas, capitales y curiosidades de Wikipedia. Mapa en el que se hace clic con los nombres en el idioma del juego, ficha de cada país con su nombre verdadero, jugadores con récords y ranking, en 4 idiomas',
+            fr: 'Jeu de géographie en 3 niveaux avec chronomètre et vies : continents, pays et drapeaux, capitales et curiosités de Wikipédia. Carte cliquable avec les noms dans la langue du jeu, fiche de chaque pays avec son vrai nom, joueurs avec records et classement, en 4 langues'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'Leaflet', 'TopoJSON', 'OpenStreetMap', 'Wikipedia API'],
+        caminho: 'projetos/EXERCICIO012 - Imagem Escondida/',
+        imagem: 'imagens/projetos/012-imagem-escondida.jpg'
+    },
+    {
+        id: '008',
+        grupo: 'web',
+        titulo: {
+            pt: 'Tabuada em Jogos',
+            en: 'Times Tables Games',
+            es: 'Tablas de Multiplicar en Juegos',
+            fr: 'Tables de Multiplication en Jeux'
+        },
+        descricao: {
+            pt: 'Jogos para crianças: labirinto, quiz com tempo, caça aos múltiplos e memória',
+            en: 'Games for kids: maze, timed quiz, multiples hunt and memory',
+            es: 'Juegos para niños: laberinto, quiz con tiempo, caza de múltiplos y memoria',
+            fr: 'Jeux pour enfants : labyrinthe, quiz chronométré, chasse aux multiples et mémoire'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'SVG', 'Web Audio'],
+        caminho: 'projetos/EXERCICIO008 - Tabuada/',
+        imagem: 'imagens/projetos/008-tabuada.jpg'
+    },
+    {
+        id: '011',
+        grupo: 'web',
+        titulo: {
+            pt: 'Curiosidades do Mundo',
+            en: 'Curiosities of the World',
+            es: 'Curiosidades del Mundo',
+            fr: 'Curiosités du Monde'
+        },
+        descricao: {
+            pt: 'Curiosidades reais da Wikipédia por áreas (ciência, natureza, história, artes, teologia…), com mais dados escondidos para revelar ao clicar. Dados de uma API, em 4 idiomas',
+            en: 'Real Wikipedia curiosities by area (science, nature, history, arts, theology…), with more hidden facts to reveal on click. Data from an API, in 4 languages',
+            es: 'Curiosidades reales de Wikipedia por áreas (ciencia, naturaleza, historia, artes, teología…), con más datos escondidos para revelar al hacer clic. Datos de una API, en 4 idiomas',
+            fr: 'Curiosités réelles de Wikipédia par domaine (science, nature, histoire, arts, théologie…), avec plus de données cachées à révéler d\'un clic. Données d\'une API, en 4 langues'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS', 'Wikipedia API'],
+        caminho: 'projetos/EXERCICIO011 - Curiosidades Escondidas/',
+        imagem: 'imagens/projetos/011-curiosidades-do-mundo.jpg'
+    },
+    {
+        id: '025',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Template Interativo para Negócios: Aro Alto',
+            en: 'Interactive Business Template: Aro Alto',
+            es: 'Plantilla Interactiva para Negocios: Aro Alto',
+            fr: 'Modèle Interactif pour Entreprises: Aro Alto'
+        },
+        descricao: {
+            pt: 'Template reutilizável para negócios de serviços, com abertura animada e mascote interativo, anúncio de vagas, catálogo de programas, simulador de mensalidade, marcação de horários e inscrição, aqui como o site de uma academia de basquetebol fictícia',
+            en: 'Reusable template for service businesses, with an animated intro and interactive mascot, availability announcement, program catalog, monthly fee simulator, appointment booking and sign-up, shown here as the site of a fictional basketball academy',
+            es: 'Plantilla reutilizable para negocios de servicios, con intro animada y mascota interactiva, anuncio de plazas, catálogo de programas, simulador de cuota mensual, reserva de horarios e inscripción, aquí como el sitio de una academia de baloncesto ficticia',
+            fr: 'Modèle réutilisable pour entreprises de services, avec intro animée et mascotte interactive, annonce des places, catalogue de programmes, simulateur de mensualité, prise de rendez-vous et inscription, ici comme le site d\'une académie de basketball fictive'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://template-interativo.onrender.com',
+        imagem: 'imagens/025-aro-alto.jpg'
+    },
+    {
+        id: '026',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Template Vitrine para Negócios: Sole House',
+            en: 'Business Showcase Template: Sole House',
+            es: 'Plantilla Vitrina para Negocios: Sole House',
+            fr: 'Modèle Vitrine pour Entreprises: Sole House'
+        },
+        descricao: {
+            pt: 'Template de loja online em HTML, CSS e JavaScript, pronto a adaptar a qualquer negócio: menu grande, pesquisa, filtros, carrinho e finalização simulada, aqui como a loja de uma marca fictícia de sneakers e streetwear',
+            en: 'Online store template in HTML, CSS and JavaScript, ready to adapt to any business: mega menu, search, filters, cart and simulated checkout, shown here as the store of a fictional sneaker and streetwear brand',
+            es: 'Plantilla de tienda online en HTML, CSS y JavaScript, lista para adaptar a cualquier negocio: menú grande, búsqueda, filtros, carrito y pago simulado, aquí como la tienda de una marca ficticia de sneakers y streetwear',
+            fr: 'Modèle de boutique en ligne en HTML, CSS et JavaScript, prêt à adapter à toute entreprise : méga menu, recherche, filtres, panier et paiement simulé, ici comme la boutique d\'une marque fictive de sneakers et streetwear'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://sole-house.onrender.com',
+        imagem: 'imagens/026-sole-house.jpg'
+    },
+    {
+        id: '027',
+        grupo: 'templates',
+        titulo: {
+            pt: 'Quiosques Interativos: Museu Aurora & Mesa Lume',
+            en: 'Interactive Kiosks: Museu Aurora & Mesa Lume',
+            es: 'Quioscos Interactivos: Museu Aurora y Mesa Lume',
+            fr: 'Bornes Interactives: Museu Aurora et Mesa Lume'
+        },
+        descricao: {
+            pt: 'Duas demonstrações de interface para ecrãs táteis e totens: um guia de museu e um menu de restaurante, com navegação por toque, sistema de pedidos e botão para chamar o empregado, tudo em PT/EN',
+            en: 'Two touchscreen interface demos: a museum guide and a restaurant menu, with touch navigation, an ordering system and a call-server button, all in PT/EN',
+            es: 'Dos demostraciones de interfaz táctil: una guía de museo y un menú de restaurante, con navegación táctil, sistema de pedidos y botón para llamar al camarero, todo en PT/EN',
+            fr: 'Deux démonstrations d\'interface tactile: un guide de musée et un menu de restaurant, avec navigation tactile, système de commande et bouton d\'appel du serveur, le tout en PT/EN'
+        },
+        tag: 'Template',
+        tecnologias: ['HTML', 'CSS', 'JavaScript'],
+        url: 'https://demo-wingsys.onrender.com',
+        imagem: 'imagens/027-demo-wingsys.jpg'
+    },
+    {
+        id: '017',
+        grupo: 'base',
+        titulo: {
+            pt: 'Números Primos',
+            en: 'Prime Numbers',
+            es: 'Números Primos',
+            fr: 'Nombres Premiers'
+        },
+        descricao: {
+            pt: 'Escreve um número e vê se é primo, com a lista de todos os primos até ele e um resumo',
+            en: 'Type a number to see whether it is prime, with the list of all primes up to it and a summary',
+            es: 'Escribe un número y mira si es primo, con la lista de todos los primos hasta él y un resumen',
+            fr: 'Saisis un nombre pour savoir s\'il est premier, avec la liste de tous les premiers jusqu\'à lui et un résumé'
+        },
+        tag: 'JavaScript',
+        tecnologias: ['JavaScript', 'HTML', 'CSS'],
+        caminho: 'projetos/EXERCICIO017 - Números Primos/',
+        imagem: 'imagens/projetos/017-numeros-primos.jpg'
+    },
+    {
+        id: '019',
+        grupo: 'base',
+        titulo: {
+            pt: 'Breakpoints',
+            en: 'Breakpoints',
+            es: 'Breakpoints',
+            fr: 'Breakpoints'
+        },
+        descricao: {
+            pt: 'Página responsiva com menu e cartões que se adaptam por media queries ao telemóvel, tablet e computador, com indicador do breakpoint atual',
+            en: 'Responsive page with a menu and cards that adapt through media queries to phone, tablet and desktop, with a current-breakpoint indicator',
+            es: 'Página responsiva con menú y tarjetas que se adaptan con media queries a móvil, tableta y ordenador, con indicador del breakpoint actual',
+            fr: 'Page responsive avec menu et cartes qui s\'adaptent par media queries au téléphone, à la tablette et à l\'ordinateur, avec indicateur du breakpoint actuel'
+        },
+        tag: 'CSS',
+        tecnologias: ['CSS', 'Media Queries', 'HTML', 'JavaScript'],
+        caminho: 'projetos/EXERCICIO019 - Breakpoints/',
+        imagem: 'imagens/projetos/019-breakpoints.jpg'
+    }
+];
 
-// ------------------------------------------------
-// Ano automático + menu mobile
-// ------------------------------------------------
-document.getElementById('anoAtual').textContent = new Date().getFullYear();
-
-const btnMenu = document.getElementById('btnMenu');
-const navPrincipal = document.getElementById('navPrincipal');
-btnMenu.addEventListener('click', () => {
-    const aberto = navPrincipal.classList.toggle('aberto');
-    btnMenu.setAttribute('aria-expanded', aberto ? 'true' : 'false');
-});
-navPrincipal.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => navPrincipal.classList.remove('aberto'));
-});
-
-// ------------------------------------------------
-// Animação de entrada ao scroll (dá vida à página)
-// ------------------------------------------------
-const observadorRevelacao = new IntersectionObserver((entradas) => {
-    entradas.forEach(entrada => {
-        if (entrada.isIntersecting) {
-            entrada.target.classList.add('visivel');
-            observadorRevelacao.unobserve(entrada.target);
+// Grupos em que os projetos aparecem no portfólio (a ordem aqui é a ordem na página)
+const gruposProjetos = [
+    {
+        id: 'python',
+        titulo: { pt: 'Aplicações completas em Python', en: 'Complete Python applications', es: 'Aplicaciones completas en Python', fr: 'Applications complètes en Python' },
+        descricao: {
+            pt: 'APIs, painéis de dados, automação e machine learning, publicados online',
+            en: 'APIs, data dashboards, automation and machine learning, published online',
+            es: 'APIs, paneles de datos, automatización y machine learning, publicados en línea',
+            fr: 'APIs, tableaux de bord de données, automatisation et machine learning, publiés en ligne'
         }
-    });
-}, { threshold: 0.12 });
-
-function ativarRevelacao(elementos) {
-    elementos.forEach(el => {
-        el.classList.add('reveal');
-        observadorRevelacao.observe(el);
-    });
-}
-
-// ------------------------------------------------
-// Indicador de progresso (stepper)
-// ------------------------------------------------
-const stepEls = document.querySelectorAll('.step');
-const linhaEls = document.querySelectorAll('.step-linha');
-
-function atualizarStepper() {
-    const passo1 = estado.servicosSelecionados.size > 0; // Programas escolhidos
-    const passo2 = passo1; // Mensalidade calculada automaticamente junto com o passo 1
-    const passo3 = Boolean(estado.dataEscolhida && estado.horaEscolhida); // Aula marcada
-    const passo4 = estado.inscricaoEnviada; // Inscrição enviada
-
-    const concluidos = [passo1, passo2, passo3, passo4];
-    const atual = concluidos.findIndex(c => !c); // primeiro passo por concluir
-
-    stepEls.forEach((el, i) => {
-        el.classList.toggle('concluido', concluidos[i]);
-        el.classList.toggle('atual', i === atual);
-    });
-
-    linhaEls.forEach((el, i) => {
-        el.classList.toggle('concluida', concluidos[i]);
-    });
-}
-
-// ------------------------------------------------
-// Resumo flutuante (fica sempre visível assim que há seleção)
-// ------------------------------------------------
-const resumoFlutuante = document.getElementById('resumoFlutuante');
-const resumoFlutuanteTexto = document.getElementById('resumoFlutuanteTexto');
-
-function renderResumoFlutuante() {
-    const selecionados = catalogoServicos.filter(s => estado.servicosSelecionados.has(s.id));
-
-    if (selecionados.length === 0) {
-        resumoFlutuante.hidden = true;
-        return;
-    }
-
-    const totalMensal = totalPorTipo(selecionados, 'mensal');
-    const totalUnico = totalPorTipo(selecionados, 'unico');
-    const plural = selecionados.length === 1 ? 'programa' : 'programas';
-    const partes = [];
-    if (totalMensal > 0) partes.push(`${totalMensal} €/mês`);
-    if (totalUnico > 0) partes.push(`${totalUnico} € único`);
-    resumoFlutuanteTexto.textContent = `${selecionados.length} ${plural} · ${partes.join(' + ')}`;
-    resumoFlutuante.hidden = false;
-
-    resumoFlutuante.classList.remove('pulso');
-    void resumoFlutuante.offsetWidth;
-    resumoFlutuante.classList.add('pulso');
-}
-
-resumoFlutuante.addEventListener('click', () => {
-    document.getElementById('orcamento').scrollIntoView({ behavior: 'smooth' });
-});
-
-// ------------------------------------------------
-// Filtros de categoria
-// ------------------------------------------------
-const filtrosContainer = document.getElementById('filtrosCategoria');
-
-function renderFiltros() {
-    filtrosContainer.innerHTML = categorias.map(cat => `
-        <button class="filtro-btn ${cat === estado.categoriaAtiva ? 'ativo' : ''}" data-categoria="${cat}">
-            ${cat}
-        </button>
-    `).join('');
-
-    filtrosContainer.querySelectorAll('.filtro-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            estado.categoriaAtiva = btn.dataset.categoria;
-            renderFiltros();
-            renderCatalogo();
-        });
-    });
-}
-
-// ------------------------------------------------
-// Catálogo
-// ------------------------------------------------
-const catalogoGrid = document.getElementById('catalogoGrid');
-
-function renderCatalogo() {
-    const servicosVisiveis = catalogoServicos.filter(s =>
-        estado.categoriaAtiva === 'Todos' || s.categoria === estado.categoriaAtiva
-    );
-
-    catalogoGrid.innerHTML = servicosVisiveis.map(s => `
-        <div class="servico-cartao ${estado.servicosSelecionados.has(s.id) ? 'selecionado' : ''}" data-id="${s.id}">
-            <div class="servico-icone">${ICONES_SERVICO[s.icone] || ''}</div>
-            <p class="servico-categoria">${s.categoria}</p>
-            <h3>${s.nome}</h3>
-            <p class="servico-desc">${s.descricao}</p>
-            <p class="servico-preco">${s.preco} € ${s.tipo === 'unico' ? '<span class="servico-preco-tipo">pagamento único</span>' : '<span class="servico-preco-tipo">/mês</span>'}</p>
-            <label class="servico-checkbox">
-                <input type="checkbox" data-id="${s.id}" ${estado.servicosSelecionados.has(s.id) ? 'checked' : ''}>
-                Adicionar à inscrição
-            </label>
-        </div>
-    `).join('');
-
-    function alternarSelecao(id) {
-        if (estado.servicosSelecionados.has(id)) {
-            estado.servicosSelecionados.delete(id);
-        } else {
-            estado.servicosSelecionados.add(id);
+    },
+    {
+        id: 'dados',
+        titulo: { pt: 'Dados e automação', en: 'Data and automation', es: 'Datos y automatización', fr: 'Données et automatisation' },
+        descricao: {
+            pt: 'Pipelines de dados reais, bases de dados e análise com SQL, com o código no GitHub',
+            en: 'Real-data pipelines, databases and SQL analysis, with the code on GitHub',
+            es: 'Pipelines de datos reales, bases de datos y análisis con SQL, con el código en GitHub',
+            fr: 'Pipelines de données réelles, bases de données et analyse SQL, avec le code sur GitHub'
         }
-        renderCatalogo();
-        renderOrcamento();
-        renderResumoFinal();
-        renderResumoFlutuante();
-        atualizarStepper();
-    }
-
-    catalogoGrid.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        cb.addEventListener('change', (e) => {
-            const id = Number(e.target.dataset.id);
-            if (e.target.checked) {
-                estado.servicosSelecionados.add(id);
-            } else {
-                estado.servicosSelecionados.delete(id);
-            }
-            renderCatalogo();
-            renderOrcamento();
-            renderResumoFinal();
-            renderResumoFlutuante();
-            atualizarStepper();
-        });
-    });
-
-    // clicar em qualquer ponto do cartão também seleciona (não só na checkbox)
-    catalogoGrid.querySelectorAll('.servico-cartao').forEach(cartao => {
-        cartao.addEventListener('click', (e) => {
-            if (e.target.closest('.servico-checkbox')) return; // deixa a checkbox tratar do próprio clique
-            alternarSelecao(Number(cartao.dataset.id));
-        });
-    });
-
-    ativarRevelacao(catalogoGrid.querySelectorAll('.servico-cartao'));
-}
-
-// ------------------------------------------------
-// Orçamento (simulador de mensalidade)
-// ------------------------------------------------
-const listaOrcamento = document.getElementById('listaOrcamento');
-const orcamentoTotal = document.getElementById('orcamentoTotal');
-
-function totalPorTipo(itens, tipo) {
-    return itens.filter(s => s.tipo === tipo).reduce((soma, s) => soma + s.preco, 0);
-}
-
-function renderOrcamento() {
-    const selecionados = catalogoServicos.filter(s => estado.servicosSelecionados.has(s.id));
-
-    if (selecionados.length === 0) {
-        listaOrcamento.innerHTML = '<li class="orcamento-vazio">Ainda não escolheste nenhum programa.</li>';
-        orcamentoTotal.textContent = '0 €';
-        return;
-    }
-
-    listaOrcamento.innerHTML = selecionados.map(s => `
-        <li><span>${s.nome}</span><span class="item-preco">${s.preco} € ${s.tipo === 'unico' ? '(único)' : '/mês'}</span></li>
-    `).join('');
-
-    const totalMensal = totalPorTipo(selecionados, 'mensal');
-    const totalUnico = totalPorTipo(selecionados, 'unico');
-
-    if (totalMensal > 0 && totalUnico > 0) {
-        orcamentoTotal.innerHTML = `${totalMensal} €/mês <span class="orcamento-total-extra">+ ${totalUnico} € equipamento (único)</span>`;
-    } else if (totalUnico > 0) {
-        orcamentoTotal.textContent = `${totalUnico} € (pagamento único)`;
-    } else {
-        orcamentoTotal.textContent = `${totalMensal} €/mês`;
-    }
-
-    orcamentoTotal.classList.remove('pulso');
-    void orcamentoTotal.offsetWidth;
-    orcamentoTotal.classList.add('pulso');
-}
-
-// ------------------------------------------------
-// Marcações (data + horário)
-// ------------------------------------------------
-const dataMarcacao = document.getElementById('dataMarcacao');
-const blocoHorarios = document.getElementById('blocoHorarios');
-const horariosGrid = document.getElementById('horariosGrid');
-const marcacaoResumo = document.getElementById('marcacaoResumo');
-
-const hoje = new Date().toISOString().split('T')[0];
-dataMarcacao.min = hoje;
-
-const HORAS_DISPONIVEIS = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00', '18:00'];
-
-// gera disponibilidade "simulada" mas sempre igual para a mesma data
-// (não é um sistema real de reservas — é só para mostrar a interação)
-function horasIndisponiveisParaData(dataStr) {
-    let soma = 0;
-    for (const ch of dataStr) soma += ch.charCodeAt(0);
-    const indisponiveis = new Set();
-    indisponiveis.add(soma % HORAS_DISPONIVEIS.length);
-    indisponiveis.add((soma * 3 + 1) % HORAS_DISPONIVEIS.length);
-    return indisponiveis;
-}
-
-dataMarcacao.addEventListener('change', () => {
-    estado.dataEscolhida = dataMarcacao.value;
-    estado.horaEscolhida = null;
-
-    if (!estado.dataEscolhida) {
-        blocoHorarios.hidden = true;
-        atualizarStepper();
-        return;
-    }
-
-    const indisponiveis = horasIndisponiveisParaData(estado.dataEscolhida);
-
-    horariosGrid.innerHTML = HORAS_DISPONIVEIS.map((h, i) => `
-        <button type="button" class="horario-btn" data-hora="${h}" ${indisponiveis.has(i) ? 'disabled' : ''}>
-            ${h}
-        </button>
-    `).join('');
-
-    horariosGrid.querySelectorAll('.horario-btn:not(:disabled)').forEach(btn => {
-        btn.addEventListener('click', () => {
-            horariosGrid.querySelectorAll('.horario-btn').forEach(b => b.classList.remove('selecionado'));
-            btn.classList.add('selecionado');
-            estado.horaEscolhida = btn.dataset.hora;
-            atualizarResumoMarcacao();
-            renderResumoFinal();
-            atualizarStepper();
-        });
-    });
-
-    blocoHorarios.hidden = false;
-    atualizarResumoMarcacao();
-    renderResumoFinal();
-    atualizarStepper();
-});
-
-function formatarDataPt(dataStr) {
-    const [ano, mes, dia] = dataStr.split('-');
-    return `${dia}/${mes}/${ano}`;
-}
-
-function atualizarResumoMarcacao() {
-    if (!estado.dataEscolhida) {
-        marcacaoResumo.textContent = '';
-        return;
-    }
-    marcacaoResumo.textContent = estado.horaEscolhida
-        ? `Aula marcada: ${formatarDataPt(estado.dataEscolhida)} às ${estado.horaEscolhida}`
-        : `Escolhe um horário disponível para ${formatarDataPt(estado.dataEscolhida)}.`;
-}
-
-// ------------------------------------------------
-// Resumo final (dentro do formulário de inscrição)
-// ------------------------------------------------
-const resumoServicos = document.getElementById('resumoServicos');
-const resumoHorario = document.getElementById('resumoHorario');
-
-function renderResumoFinal() {
-    const selecionados = catalogoServicos.filter(s => estado.servicosSelecionados.has(s.id));
-
-    if (selecionados.length === 0) {
-        resumoServicos.textContent = 'Nenhum programa selecionado ainda.';
-    } else {
-        const totalMensal = totalPorTipo(selecionados, 'mensal');
-        const totalUnico = totalPorTipo(selecionados, 'unico');
-        const partes = [];
-        if (totalMensal > 0) partes.push(`Mensalidade: ${totalMensal} €`);
-        if (totalUnico > 0) partes.push(`Equipamento (único): ${totalUnico} €`);
-        resumoServicos.textContent = `Programas: ${selecionados.map(s => s.nome).join(', ')} — ${partes.join(' · ')}`;
-    }
-
-    resumoHorario.textContent = (estado.dataEscolhida && estado.horaEscolhida)
-        ? `Aula experimental: ${formatarDataPt(estado.dataEscolhida)} às ${estado.horaEscolhida}`
-        : 'Nenhum horário selecionado ainda.';
-}
-
-// ------------------------------------------------
-// Envio do formulário
-// ------------------------------------------------
-const formContacto = document.getElementById('formContacto');
-const formNota = document.getElementById('formNota');
-const btnEnviar = document.getElementById('btnEnviar');
-const confirmacaoEnvio = document.getElementById('confirmacaoEnvio');
-const linkAbrirEmail = document.getElementById('linkAbrirEmail');
-const textoMensagem = document.getElementById('textoMensagem');
-const btnCopiarMensagem = document.getElementById('btnCopiarMensagem');
-
-btnCopiarMensagem.addEventListener('click', async () => {
-    try {
-        await navigator.clipboard.writeText(textoMensagem.value);
-        btnCopiarMensagem.textContent = 'Copiado!';
-        btnCopiarMensagem.classList.add('copiado');
-    } catch (erro) {
-        // sem permissão de clipboard — seleciona o texto para copiar manualmente (Ctrl+C)
-        textoMensagem.select();
-    }
-    setTimeout(() => {
-        btnCopiarMensagem.textContent = 'Copiar mensagem';
-        btnCopiarMensagem.classList.remove('copiado');
-    }, 2500);
-});
-
-formContacto.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const nome = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const telefone = document.getElementById('telefone').value.trim();
-    const mensagem = document.getElementById('mensagem').value.trim();
-
-    const selecionados = catalogoServicos.filter(s => estado.servicosSelecionados.has(s.id));
-    const totalMensal = totalPorTipo(selecionados, 'mensal');
-    const totalUnico = totalPorTipo(selecionados, 'unico');
-    const resumoServicosTexto = selecionados.length
-        ? selecionados.map(s => `${s.nome} (${s.preco} € ${s.tipo === 'unico' ? 'único' : '/mês'})`).join(', ')
-        : 'Nenhum';
-    const resumoHorarioTexto = (estado.dataEscolhida && estado.horaEscolhida)
-        ? `${formatarDataPt(estado.dataEscolhida)} às ${estado.horaEscolhida}`
-        : 'Não selecionado';
-
-    const corpoCompleto =
-        `Nome do atleta: ${nome}\nEmail: ${email}\nTelefone: ${telefone || '-'}\n\n` +
-        `Programas escolhidos: ${resumoServicosTexto}\n` +
-        `Mensalidade estimada: ${totalMensal} €` + (totalUnico > 0 ? ` + ${totalUnico} € de equipamento (pagamento único)` : '') + `\n` +
-        `Aula experimental: ${resumoHorarioTexto}\n\nMensagem:\n${mensagem || '-'}`;
-
-    // Enquanto o Formspree não estiver configurado, mostra uma alternativa que
-    // funciona sempre: um link mailto (clicado pela própria pessoa, mais fiável
-    // do que redirecionar automaticamente) + a mensagem pronta a copiar.
-    if (FORMSPREE_URL.includes('XXXXXXXX')) {
-        const assunto = encodeURIComponent(`Nova inscrição de ${nome}`);
-        linkAbrirEmail.href = `mailto:${EMAIL_NEGOCIO}?subject=${assunto}&body=${encodeURIComponent(corpoCompleto)}`;
-        textoMensagem.value = `Para: ${EMAIL_NEGOCIO}\n\n${corpoCompleto}`;
-        confirmacaoEnvio.hidden = false;
-        formNota.textContent = '';
-        estado.inscricaoEnviada = true;
-        atualizarStepper();
-        confirmacaoEnvio.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        return;
-    }
-
-    btnEnviar.disabled = true;
-    formNota.textContent = 'A enviar...';
-    formNota.className = 'form-nota';
-
-    try {
-        const dadosFormulario = new FormData();
-        dadosFormulario.append('nome', nome);
-        dadosFormulario.append('email', email);
-        dadosFormulario.append('telefone', telefone);
-        dadosFormulario.append('mensagem', corpoCompleto);
-
-        const resposta = await fetch(FORMSPREE_URL, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: dadosFormulario
-        });
-
-        if (resposta.ok) {
-            formNota.textContent = 'Inscrição enviada com sucesso! Entraremos em contacto em breve.';
-            formNota.className = 'form-nota sucesso';
-            estado.inscricaoEnviada = true;
-            formContacto.reset();
-            estado.servicosSelecionados.clear();
-            estado.dataEscolhida = null;
-            estado.horaEscolhida = null;
-            blocoHorarios.hidden = true;
-            renderCatalogo();
-            renderOrcamento();
-            renderResumoFinal();
-            renderResumoFlutuante();
-            atualizarStepper();
-        } else {
-            throw new Error('Falha no envio');
+    },
+    {
+        id: 'web',
+        titulo: { pt: 'Sistemas e jogos web', en: 'Web systems and games', es: 'Sistemas y juegos web', fr: 'Systèmes et jeux web' },
+        descricao: {
+            pt: 'PHP e JavaScript: quiz de programação, gestão escolar, calculadora, jogos de geografia e de tabuada e curiosidades',
+            en: 'PHP and JavaScript: programming quiz, school management, calculator, geography and times-table games and curiosities',
+            es: 'PHP y JavaScript: quiz de programación, gestión escolar, calculadora, juegos de geografía y de tablas de multiplicar y curiosidades',
+            fr: 'PHP et JavaScript : quiz de programmation, gestion scolaire, calculatrice, jeux de géographie et de tables de multiplication et curiosités'
         }
-    } catch (erro) {
-        formNota.textContent = 'Não foi possível enviar agora. Tenta novamente ou contacta-nos diretamente.';
-        formNota.className = 'form-nota erro';
-    } finally {
-        btnEnviar.disabled = false;
+    },
+    {
+        id: 'templates',
+        titulo: { pt: 'Templates e quiosques', en: 'Templates and kiosks', es: 'Plantillas y quioscos', fr: 'Modèles et bornes' },
+        descricao: {
+            pt: 'Interfaces prontas a adaptar a um negócio, em HTML, CSS e JavaScript',
+            en: 'Interfaces ready to adapt to a business, in HTML, CSS and JavaScript',
+            es: 'Interfaces listas para adaptar a un negocio, en HTML, CSS y JavaScript',
+            fr: 'Interfaces prêtes à adapter à une entreprise, en HTML, CSS et JavaScript'
+        }
+    },
+    {
+        id: 'base',
+        titulo: { pt: 'Exercícios de base', en: 'Foundation exercises', es: 'Ejercicios de base', fr: 'Exercices de base' },
+        descricao: {
+            pt: 'Os primeiros passos em JavaScript, HTML e CSS, durante a formação',
+            en: 'The first steps in JavaScript, HTML and CSS, during training',
+            es: 'Los primeros pasos en JavaScript, HTML y CSS, durante la formación',
+            fr: 'Les premiers pas en JavaScript, HTML et CSS, pendant la formation'
+        }
     }
-});
-
-// ------------------------------------------------
-// Arranque
-// ------------------------------------------------
-renderFiltros();
-renderCatalogo();
-renderOrcamento();
-renderResumoFinal();
-renderResumoFlutuante();
-atualizarStepper();
-ativarRevelacao(document.querySelectorAll('.orcamento-caixa, .marcacoes-caixa, .contacto-form'));
+];
 
 
 // ============================================
-// NOVO: dados do clube (todos de exemplo, edita à vontade)
+// 5. FUNÇÕES PARA CARREGAR DADOS
 // ============================================
-const CLUBE = {
-    resultados: [
-        { data: '28 Set', adv: 'Leões da Foz',     casa: true,  pts: [68, 61] },
-        { data: '21 Set', adv: 'Tigres do Vale',   casa: false, pts: [57, 63] },
-        { data: '14 Set', adv: 'Lobos de Gaia',    casa: true,  pts: [74, 52] },
-        { data: '07 Set', adv: 'Falcões do Norte', casa: false, pts: [49, 71] }
-    ],
-    classificacao: [
-        { eq: 'Aro Alto',         j: 8, v: 7, d: 1 },
-        { eq: 'Falcões do Norte', j: 8, v: 6, d: 2 },
-        { eq: 'Leões da Foz',     j: 8, v: 4, d: 4 },
-        { eq: 'Tigres do Vale',   j: 8, v: 3, d: 5 },
-        { eq: 'Lobos de Gaia',    j: 8, v: 2, d: 6 },
-        { eq: 'Corvos do Cávado', j: 8, v: 1, d: 7 }
-    ],
-    equipa: [
-        { nome: 'Marco Silva',  funcao: 'Treinador principal', num: 5,  cor: '#ff6b00' },
-        { nome: 'Sofia Duarte', funcao: 'Formação jovem',      num: 11, cor: '#ffb100' },
-        { nome: 'Rui Anjos',    funcao: 'Preparação física',   num: 23, cor: '#ff6b00' },
-        { nome: 'Inês Costa',   funcao: 'Treino individual',   num: 7,  cor: '#ffb100' }
-    ],
-    noticias: [
-        { tag: 'Clube',       data: '02 Out', titulo: 'Abertas as inscrições para a nova época',           texto: 'Há vagas em todos os escalões. A aula experimental continua grátis para novos atletas.' },
-        { tag: 'Competição',  data: '28 Set', titulo: 'Sub-16 vencem em casa e lideram o campeonato',      texto: 'Uma segunda parte de grande intensidade garantiu a sétima vitória da época.' },
-        { tag: 'Comunidade',  data: '19 Set', titulo: 'Torneio de mini-basket junta 12 equipas no pavilhão', texto: 'Um sábado de jogos, convívio e muitos sorrisos para os mais novos.' }
-    ],
-    parceiros: ['Pavilhão Norte', 'Sportiva', 'Clínica Movimento', 'Café Central', 'Gráfica Alvo'],
-    faixa: ['BASQUETEBOL', 'FORMAÇÃO', 'COMPETIÇÃO', 'COMUNIDADE', 'AULA GRÁTIS', 'ESPÍRITO DE EQUIPA'],
-    proximoJogo: { diaSemana: 6, hora: 18 }, // sábado às 18:00 (0 = domingo)
-    // Vagas por escalão (o anúncio do topo usa estes números; "cat" tem de coincidir com a categoria do catálogo)
-    vagas: [
-        { nome: 'Mini-Basket (6-9 anos)', cat: 'Formação Jovem', total: 30, livres: 12 },
-        { nome: 'Sub-12 (10-12 anos)',    cat: 'Formação Jovem', total: 30, livres: 7 },
-        { nome: 'Sub-16 (13-16 anos)',    cat: 'Formação Jovem', total: 30, livres: 4 },
-        { nome: 'Sénior / Adultos',       cat: 'Adultos',        total: 24, livres: 10 },
-        { nome: 'Treino 1-a-1',           cat: 'Individual',     total: 10, livres: 3 }
-    ]
-};
 
-function proximaData() {
-    const agora = new Date();
-    const d = new Date(agora);
-    d.setHours(CLUBE.proximoJogo.hora, 0, 0, 0);
-    let falta = (CLUBE.proximoJogo.diaSemana - d.getDay() + 7) % 7;
-    if (falta === 0 && d <= agora) falta = 7;
-    d.setDate(d.getDate() + falta);
-    return d;
+// Áreas em que as tecnologias são agrupadas no perfil
+const gruposCompetencias = [
+    { nome: { pt: 'Linguagens', en: 'Languages', es: 'Lenguajes', fr: 'Langages' },
+      itens: ['Python', 'JavaScript', 'PHP', 'Java', 'HTML & CSS'] },
+    { nome: { pt: 'Frameworks', en: 'Frameworks', es: 'Frameworks', fr: 'Frameworks' },
+      itens: ['FastAPI', 'Flask', 'Dash'] },
+    { nome: { pt: 'Dados e automação', en: 'Data and automation', es: 'Datos y automatización', fr: 'Données et automatisation' },
+      itens: ['Pandas', 'RPA (Automação)', 'Machine Learning'] },
+    { nome: { pt: 'Bases de dados', en: 'Databases', es: 'Bases de datos', fr: 'Bases de données' },
+      itens: ['MySQL', 'PostgreSQL', 'SQL Server', 'SQLite', 'MongoDB'] },
+    { nome: { pt: 'Sistemas e ferramentas', en: 'Systems and tools', es: 'Sistemas y herramientas', fr: 'Systèmes et outils' },
+      itens: ['Git', 'Linux', 'Ubuntu', 'Proxmox', 'VS Code'] },
+    { nome: { pt: 'Gestão e negócio', en: 'Management and business', es: 'Gestión y negocio', fr: 'Gestion et affaires' },
+      itens: null } // vem de competenciasComplementares
+];
+
+function carregarCompetencias() {
+    const container = document.getElementById('tagsContainer');
+    if (container) {
+        container.innerHTML = '';
+        const porNome = {};
+        competencias.forEach(tech => { porNome[tech.pt] = tech; });
+
+        gruposCompetencias.forEach(grupo => {
+            const lista = grupo.itens
+                ? grupo.itens.map(nome => porNome[nome]).filter(Boolean)
+                : competenciasComplementares;
+
+            const linha = document.createElement('div');
+            linha.className = 'skills-grupo';
+
+            const rotulo = document.createElement('span');
+            rotulo.className = 'skills-rotulo';
+            rotulo.textContent = L(grupo.nome);
+            linha.appendChild(rotulo);
+
+            const tags = document.createElement('div');
+            tags.className = 'tags';
+            lista.forEach(tech => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.textContent = L(tech);
+                tags.appendChild(tag);
+            });
+            linha.appendChild(tags);
+            container.appendChild(linha);
+        });
+    }
+
+    const numero = document.getElementById('numeroTech');
+    if (numero) numero.textContent = String(competencias.length);
 }
 
-function renderClube() {
-    // faixa que corre
-    const palavras = CLUBE.faixa.map(p => `<span>${p}</span>`).join('');
-    document.getElementById('marqueePista').innerHTML = palavras + palavras + palavras + palavras;
+function carregarExperiencias() {
+    const container = document.getElementById('experienciaContainer');
+    if (!container) return;
 
-    // resultados
-    document.getElementById('listaJogos').innerHTML = CLUBE.resultados.map(j => {
-        const ganhou = j.pts[0] > j.pts[1];
-        const [a, b] = j.casa ? [j.pts[0], j.pts[1]] : [j.pts[0], j.pts[1]];
-        return `<li class="jogo ${ganhou ? 'vitoria' : 'derrota'}">
-            <span class="jogo-data">${j.data}</span>
-            <span class="jogo-eq"><strong>Aro Alto</strong> <em>${j.casa ? 'vs' : 'em'}</em> ${j.adv}</span>
-            <span class="jogo-res">${a} - ${b}</span>
-            <span class="jogo-tag">${ganhou ? 'V' : 'D'}</span></li>`;
-    }).join('');
+    container.innerHTML = '';
+    experiencias.forEach(exp => {
+        const div = document.createElement('div');
+        div.className = 'experiencia-item reveal';
+        div.innerHTML = `
+            <div class="titulo">${L(exp.titulo)}</div>
+            <div class="empresa">${exp.empresa}</div>
+            <div class="periodo">${L(exp.periodo)}</div>
+            <div class="descricao">${L(exp.descricao)}</div>
+        `;
+        container.appendChild(div);
+    });
+}
 
-    // classificação
-    const linhas = CLUBE.classificacao.map(e => ({ ...e, pts: e.v * 2 + e.d })).sort((x, y) => y.pts - x.pts);
-    document.getElementById('tabelaClassificacao').innerHTML =
-        `<thead><tr><th>#</th><th>Equipa</th><th>J</th><th>V</th><th>D</th><th>Pts</th></tr></thead><tbody>` +
-        linhas.map((e, i) => `<tr class="${e.eq === 'Aro Alto' ? 'nos' : ''}"><td>${i + 1}</td><td>${e.eq}</td><td>${e.j}</td><td>${e.v}</td><td>${e.d}</td><td><strong>${e.pts}</strong></td></tr>`).join('') + `</tbody>`;
+function carregarFormacao() {
+    const container = document.getElementById('formacaoContainer');
+    if (!container) return;
 
-    // equipa técnica
-    document.getElementById('equipaGrid').innerHTML = CLUBE.equipa.map(p => `
-        <article class="treinador">
-            <div class="treinador-foto" style="--c:${p.cor}">
-                <span class="treinador-num">${p.num}</span>
-                <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="44" r="22" fill="#2a2a2a"/><path d="M14 120 C 14 84, 36 72, 60 72 C 84 72, 106 84, 106 120 Z" fill="#2a2a2a"/><path d="M40 78 L60 96 L80 78" fill="none" stroke="${p.cor}" stroke-width="5"/></svg>
+    container.innerHTML = '';
+    formacao.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'formacao-item reveal';
+        div.innerHTML = `
+            <div class="titulo">${L(item.curso)}</div>
+            <div class="empresa">${item.instituicao}</div>
+            <div class="periodo">${item.periodo}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function carregarProjetos() {
+    const container = document.getElementById('projetosContainer');
+    if (!container) return;
+
+    // as miniaturas usam a mesma versão (?v=) do script, para o navegador não mostrar capturas antigas
+    const tagScript = document.querySelector('script[src*="script.js"]');
+    const versaoCache = tagScript ? (tagScript.getAttribute('src').split('?v=')[1] || '') : '';
+    const versaoImagens = versaoCache ? '?v=' + encodeURIComponent(versaoCache) : '';
+
+    container.innerHTML = '';
+    gruposProjetos.forEach(grupo => {
+        const doGrupo = projetos.filter(p => p.grupo === grupo.id);
+        if (!doGrupo.length) return;
+
+        const secao = document.createElement('section');
+        secao.className = 'projetos-grupo';
+        secao.innerHTML = `
+            <div class="grupo-cabecalho">
+                <h2 class="grupo-titulo">${L(grupo.titulo)} <span class="grupo-contagem">${doGrupo.length}</span></h2>
+                <p class="grupo-descricao">${L(grupo.descricao)}</p>
             </div>
-            <h3>${p.nome}</h3><p>${p.funcao}</p>
-        </article>`).join('');
+        `;
+        const grelha = document.createElement('div');
+        grelha.className = 'projetos-grid';
 
-    // notícias
-    document.getElementById('noticiasGrid').innerHTML = CLUBE.noticias.map((n, i) => `
-        <article class="noticia">
-            <div class="noticia-img n${i}"><svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><circle cx="${120 + i * 70}" cy="110" r="${70 - i * 8}" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="3"/><line x1="0" y1="110" x2="400" y2="110" stroke="rgba(255,255,255,.4)" stroke-width="3"/><circle cx="${300 - i * 40}" cy="${70 + i * 30}" r="26" fill="rgba(255,255,255,.9)"/><path d="M${274 - i * 40} ${70 + i * 30}h52M${300 - i * 40} ${44 + i * 30}v52" stroke="#ff6b00" stroke-width="3"/></svg><span class="noticia-tag">${n.tag}</span></div>
-            <div class="noticia-corpo"><p class="noticia-data">${n.data}</p><h3>${n.titulo}</h3><p>${n.texto}</p></div>
-        </article>`).join('');
+        doGrupo.forEach(proj => {
+            const div = document.createElement('a');
+            div.className = 'projeto-card reveal';
+            div.href = proj.url || (proj.caminho + (proj.php ? '' : 'index.html'));
+            div.target = '_blank';
+            div.rel = 'noopener';
+            const chips = (proj.tecnologias || []).map(nome => `<span class="chip-tec">${nome}</span>`).join('');
+            div.innerHTML = `
+                <div class="projeto-thumb">
+                    <img src="${proj.imagem}${versaoImagens}" alt="Captura do projeto ${L(proj.titulo)}" loading="lazy">
+                    <span class="projeto-thumb-tag">${proj.tag}</span>
+                </div>
+                <div class="projeto-body">
+                    <h3>${L(proj.titulo)}</h3>
+                    <p>${L(proj.descricao)}</p>
+                    <div class="projeto-tecnologias" aria-label="${t('projeto_tecnologias')}">${chips}</div>
+                    <span class="projeto-link">${(proj.url && proj.url.includes('github.com')) ? t('projeto_ver_codigo') : t('projeto_ver')}</span>
+                </div>
+            `;
+            grelha.appendChild(div);
+        });
 
-    // parceiros
-    document.getElementById('parceirosLista').innerHTML = CLUBE.parceiros.map(p => `<li>${p}</li>`).join('');
+        secao.appendChild(grelha);
+        container.appendChild(secao);
+    });
 }
 
-// Próximo jogo: contagem decrescente
-function iniciarContagem() {
-    const alvo = proximaData();
-    const dias = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'];
-    document.getElementById('proximoData').textContent =
-        `${dias[alvo.getDay()]}, ${String(alvo.getDate()).padStart(2, '0')}/${String(alvo.getMonth() + 1).padStart(2, '0')} · ${String(alvo.getHours()).padStart(2, '0')}:00 · Pavilhão Municipal`;
-    const el = document.getElementById('contagemJogo');
-    const p2 = n => String(n).padStart(2, '0');
-    const tick = () => {
-        let s = Math.max(0, Math.floor((alvo - Date.now()) / 1000));
-        const d = Math.floor(s / 86400); s %= 86400; const h = Math.floor(s / 3600); s %= 3600; const m = Math.floor(s / 60); s %= 60;
-        el.innerHTML = `<div><b>${p2(d)}</b><span>dias</span></div><div><b>${p2(h)}</b><span>horas</span></div><div><b>${p2(m)}</b><span>min</span></div><div><b>${p2(s)}</b><span>seg</span></div>`;
-    };
-    tick(); setInterval(tick, 1000);
+// Números do topo (projetos, tecnologias, experiências): saem das listas, nunca à mão
+function atualizarEstatisticas() {
+    const alvos = { numeroProjetos: projetos.length, numeroTech: competencias.length, numeroExperiencias: experiencias.length };
+    Object.keys(alvos).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = String(alvos[id]);
+    });
 }
 
-// ------------------------------------------------
-// Anúncio "Inscrições abertas": mensagens que rodam + painel de vagas
-// ------------------------------------------------
-(function iniciarAnuncio() {
-    const totalLivres = CLUBE.vagas.reduce((n, v) => n + v.livres, 0);
-    const maisCheio = [...CLUBE.vagas].sort((a, b) => a.livres - b.livres)[0];
-    const msgs = [
-        { html: `Nova época 2026/27 <strong>vagas limitadas</strong>`, alvo: '#painel' },
-        { html: `Aula experimental <strong>grátis</strong> em qualquer escalão`, alvo: '#marcacoes' },
-        { html: `Restam <strong>${totalLivres} vagas</strong> no total`, alvo: '#painel' },
-        { html: `Últimas <strong>${maisCheio.livres} vagas</strong> no ${maisCheio.nome.split(' (')[0]}`, alvo: '#painel' }
-    ];
-    const caixa = document.getElementById('anuncioMsgs');
-    const painel = document.getElementById('anuncioPainel');
-    const btn = document.getElementById('anuncioBtn');
-    const btnTxt = document.getElementById('anuncioBtnTxt');
-    caixa.innerHTML = msgs.map((m, i) => `<a class="anuncio-msg ${i === 0 ? 'ativa' : ''}" href="${m.alvo === '#painel' ? '#' : m.alvo}" data-alvo="${m.alvo}">${m.html}</a>`).join('');
-    const els = [...caixa.children];
-    let atual = 0, pausado = false;
-    setInterval(() => {
-        if (pausado || document.hidden) return;
-        els[atual].classList.remove('ativa'); els[atual].classList.add('saiu');
-        const ant = els[atual];
-        setTimeout(() => ant.classList.remove('saiu'), 520);
-        atual = (atual + 1) % els.length;
-        els[atual].classList.add('ativa');
-    }, 3800);
-    caixa.addEventListener('pointerenter', () => { pausado = true; });
-    caixa.addEventListener('pointerleave', () => { pausado = false; });
+// ============================================
+// 6. FUNÇÃO PARA FORMULÁRIO DE CONTACTO
+// ============================================
+// URL da tua Google Apps Script (envia diretamente para o teu Gmail)
+const ENDPOINT_CONTACTO = 'https://script.google.com/macros/s/AKfycbzU4jTMhs1rTK_YFIyQLqb0Nx59TZDRwHQRbk-Dc3pU2vOEfGWT-slohAxcQnPinAk6/exec';
 
-    // painel de vagas
-    document.getElementById('listaVagas').innerHTML = CLUBE.vagas.map((v, i) => {
-        const ocupado = Math.round((v.total - v.livres) / v.total * 100);
-        const poucas = v.livres <= 5;
-        return `<li><button type="button" class="vaga ${poucas ? 'poucas' : ''}" data-i="${i}">
-            <strong>${v.nome}</strong><em>${poucas ? 'Últimas ' : 'Restam '}${v.livres} vagas</em>
-            <span class="vaga-barra"><i data-w="${ocupado}"></i></span></button></li>`;
-    }).join('');
-    function alternar(abrir) {
-        const aberto = abrir ?? painel.hidden;
-        painel.hidden = !aberto;
-        btn.setAttribute('aria-expanded', aberto ? 'true' : 'false');
-        btnTxt.textContent = aberto ? 'Fechar' : 'Ver vagas';
-        if (aberto) requestAnimationFrame(() => requestAnimationFrame(() => painel.querySelectorAll('.vaga-barra i').forEach(b => { b.style.width = b.dataset.w + '%'; })));
-        else painel.querySelectorAll('.vaga-barra i').forEach(b => { b.style.width = '0'; });
+function configurarFormulario() {
+    const form = document.getElementById('contactoForm');
+    const feedback = document.getElementById('feedback');
+    if (!form) return;
+
+    const botao = form.querySelector('.btn-enviar');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nome = document.getElementById('nome').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const assunto = document.getElementById('assunto').value.trim();
+        const mensagem = document.getElementById('mensagem').value.trim();
+
+        if (!nome || !email || !assunto || !mensagem) {
+            feedback.className = 'feedback erro';
+            feedback.textContent = t('form_erro_campos');
+            return;
+        }
+
+        if (botao) {
+            botao.disabled = true;
+            botao.textContent = t('form_enviando');
+        }
+
+        const dados = new FormData();
+        dados.append('nome', nome);
+        dados.append('email', email);
+        dados.append('assunto', assunto);
+        dados.append('mensagem', mensagem);
+
+        // O Apps Script do Google pode demorar vários segundos (arranque a frio + redirecionamento).
+        // Como com no-cors não dá para ler a resposta, mostramos a confirmação ao fim de ~1,2 s
+        // e deixamos o envio terminar em segundo plano (keepalive). Só um erro de rede mostra falha.
+        let concluido = false;
+        const restaurarBotao = () => {
+            if (botao) {
+                botao.disabled = false;
+                botao.textContent = t('form_btn_enviar');
+            }
+        };
+        const mostrarSucesso = () => {
+            if (concluido) return;
+            concluido = true;
+            feedback.className = 'feedback sucesso';
+            feedback.textContent = t('form_sucesso').replace('{nome}', nome);
+            form.reset();
+            restaurarBotao();
+        };
+        const mostrarErro = () => {
+            concluido = true;
+            feedback.className = 'feedback erro';
+            feedback.textContent = t('form_erro_envio');
+            restaurarBotao();
+        };
+
+        const temporizador = setTimeout(mostrarSucesso, 1200);
+
+        fetch(ENDPOINT_CONTACTO, {
+            method: 'POST',
+            body: dados,
+            mode: 'no-cors', // o Apps Script não devolve CORS; assumimos sucesso se não houver erro de rede
+            keepalive: true
+        })
+            .then(() => { clearTimeout(temporizador); mostrarSucesso(); })
+            .catch(() => { clearTimeout(temporizador); mostrarErro(); });
+    });
+}
+
+// ============================================
+// 7. ANIMAÇÃO AO FAZER SCROLL (reveal)
+// ============================================
+function iniciarScrollReveal() {
+    const alvo = document.querySelectorAll('.reveal');
+    if (!alvo.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+        alvo.forEach(el => el.classList.add('visible'));
+        return;
     }
-    btn.addEventListener('click', () => alternar());
-    caixa.addEventListener('click', e => {
-        const a = e.target.closest('.anuncio-msg'); if (!a) return;
-        if (a.dataset.alvo === '#painel') { e.preventDefault(); alternar(true); }
-        else alternar(false);
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    alvo.forEach(el => observer.observe(el));
+}
+
+// ============================================
+// 8. RECARREGAR CONTEÚDO DINÂMICO QUANDO O IDIOMA MUDA
+// ============================================
+function recarregarConteudoDinamico() {
+    carregarCompetencias();
+    carregarExperiencias();
+    carregarFormacao();
+    carregarProjetos();
+    atualizarEstatisticas();
+    atualizarTextoTema();
+    iniciarScrollReveal(); // reobserva os novos elementos gerados (experiência/formação/projetos)
+
+    const botao = document.querySelector('#contactoForm .btn-enviar');
+    if (botao && !botao.disabled) botao.textContent = t('form_btn_enviar');
+}
+
+document.addEventListener('idiomaAlterado', recarregarConteudoDinamico);
+
+// ============================================
+// 9. INICIALIZAR TUDO
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    initTheme();
+    carregarCompetencias();
+    carregarExperiencias();
+    carregarFormacao();
+    carregarProjetos();
+    atualizarEstatisticas();
+    configurarFormulario();
+
+    // marca as secções estáticas para a animação de scroll também
+    document.querySelectorAll('section, .hero-cta, .contactos-grid, .contacto-form').forEach(el => {
+        el.classList.add('reveal');
     });
-    document.getElementById('anuncioMarcar').addEventListener('click', () => alternar(false));
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !painel.hidden) { alternar(false); btn.focus(); } });
-    // clicar numa vaga: abre o catálogo já filtrado nesse escalão
-    painel.addEventListener('click', e => {
-        const b = e.target.closest('.vaga'); if (!b) return;
-        estado.categoriaAtiva = CLUBE.vagas[Number(b.dataset.i)].cat;
-        renderFiltros(); renderCatalogo();
-        alternar(false);
-        document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
-    });
-})();
 
-// Cabeçalho muda ao fazer scroll
-const cabecalho = document.getElementById('cabecalho');
-function marcarScroll() { cabecalho.classList.toggle('solido', scrollY > 40); }
-addEventListener('scroll', marcarScroll, { passive: true }); marcarScroll();
+    iniciarScrollReveal();
 
-// Mascote do hero
-const heroMascote = document.getElementById('heroMascote');
-heroMascote.innerHTML = mascoteSVG({ classe: 'hero-m' });
-ativarMascote(heroMascote.querySelector('svg'), { balao: document.getElementById('balaoMascote'), area: document });
-
-renderClube();
-iniciarContagem();
-ativarRevelacao(document.querySelectorAll('.painel, .treinador, .noticia, .parceiros-lista li, .proximo-caixa'));
-
-// O resumo flutuante esconde-se quando já estás a ver o placard ou o formulário (evita repetir a informação)
-(function () {
-    const visiveis = new Set();
-    const obs = new IntersectionObserver(es => {
-        es.forEach(e => e.isIntersecting ? visiveis.add(e.target.id) : visiveis.delete(e.target.id));
-        document.body.classList.toggle('sem-flut', visiveis.size > 0);
-    }, { threshold: 0.25 });
-    ['orcamento', 'contacto'].forEach(id => obs.observe(document.getElementById(id)));
-})();
+    document.body.classList.add('pagina-pronta');
+});
