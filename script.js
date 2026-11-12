@@ -579,10 +579,10 @@ const projetos = [
             fr: 'Modèle Vitrine pour Entreprises: Sole House'
         },
         descricao: {
-            pt: 'Template institucional de uma página, pronto a adaptar a qualquer negócio, aqui reskinado como a loja de uma marca fictícia de sneakers e streetwear',
-            en: 'One-page institutional template, ready to adapt to any business, reskinned here as the store of a fictional sneaker and streetwear brand',
-            es: 'Plantilla institucional de una página, lista para adaptar a cualquier negocio, aquí adaptada como la tienda de una marca ficticia de sneakers y streetwear',
-            fr: 'Modèle institutionnel d\'une page, prêt à adapter à toute entreprise, ici décliné comme la boutique d\'une marque fictive de sneakers et streetwear'
+            pt: 'Template de loja online em HTML, CSS e JavaScript, pronto a adaptar a qualquer negócio: menu grande, pesquisa, filtros, carrinho e finalização simulada, aqui como a loja de uma marca fictícia de sneakers e streetwear',
+            en: 'Online store template in HTML, CSS and JavaScript, ready to adapt to any business: mega menu, search, filters, cart and simulated checkout, shown here as the store of a fictional sneaker and streetwear brand',
+            es: 'Plantilla de tienda online en HTML, CSS y JavaScript, lista para adaptar a cualquier negocio: menú grande, búsqueda, filtros, carrito y pago simulado, aquí como la tienda de una marca ficticia de sneakers y streetwear',
+            fr: 'Modèle de boutique en ligne en HTML, CSS et JavaScript, prêt à adapter à toute entreprise : méga menu, recherche, filtres, panier et paiement simulé, ici comme la boutique d\'une marque fictive de sneakers et streetwear'
         },
         tag: 'Template',
         tecnologias: ['HTML', 'CSS', 'JavaScript'],
